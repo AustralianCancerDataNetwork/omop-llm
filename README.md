@@ -1,2 +1,2 @@
 # omop-llm
-LLM infrastructure for embedding and instructor tasks
+LLM interface for embedding and instructor tasks.
