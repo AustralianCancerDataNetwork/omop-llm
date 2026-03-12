@@ -3,7 +3,6 @@ name = "omop-llm"
 version = "0.1.0"
 description = "LLM interfaces for OMOP"
 authors = [
-  {name = "Georgina Kennedy", email = "georgina.kennedy@unsw.edu.au"},
   {name = "Nico Loesch", email = "n.loesch@unsw.edu.au"}
 ]
 license = "Apache-2.0"
