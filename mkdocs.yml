@@ -29,8 +29,8 @@ theme:
 
 nav:
   - Home: index.md
-  - Getting Started:
-      - Installation: usage/installation.md
+  - Installation: usage/installation.md
+  - "API Reference": reference.md
 
 plugins:
   - search
