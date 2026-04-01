@@ -3,9 +3,6 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Union, TypeAlias
 
 import instructor
-import numpy as np
-import requests
-from openai import OpenAI
 from pydantic import BaseModel
 from prompt_spec import PromptTemplate
 

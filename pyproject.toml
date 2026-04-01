@@ -1,6 +1,6 @@
 [project]
 name = "omop-llm"
-version = "0.1.0"
+version = "0.1.1"
 description = "LLM interfaces for OMOP"
 authors = [
   {name = "Nico Loesch", email = "n.loesch@unsw.edu.au"}
@@ -10,6 +10,10 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "instructor>=1.13.0",
+    "prompt-spec>=0.1.4",
+    "openai",
+    "numpy",
+    "pydantic",
   ]
 
 [dependency-groups]

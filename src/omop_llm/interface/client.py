@@ -1,13 +1,10 @@
 import logging
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Union, TypeAlias
+from typing import Any, Dict, List, Optional, Union, TypeAlias, Tuple
 
-import instructor
 import numpy as np
 import requests
 from openai import OpenAI
-from pydantic import BaseModel
-from prompt_spec import PromptTemplate
 
 logger = logging.getLogger(__name__)
 
@@ -125,7 +122,7 @@ class LLMClient:
     def base_client(self) -> OpenAI:
         return self._base_client
 
-    def embeddings(self, text: Union[str, List[str]], batch_size: Optional[int] = None) -> np.ndarray:
+    def embeddings(self, text: Union[str, List[str], Tuple[str, ...]], batch_size: Optional[int] = None) -> np.ndarray:
         """
         Retrieve embeddings for the given text.
 
@@ -151,7 +148,9 @@ class LLMClient:
             batch_size = self.embedding_batch_size
         
         if isinstance(text, str):
-            text = [text]
+            text = (text, )
+        elif isinstance(text, list):
+            text = tuple(text)
 
         batch_buffer = []
 
