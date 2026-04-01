@@ -1,6 +1,6 @@
 [project]
 name = "omop-llm"
-version = "1.0.0"
+version = "0.1.1"
 description = "LLM interfaces for OMOP"
 authors = [
   {name = "Nico Loesch", email = "n.loesch@unsw.edu.au"}

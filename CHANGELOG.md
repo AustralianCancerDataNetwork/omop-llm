@@ -1,3 +1,10 @@
+## [0.1.1](https://github.com/AustralianCancerDataNetwork/omop-llm/compare/v0.1.0...v0.1.1) (2026-04-01)
+
+
+### Bug Fixes
+
+* trigger initial 0.x release ([63ce049](https://github.com/AustralianCancerDataNetwork/omop-llm/commit/63ce04934bdb021b903b87dfd452f2e028324bd0))
+
 # 1.0.0 (2026-04-01)
 
 
