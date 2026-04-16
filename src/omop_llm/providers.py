@@ -85,27 +85,51 @@ class EmbeddingProvider(ABC):
 class OllamaProvider(EmbeddingProvider):
     """Provider for models served by Ollama.
 
-    Canonical model names always include a tag (``name:tag``).  If no tag is
-    present ``':latest'`` is appended.  Embedding dimensions are retrieved via
-    Ollama's ``POST /api/show`` endpoint.
+    Canonical model names must include an explicit, immutable tag (``name:tag``).
+    Both untagged names and the mutable ``:latest`` tag are rejected.
+    Embedding dimensions are retrieved via Ollama's ``POST /api/show`` endpoint.
     """
 
     def canonical_model_name(self, name: str) -> str:
-        """Append ``':latest'`` if *name* carries no tag.
+        """Require an explicit, immutable model tag.
+
+        Rejects both untagged names and the mutable ``:latest`` tag.
 
         Parameters
         ----------
         name : str
-            Model name, e.g. ``'llama3'`` or ``'llama3:8b'``.
+            Model name with explicit tag, e.g. ``'llama3:8b'`` or
+            ``'nomic-embed-text:v1.5'``.
 
         Returns
         -------
         str
-            Model name with tag, e.g. ``'llama3:latest'`` or ``'llama3:8b'``.
+            The input name, validated and stripped of whitespace.
+
+        Raises
+        ------
+        ValueError
+            If the name has no tag, or if the tag is ``:latest``.
         """
         name = name.strip()
         if ":" not in name:
-            name = f"{name}:latest"
+            raise ValueError(
+                f"Ollama model name {name!r} must include an explicit tag. "
+                f"Use a specific version (e.g. '{name}:8b') instead of relying on "
+                f"the mutable ':latest' pointer. Running 'ollama pull {name}' can "
+                f"silently change which model version ':latest' refers to, breaking "
+                f"consistency between stored embeddings and new query embeddings."
+            )
+
+        model_part, tag = name.rsplit(":", 1)
+        if tag == "latest":
+            raise ValueError(
+                f"Ollama model name {name!r} uses the mutable ':latest' tag. "
+                f"':latest' can change between 'ollama pull' runs, breaking "
+                f"consistency between stored embeddings and new query embeddings. "
+                f"Use an explicit, immutable tag (e.g. '<model_name>:8b')."
+            )
+
         return name
 
     def get_embedding_dim(self, model: str, api_base: URL) -> int:
