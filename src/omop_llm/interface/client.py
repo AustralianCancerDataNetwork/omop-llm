@@ -3,8 +3,9 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Union, TypeAlias, Tuple
 
 import numpy as np
-import requests
 from openai import OpenAI
+
+from omop_llm.providers import EmbeddingProvider, get_provider_for_api_base
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +32,11 @@ class LLMClient:
     Parameters
     ----------
     model : str
-        The name of the model to use (e.g., 'gpt-4', 'llama3').
+        Model name as supplied by the caller (e.g. ``'llama3'`` or
+        ``'text-embedding-3-small'``).  Canonicalised in ``__post_init__``
+        via the provider (e.g. ``'llama3'`` → ``'llama3:latest'`` for
+        Ollama).  After construction ``self.model`` holds the canonical
+        form and is the value stored in the embedding registry.
     api_base : str
         The base URL for the API endpoint.
     api_key : str
@@ -40,6 +45,11 @@ class LLMClient:
         The temperature parameter for generation. Default is 1.0.
     system_message : str, optional
         The default system message to prepend to chats. Default is "".
+    provider : EmbeddingProvider, optional
+        Embedding provider that handles model-name canonicalisation and
+        dimension retrieval.  Inferred automatically from *api_base* and
+        *api_key* via :func:`~omop_llm.providers.get_provider_for_api_base`
+        if not supplied.
 
     Attributes
     ----------
@@ -55,13 +65,17 @@ class LLMClient:
     temperature: float = 1.0
     system_message: str = ""
     embedding_batch_size: int = 32
+    provider: Optional[EmbeddingProvider] = None
     _base_client: OpenAI = field(init=False, repr=False)
     _embedding_dim: Optional[int] = field(init=False, default=None)
 
     def __post_init__(self) -> None:
-        logger.info(f"Initialising {self.__class__.__name__} for model={self.model}")
         if self.api_key is None:
             self.api_key = "ollama"  # Default to "ollama" for compatibility, but can be overridden
+        if self.provider is None:
+            self.provider = get_provider_for_api_base(self.api_base, self.api_key)
+        self.model = self.provider.canonical_model_name(self.model)
+        logger.info(f"Initialising {self.__class__.__name__} with canonical_model_name={self.model!r}")
 
         self._base_client = OpenAI(
             base_url=self.api_base,
@@ -70,11 +84,10 @@ class LLMClient:
 
     @property
     def embedding_dim(self) -> int:
-        """
-        Retrieve the embedding dimension for the current model.
+        """Retrieve the embedding dimension for the current model.
 
-        If the dimension is not cached, it attempts to fetch it from the API.
-        Currently supports Ollama endpoints.
+        Delegates to the provider's :meth:`~omop_llm.providers.EmbeddingProvider.get_embedding_dim`
+        on first call, then caches the result.
 
         Returns
         -------
@@ -84,39 +97,14 @@ class LLMClient:
         Raises
         ------
         ValueError
-            If model information cannot be found in the Ollama response.
+            If the provider cannot determine the dimension from the API response.
         NotImplementedError
-            If the API base is not supported for automatic dimension retrieval.
+            If the provider does not support automatic dimension retrieval
+            (e.g. :class:`~omop_llm.providers.OpenAICompatProvider`).
         """
-        if self._embedding_dim is not None:
-            return self._embedding_dim
-        
-        if (
-            "ollama" in self.api_base or 
-            (
-                (
-                    "localhost" in self.api_base or
-                    "127.0.0.1" in self.api_base
-                ) and self.api_key == "ollama"
-            )
-        ):
-            # Strip /v1 to access base Ollama API
-            ollama_url_without_v1 = self.api_base.replace("/v1", "")
-            requests_url = f"{ollama_url_without_v1}/api/show"
-            
-            response = requests.post(requests_url, json={"name": self.model}).json()
-            model_info = response.get("model_info", {})
-            
-            if model_info:
-                # Find keys resembling 'embedding_length'
-                embedding_key = [key for key in model_info.keys() if "embedding_length" in key]
-                if len(embedding_key) == 1:
-                    self._embedding_dim = int(model_info[embedding_key[0]])
-                    return self._embedding_dim
-            
-            raise ValueError(f"Model information not found in Ollama response: {response}")
-        else:
-            raise NotImplementedError("Embedding dimension retrieval not implemented for this API base")
+        if self._embedding_dim is None:
+            self._embedding_dim = self.provider.get_embedding_dim(self.model, self.api_base)
+        return self._embedding_dim
 
     @property
     def base_client(self) -> OpenAI:
@@ -163,7 +151,10 @@ class LLMClient:
             )
             batch_buffer.extend([emb.embedding for emb in response.data])
 
-        return np.array(batch_buffer)
+        return_array = np.array(batch_buffer)
+        assert return_array.ndim == 2, f"Expected embeddings to be a 2D array, got shape {return_array.shape}"
+        assert return_array.shape[0] == len(text), f"Expected number of embeddings ({return_array.shape[0]}) to match number of input texts ({len(text)})"
+        return return_array
 
     def similarity(
         self,
