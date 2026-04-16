@@ -1,6 +1,15 @@
+"""Embedding client for OMOP concept vectorisation.
+
+Wraps any OpenAI-compatible endpoint to provide batched text embedding with
+numpy output, automatic embedding-dimension discovery, and cosine-similarity
+helpers.  The canonical model name (``self.model``) is the stable key stored
+in the omop-emb registry.
+"""
+
+from __future__ import annotations
+
 import logging
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Union, TypeAlias, Tuple
+from typing import Any, Dict, List, Optional, Tuple, TypeAlias, Union
 
 import numpy as np
 from openai import OpenAI
@@ -9,260 +18,172 @@ from omop_llm.providers import EmbeddingProvider, get_provider_for_api_base
 
 logger = logging.getLogger(__name__)
 
-
 CHAT_MESSAGE_DICT: TypeAlias = Dict[str, str]
 
 
 class LLMClientError(RuntimeError):
-    """
-    Custom exception for LLM Client runtime errors.
-    """
+    """Custom exception for LLM client runtime errors."""
     pass
 
 
-@dataclass
-class LLMClient:
-    """
-    Base class for LLM clients.
-
-    This class replicates the API of the OntoGPT LLMClient but serves as a
-    base for other implementations (e.g., InstructorClient). Relies on the
-    OpenAI client for core functionality.
+class EmbeddingClient:
+    """Client for generating text embeddings over any OpenAI-compatible endpoint.
 
     Parameters
     ----------
     model : str
-        Model name as supplied by the caller (e.g. ``'llama3'`` or
-        ``'text-embedding-3-small'``).  Canonicalised in ``__post_init__``
-        via the provider (e.g. ``'llama3'`` → ``'llama3:latest'`` for
-        Ollama).  After construction ``self.model`` holds the canonical
-        form and is the value stored in the embedding registry.
+        Model name.  Canonicalised by the provider on construction
+        (e.g. ``'llama3'`` → ``'llama3:latest'`` for Ollama).  After
+        construction ``self.model`` is the stable key used in the omop-emb
+        registry.
     api_base : str
-        The base URL for the API endpoint.
-    api_key : str
-        The API key for authentication.
-    temperature : float, optional
-        The temperature parameter for generation. Default is 1.0.
-    system_message : str, optional
-        The default system message to prepend to chats. Default is "".
+        API endpoint base URL, e.g. ``'http://localhost:11434/v1'``.
+    api_key : str, optional
+        API key.  Defaults to ``'ollama'`` (ignored by Ollama, required by
+        the OpenAI SDK).
+    embedding_batch_size : int, optional
+        Number of texts per API call.  Default is 32.
     provider : EmbeddingProvider, optional
-        Embedding provider that handles model-name canonicalisation and
-        dimension retrieval.  Inferred automatically from *api_base* and
-        *api_key* via :func:`~omop_llm.providers.get_provider_for_api_base`
-        if not supplied.
-
-    Attributes
-    ----------
-    _base_client : OpenAI
-        The initialized OpenAI client instance.
-    _embedding_dim : int or None
-        Cached embedding dimension size.
+        Controls model-name canonicalisation and embedding-dimension
+        discovery.  Inferred from *api_base* / *api_key* when omitted.
     """
 
-    model: str
-    api_base: str
-    api_key: str = "ollama"  # required by OpenAI client, ignored by Ollama
-    temperature: float = 1.0
-    system_message: str = ""
-    embedding_batch_size: int = 32
-    provider: Optional[EmbeddingProvider] = None
-    _base_client: OpenAI = field(init=False, repr=False)
-    _embedding_dim: Optional[int] = field(init=False, default=None)
-
-    def __post_init__(self) -> None:
-        if self.api_key is None:
-            self.api_key = "ollama"  # Default to "ollama" for compatibility, but can be overridden
-        if self.provider is None:
-            self.provider = get_provider_for_api_base(self.api_base, self.api_key)
-        self.model = self.provider.canonical_model_name(self.model)
-        logger.info(f"Initialising {self.__class__.__name__} with canonical_model_name={self.model!r}")
-
-        self._base_client = OpenAI(
-            base_url=self.api_base,
-            api_key=self.api_key,
-        )
+    def __init__(
+        self,
+        model: str,
+        api_base: str,
+        api_key: str = "ollama",
+        embedding_batch_size: int = 32,
+        provider: Optional[EmbeddingProvider] = None,
+    ) -> None:
+        if provider is None:
+            provider = get_provider_for_api_base(api_base, api_key)
+        self._provider = provider
+        self._model = provider.canonical_model_name(model)
+        self._embedding_batch_size = embedding_batch_size
+        self._embedding_dim: Optional[int] = None
+        self._base_client = OpenAI(base_url=api_base, api_key=api_key)
+        logger.info(f"EmbeddingClient initialised for model={self._model!r}")
 
     @property
-    def embedding_dim(self) -> int:
-        """Retrieve the embedding dimension for the current model.
+    def provider(self) -> EmbeddingProvider:
+        return self._provider
 
-        Delegates to the provider's :meth:`~omop_llm.providers.EmbeddingProvider.get_embedding_dim`
-        on first call, then caches the result.
+    @property
+    def model(self) -> str:
+        """Canonical model name — the stable key stored in the omop-emb registry."""
+        return self._model
 
-        Returns
-        -------
-        int
-            The size of the embedding vector.
+    @property
+    def api_base(self):
+        return self._base_client.base_url
 
-        Raises
-        ------
-        ValueError
-            If the provider cannot determine the dimension from the API response.
-        NotImplementedError
-            If the provider does not support automatic dimension retrieval
-            (e.g. :class:`~omop_llm.providers.OpenAICompatProvider`).
-        """
-        if self._embedding_dim is None:
-            self._embedding_dim = self.provider.get_embedding_dim(self.model, self.api_base)
-        return self._embedding_dim
+    @property
+    def api_key(self) -> str:
+        return self._base_client.api_key
+
+    @property
+    def embedding_batch_size(self) -> int:
+        return self._embedding_batch_size
 
     @property
     def base_client(self) -> OpenAI:
         return self._base_client
 
-    def embeddings(self, text: Union[str, List[str], Tuple[str, ...]], batch_size: Optional[int] = None) -> np.ndarray:
+    @property
+    def embedding_dim(self) -> int:
+        """Embedding vector dimension, auto-discovered on first access.
+
+        For Ollama endpoints this queries ``POST /api/show``.  For
+        OpenAI-compatible providers the dimension must be supplied at
+        construction time via a provider that implements
+        :meth:`~omop_llm.providers.EmbeddingProvider.get_embedding_dim`.
+
+        Raises
+        ------
+        ValueError
+            If the provider cannot determine the dimension from the API.
+        NotImplementedError
+            If the provider requires an explicit dimension
+            (see :class:`~omop_llm.providers.OpenAICompatProvider`).
         """
-        Retrieve embeddings for the given text.
+        if self._embedding_dim is None:
+            self._embedding_dim = self._provider.get_embedding_dim(
+                self._model, self._base_client.base_url
+            )
+        return self._embedding_dim
+
+    def embeddings(
+        self,
+        text: Union[str, List[str], Tuple[str, ...]],
+        batch_size: Optional[int] = None,
+    ) -> np.ndarray:
+        """Generate embeddings for one or more texts.
 
         Parameters
         ----------
-        text : str or List[str]
-            The input text or list of texts to embed.
+        text : str | list[str] | tuple[str, ...]
+            Input text(s) to embed.
         batch_size : int, optional
-            The number of texts to process in a single API call. Default is 32.
+            Overrides ``embedding_batch_size`` for this call.
 
         Returns
         -------
         np.ndarray
-            A 2D numpy array containing the embeddings.
-
-        Raises
-        ------
-        AssertionError
-            If the base client has not been initialized.
+            2-D float array of shape ``(n_texts, embedding_dim)``.
         """
-        assert self.base_client is not None, "Base client should be initialized"
         if batch_size is None:
-            batch_size = self.embedding_batch_size
-        
+            batch_size = self._embedding_batch_size
+
         if isinstance(text, str):
-            text = (text, )
+            text = (text,)
         elif isinstance(text, list):
             text = tuple(text)
 
-        batch_buffer = []
-
-        for batch_chunk_idx in range(0, len(text), batch_size):
-            logger.debug(f"Processing batch chunk from index {batch_chunk_idx} to {batch_chunk_idx + batch_size}")
-            batch_chunk = text[batch_chunk_idx:batch_chunk_idx + batch_size]
-            response = self.base_client.embeddings.create(
-                model=self.model,
-                input=batch_chunk,
+        buffer: list[list[float]] = []
+        for start in range(0, len(text), batch_size):
+            chunk = text[start : start + batch_size]
+            logger.debug(f"Embedding batch [{start}:{start + len(chunk)}]")
+            response = self._base_client.embeddings.create(
+                model=self._model, input=chunk
             )
-            batch_buffer.extend([emb.embedding for emb in response.data])
+            buffer.extend(emb.embedding for emb in response.data)
 
-        return_array = np.array(batch_buffer)
-        assert return_array.ndim == 2, f"Expected embeddings to be a 2D array, got shape {return_array.shape}"
-        assert return_array.shape[0] == len(text), f"Expected number of embeddings ({return_array.shape[0]}) to match number of input texts ({len(text)})"
-        return return_array
+        result = np.array(buffer)
+        assert result.ndim == 2, f"Expected 2-D embedding array, got shape {result.shape}"
+        assert result.shape[0] == len(text)
+        return result
 
     def similarity(
         self,
         terms: Union[str, List[str], np.ndarray],
         terms_to_match: Union[str, List[str], np.ndarray],
-        **kwargs: Any
+        **kwargs: Any,
     ) -> np.ndarray:
-        """
-        Calculate the cosine similarity between two sets of terms.
-
-        This method handles inputs as strings, lists of strings, or pre-computed
-        numpy arrays of embeddings.
-
-        Parameters
-        ----------
-        terms : str, List[str], or np.ndarray
-            The source terms or embeddings.
-        terms_to_match : str, List[str], or np.ndarray
-            The target terms or embeddings to match against.
-        **kwargs : Any
-            Additional arguments passed to the embedding function if embedding is required.
-
-        Returns
-        -------
-        np.ndarray
-            A similarity matrix.
-
-        Raises
-        ------
-        ValueError
-            If inputs are not strings, lists, or numpy arrays.
-        """
-        if isinstance(terms, str):
-            terms = [terms]
-        if isinstance(terms_to_match, str):
-            terms_to_match = [terms_to_match]
-
-        # Process source terms
-        if isinstance(terms, list):
-            terms_embeddings = self.embeddings(text=terms, **kwargs)
-        elif isinstance(terms, np.ndarray):
-            terms_embeddings = terms
-        else:
-            raise ValueError("terms must be either a string, list of strings, or numpy array")
-
-        # Process target terms
-        if isinstance(terms_to_match, list):
-            terms_to_match_embeddings = self.embeddings(text=terms_to_match, **kwargs)
-        elif isinstance(terms_to_match, np.ndarray):
-            terms_to_match_embeddings = terms_to_match
-        else:
-            raise ValueError("terms_to_match must be either a string, list of strings, or numpy array")
-
-        return self.cosine_similarity(terms_embeddings, terms_to_match_embeddings)
+        """Cosine-similarity matrix between two sets of terms or embeddings."""
+        if isinstance(terms, (str, list)):
+            terms = self.embeddings(terms, **kwargs)
+        if isinstance(terms_to_match, (str, list)):
+            terms_to_match = self.embeddings(terms_to_match, **kwargs)
+        return self.cosine_similarity(terms, terms_to_match)
 
     @staticmethod
     def cosine_similarity(vecs_a: np.ndarray, vecs_b: np.ndarray) -> np.ndarray:
-        """
-        Compute the cosine similarity between two matrices of vectors.
-
-        Parameters
-        ----------
-        vecs_a : np.ndarray
-            A 2D array of vectors (Shape: M x D).
-        vecs_b : np.ndarray
-            A 2D array of vectors (Shape: N x D).
-
-        Returns
-        -------
-        np.ndarray
-            The dot product of the normalized vectors (Shape: M x N).
-
-        Notes
-        -----
-        A small epsilon (1e-10) is added to the norms to prevent division by zero.
-        """
-        assert vecs_a.ndim == 2 and vecs_b.ndim == 2, "Input vectors must be 2D arrays"
-        
+        """Cosine similarity between row-vector matrices (M×D, N×D → M×N)."""
+        assert vecs_a.ndim == 2 and vecs_b.ndim == 2
         norm_a = np.linalg.norm(vecs_a, axis=1, keepdims=True)
         norm_b = np.linalg.norm(vecs_b, axis=1, keepdims=True)
-
-        # Prevent division by zero
         norm_a[norm_a == 0] = 1e-10
         norm_b[norm_b == 0] = 1e-10
+        return np.dot(vecs_a / norm_a, (vecs_b / norm_b).T)
 
-        vecs_a_norm = vecs_a / norm_a
-        vecs_b_norm = vecs_b / norm_b
+    def euclidean_distance(self, text1: str, text2: str) -> float:
+        """Euclidean distance between embeddings of two texts."""
+        a = self.embeddings(text1)
+        b = self.embeddings(text2)
+        return float(np.linalg.norm(a - b))
 
-        return np.dot(vecs_a_norm, vecs_b_norm.T)
 
-    def euclidean_distance(self, text1: str, text2: str, **kwargs: Any) -> float:
-        """
-        Calculate the Euclidean distance between embeddings of two texts.
-
-        Parameters
-        ----------
-        text1 : str
-            The first text string.
-        text2 : str
-            The second text string.
-        **kwargs : Any
-            Additional arguments passed to the embedding function.
-
-        Returns
-        -------
-        float
-            The Euclidean distance (L2 norm) between the two embedding vectors.
-        """
-        a1 = self.embeddings(text1, **kwargs)
-        a2 = self.embeddings(text2, **kwargs)
-        return float(np.linalg.norm(np.array(a1) - np.array(a2)))
+# Backward-compatibility alias.  Existing code importing LLMClient continues
+# to work without changes.
+LLMClient = EmbeddingClient

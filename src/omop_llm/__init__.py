@@ -1,4 +1,4 @@
-from .interface import LLMClient, InstructorClient, CHAT_MESSAGE_DICT
+from .interface import EmbeddingClient, LLMClient, InstructorClient, CHAT_MESSAGE_DICT, LLMClientError
 from .providers import (
     EmbeddingProvider,
     OllamaProvider,
@@ -7,11 +7,16 @@ from .providers import (
 )
 
 __all__ = [
-    "LLMClient",
+    # Primary names
+    "EmbeddingClient",
     "InstructorClient",
     "CHAT_MESSAGE_DICT",
+    "LLMClientError",
+    # Providers
     "EmbeddingProvider",
     "OllamaProvider",
     "OpenAICompatProvider",
     "get_provider_for_api_base",
+    # Backward-compatibility alias
+    "LLMClient",
 ]

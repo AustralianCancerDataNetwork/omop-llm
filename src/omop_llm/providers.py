@@ -16,6 +16,7 @@ The provider is inferred automatically from the ``api_base`` URL via
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from httpx import URL
 
 import requests
 
@@ -54,7 +55,7 @@ class EmbeddingProvider(ABC):
         ...
 
     @abstractmethod
-    def get_embedding_dim(self, model: str, api_base: str) -> int:
+    def get_embedding_dim(self, model: str, api_base: URL) -> int:
         """Return the embedding dimension for *model* served at *api_base*.
 
         Parameters
@@ -62,7 +63,7 @@ class EmbeddingProvider(ABC):
         model : str
             Canonical model name (already processed by
             :meth:`canonical_model_name`).
-        api_base : str
+        api_base : URL
             Base URL of the API endpoint, e.g.
             ``'http://localhost:11434/v1'``.
 
@@ -107,14 +108,14 @@ class OllamaProvider(EmbeddingProvider):
             name = f"{name}:latest"
         return name
 
-    def get_embedding_dim(self, model: str, api_base: str) -> int:
+    def get_embedding_dim(self, model: str, api_base: URL) -> int:
         """Query ``POST /api/show`` for the embedding dimension.
 
         Parameters
         ----------
         model : str
             Canonical model name (with tag).
-        api_base : str
+        api_base : URL
             Ollama API base URL, e.g. ``'http://localhost:11434/v1'``.
 
         Returns
@@ -128,7 +129,7 @@ class OllamaProvider(EmbeddingProvider):
             If model info or the embedding length key is absent from the
             Ollama response.
         """
-        base_url = api_base.replace("/v1", "").rstrip("/")
+        base_url = str(api_base).replace("/v1", "").rstrip("/")
         response = requests.post(f"{base_url}/api/show", json={"name": model}).json()
         model_info = response.get("model_info", {})
 
