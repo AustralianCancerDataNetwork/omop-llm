@@ -1,6 +1,6 @@
 import logging
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Union, TypeAlias, Tuple
+from typing import Any
 
 import numpy as np
 import requests
@@ -9,14 +9,13 @@ from openai import OpenAI
 logger = logging.getLogger(__name__)
 
 
-CHAT_MESSAGE_DICT: TypeAlias = Dict[str, str]
+type CHAT_MESSAGE_DICT = dict[str, str]
 
 
 class LLMClientError(RuntimeError):
     """
     Custom exception for LLM Client runtime errors.
     """
-    pass
 
 
 @dataclass
@@ -56,7 +55,7 @@ class LLMClient:
     system_message: str = ""
     embedding_batch_size: int = 32
     _base_client: OpenAI = field(init=False, repr=False)
-    _embedding_dim: Optional[int] = field(init=False, default=None)
+    _embedding_dim: int | None = field(init=False, default=None)
 
     def __post_init__(self) -> None:
         logger.info(f"Initialising {self.__class__.__name__} for model={self.model}")
@@ -109,7 +108,7 @@ class LLMClient:
             
             if model_info:
                 # Find keys resembling 'embedding_length'
-                embedding_key = [key for key in model_info.keys() if "embedding_length" in key]
+                embedding_key = [key for key in model_info if "embedding_length" in key]
                 if len(embedding_key) == 1:
                     self._embedding_dim = int(model_info[embedding_key[0]])
                     return self._embedding_dim
@@ -122,7 +121,7 @@ class LLMClient:
     def base_client(self) -> OpenAI:
         return self._base_client
 
-    def embeddings(self, text: Union[str, List[str], Tuple[str, ...]], batch_size: Optional[int] = None) -> np.ndarray:
+    def embeddings(self, text: str | list[str] | tuple[str, ...], batch_size: int | None = None) -> np.ndarray:
         """
         Retrieve embeddings for the given text.
 
@@ -167,8 +166,8 @@ class LLMClient:
 
     def similarity(
         self,
-        terms: Union[str, List[str], np.ndarray],
-        terms_to_match: Union[str, List[str], np.ndarray],
+        terms: str | list[str] | np.ndarray,
+        terms_to_match: str | list[str] | np.ndarray,
         **kwargs: Any
     ) -> np.ndarray:
         """
@@ -202,20 +201,20 @@ class LLMClient:
             terms_to_match = [terms_to_match]
 
         # Process source terms
-        if isinstance(terms, list):
-            terms_embeddings = self.embeddings(text=terms, **kwargs)
-        elif isinstance(terms, np.ndarray):
+        if isinstance(terms, np.ndarray):
             terms_embeddings = terms
+        elif isinstance(terms, list):
+            terms_embeddings = self.embeddings(text=terms, **kwargs)
         else:
-            raise ValueError("terms must be either a string, list of strings, or numpy array")
+            raise TypeError("terms must be either a string, list of strings, or numpy array")
 
         # Process target terms
-        if isinstance(terms_to_match, list):
-            terms_to_match_embeddings = self.embeddings(text=terms_to_match, **kwargs)
-        elif isinstance(terms_to_match, np.ndarray):
+        if isinstance(terms_to_match, np.ndarray):
             terms_to_match_embeddings = terms_to_match
+        elif isinstance(terms_to_match, list):
+            terms_to_match_embeddings = self.embeddings(text=terms_to_match, **kwargs)
         else:
-            raise ValueError("terms_to_match must be either a string, list of strings, or numpy array")
+            raise TypeError("terms_to_match must be either a string, list of strings, or numpy array")
 
         return self.cosine_similarity(terms_embeddings, terms_to_match_embeddings)
 

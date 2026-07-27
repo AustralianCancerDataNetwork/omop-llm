@@ -1,43 +1,10 @@
-name: docs 
+name: Deploy Docs
 on:
-  workflow_run:
-    workflows: ["Release"]
-    types:
-      - completed
-
+  push:
+    tags: ['v*']
+  workflow_dispatch:
 permissions:
   contents: write
-
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_branch == 'main' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Configure Git Credentials
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.x
-          
-      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
-      
-      - uses: actions/cache@v4
-        with:
-          key: mkdocs-material-${{ env.cache_id }}
-          path: ~/.cache 
-          restore-keys: |
-            mkdocs-material-
-            
-      - name: Install MkDocs and Plugins
-        run: pip install mkdocs mkdocs-material mkdocstrings-python mkdocs-mermaid2-plugin mkdocs-table-reader-plugin
-        
-      - name: Install omop-llm
-        run: pip install .
-        
-      - name: Deploy Docs
-        run: mkdocs gh-deploy --force
+    uses: AustralianCancerDataNetwork/cava-devops/.github/workflows/deploy-docs.yml@main
