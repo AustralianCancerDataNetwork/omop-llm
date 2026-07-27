@@ -1,6 +1,6 @@
 [project]
 name = "omop-llm"
-version = "0.1.1"
+dynamic = ["version"]
 description = "LLM interfaces for OMOP"
 authors = [
   {name = "Nico Loesch", email = "n.loesch@unsw.edu.au"}
@@ -16,9 +16,11 @@ dependencies = [
     "pydantic",
   ]
 
-[dependency-groups]
+[project.optional-dependencies]
 dev = [
     "mypy>=1.19.1",
+    "ty>=0.0.59",
+    "ruff",
     "pytest>=9.0.2",
     "pytest-cov>=7.0.0",
     "types-pyyaml>=6.0.12.20250915",
@@ -29,11 +31,18 @@ dev = [
 ]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+raw-options = { tag_regex = '^v?(?P<version>[0-9]+\.[0-9]+\.[0-9]+)$' }
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/omop_llm"]
+
+[tool.uv]
+cache-keys = [{ file = "pyproject.toml" }, { git = { commit = true, tags = true } }]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

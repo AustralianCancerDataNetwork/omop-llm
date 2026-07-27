@@ -1,17 +1,17 @@
 import logging
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Union, TypeAlias
+from typing import Any
 
 import instructor
-from pydantic import BaseModel
 from prompt_spec import PromptTemplate
+from pydantic import BaseModel
 
 from .client import LLMClient, LLMClientError
 
 logger = logging.getLogger(__name__)
 
 
-CHAT_MESSAGE_DICT: TypeAlias = Dict[str, str]
+type CHAT_MESSAGE_DICT = dict[str, str]
 
 
 @dataclass
@@ -48,11 +48,11 @@ class InstructorClient(LLMClient):
 
     def complete[T: BaseModel](
         self,
-        messages: List[CHAT_MESSAGE_DICT],
-        response_model: Optional[type[T]] = None,
+        messages: list[CHAT_MESSAGE_DICT],
+        response_model: type[T] | None = None,
         show_prompt: bool = False,
         **kwargs: Any,
-    ) -> Union[str, T]:
+    ) -> str | T:
         """
         Run a chat completion.
 
@@ -106,8 +106,8 @@ class InstructorClient(LLMClient):
 
     # TODO: The next two messages should be in prompt_spec!
     def messages_from_prompt_template(
-        self, prompt_template: Optional[PromptTemplate], text: str
-    ) -> List[Dict[str, str]]:
+        self, prompt_template: PromptTemplate | None, text: str
+    ) -> list[dict[str, str]]:
         """
         Generate a list of messages from a PromptTemplate.
 
@@ -126,7 +126,7 @@ class InstructorClient(LLMClient):
         # messages.append({"role": "user", "content": text})
         # return messages
 
-    def render_prompt_messages(self, messages: List[CHAT_MESSAGE_DICT]) -> str:
+    def render_prompt_messages(self, messages: list[CHAT_MESSAGE_DICT]) -> str:
         """
         Render a list of chat messages into a single string for logging or display.
 

@@ -1,3 +1,3 @@
-from .interface import LLMClient, InstructorClient, CHAT_MESSAGE_DICT
+from .interface import CHAT_MESSAGE_DICT, InstructorClient, LLMClient
 
-__all__ = ["LLMClient", "InstructorClient", "CHAT_MESSAGE_DICT"]
+__all__ = ["CHAT_MESSAGE_DICT", "InstructorClient", "LLMClient"]
