@@ -30,6 +30,7 @@ theme:
 nav:
   - Home: index.md
   - Installation: usage/installation.md
+  - Providers: providers.md
   - "API Reference": reference.md
 
 plugins:

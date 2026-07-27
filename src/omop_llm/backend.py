@@ -1,0 +1,506 @@
+"""``ModelBackend``: the one calling contract every consumer uses.
+
+A thin wrapper around a single, already-constructed any-llm provider
+instance (an entry of :data:`omop_llm.providers.registry.PROVIDER_REGISTRY`).
+Chat completion, embeddings, and structured extraction are all methods on
+one object, gated by :class:`~omop_llm.capabilities.ModelCapabilities`,
+rather than split across separate classes per modality.
+
+Every method has a synchronous form and an ``async_``-prefixed
+asynchronous form (``complete``/``async_complete``,
+``embed_texts``/``async_embed_texts``, and so on). This was a deliberate
+choice, not an oversight: ``omop-emb``'s current codebase has no
+``async``/``await`` anywhere (confirmed by inspecting it directly), so a
+consumer that has to synchronously wait on a result needs a real sync
+path, not one hand-rolled per call site. any-llm already supplies the sync
+bridging for chat (``AnyLLM.completion()`` wraps ``acompletion()``
+internally) and for embeddings (``AnyLLM._embedding()``'s own default
+implementation wraps ``aembedding()`` the same way, confirmed by reading
+its source, and it is exactly what any-llm's own module-level
+``embedding()`` function calls). Neither sync method is reimplemented
+here; both are called directly.
+
+Consumers only ever see this class, never a raw any-llm provider instance.
+If any-llm needed replacing, only this module's method bodies, and the
+``providers/`` subclasses, would change; the public methods below would
+not.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from typing import Any
+
+from any_llm.any_llm import AnyLLM
+from any_llm.types.completion import ChatCompletion, ReasoningEffort
+from oa_configurator import ResolvedModel
+from pydantic import BaseModel
+
+from omop_llm.capabilities import ModelCapabilities
+from omop_llm.errors import UnsupportedCapabilityError
+from omop_llm.providers.base import ProviderMixin
+from omop_llm.providers.registry import (
+    canonical_model_name,
+    capabilities_for,
+    provider_class_for,
+)
+
+
+@dataclass
+class ModelBackend:
+    """One resolved, ready-to-call model.
+
+    Built by :func:`build_backend`. Wraps a single constructed any-llm
+    provider instance and binds ``model``/``configuration`` to it, so
+    callers do not repeat them on every call.
+
+    Parameters
+    ----------
+    _client : AnyLLM
+        The constructed any-llm provider instance backing this backend.
+    model : str
+        The canonical model name or identifier passed to the underlying
+        provider.
+    capabilities : ModelCapabilities
+        What this resolved backend can actually do.
+    configuration : dict, optional
+        Default keyword arguments merged into every call, overridden by
+        any argument the caller passes explicitly.
+    _api_base : str, optional
+        The base URL this backend was constructed with, if any. Threaded
+        through to provider-specific fast paths such as
+        :meth:`~omop_llm.providers.supported.OllamaProvider.embedding_dimension_hint`.
+    """
+
+    _client: AnyLLM
+    model: str
+    capabilities: ModelCapabilities
+    configuration: dict[str, Any] = field(default_factory=dict)
+    _api_base: str | None = None
+
+    @property
+    def provider(self) -> str:
+        """The provider key this backend was resolved to, e.g. ``"ollama"``.
+
+        Read directly off ``_client``'s own any-llm ``PROVIDER_NAME`` class
+        attribute rather than stored separately at construction time, so
+        there is exactly one place this string is ever defined (see
+        :data:`omop_llm.providers.registry.PROVIDER_REGISTRY`, whose keys
+        are derived from the same attribute).
+        """
+        return self._client.PROVIDER_NAME
+
+    def _build_call_kwargs(
+        self,
+        *,
+        tools: list[dict[str, Any]] | None,
+        response_format: dict[str, Any] | type | None,
+        max_tokens: int | None,
+        temperature: float | None,
+        reasoning_effort: ReasoningEffort | None,
+        extra: dict[str, Any],
+    ) -> dict[str, Any]:
+        if extra.get("stream"):
+            raise NotImplementedError(
+                "ModelBackend does not support stream=True yet; "
+                "complete()/async_complete() are typed to always return a "
+                "ChatCompletion, not a chunk iterator"
+            )
+        call_kwargs: dict[str, Any] = {**self.configuration, **extra}
+        if tools is not None:
+            call_kwargs["tools"] = tools
+        if response_format is not None:
+            call_kwargs["response_format"] = response_format
+        if max_tokens is not None:
+            call_kwargs["max_tokens"] = max_tokens
+        if temperature is not None:
+            call_kwargs["temperature"] = temperature
+        if reasoning_effort is not None:
+            call_kwargs["reasoning_effort"] = reasoning_effort
+        return call_kwargs
+
+    def complete(
+        self,
+        messages: list[dict[str, Any]],
+        *,
+        tools: list[dict[str, Any]] | None = None,
+        response_format: dict[str, Any] | type | None = None,
+        max_tokens: int | None = None,
+        temperature: float | None = None,
+        reasoning_effort: ReasoningEffort | None = None,
+        **kwargs: Any,
+    ) -> ChatCompletion:
+        """Run one chat completion synchronously. See :meth:`async_complete` for parameters."""
+        call_kwargs = self._build_call_kwargs(
+            tools=tools, response_format=response_format, max_tokens=max_tokens,
+            temperature=temperature, reasoning_effort=reasoning_effort, extra=kwargs,
+        )
+        # call_kwargs is built dynamically, so its exact keys are not
+        # visible to the type checker at this call site, so it cannot pick
+        # a specific overload. stream is rejected above, so this is always
+        # the non-streaming ChatCompletion branch.
+        return self._client.completion(  # ty: ignore[no-matching-overload]
+            model=self.model, messages=messages, **call_kwargs
+        )
+
+    async def async_complete(
+        self,
+        messages: list[dict[str, Any]],
+        *,
+        tools: list[dict[str, Any]] | None = None,
+        response_format: dict[str, Any] | type | None = None,
+        max_tokens: int | None = None,
+        temperature: float | None = None,
+        reasoning_effort: ReasoningEffort | None = None,
+        **kwargs: Any,
+    ) -> ChatCompletion:
+        """Run one chat completion.
+
+        Parameters
+        ----------
+        messages : list of dict
+            Chat history in OpenAI message format.
+        tools : list of dict, optional
+            Raw OpenAI-style tool schema list. any-llm normalizes tool-call
+            parsing per provider, so callers doing multi-turn agentic tool
+            use pass the same schema regardless of which provider is
+            resolved. Requires ``self.capabilities.tool_use``.
+        response_format : dict or type, optional
+            A raw JSON-schema dict, or a Pydantic model class. any-llm
+            translates a Pydantic class into each provider's own native
+            structured-output mechanism. See :meth:`extract`/:meth:`async_extract`
+            for a convenience method that validates and unwraps the
+            result.
+        max_tokens : int, optional
+            Maximum number of tokens to generate.
+        temperature : float, optional
+            Sampling temperature.
+        reasoning_effort : ReasoningEffort, optional
+            Requested extended-thinking effort, any-llm's own normalized
+            parameter across providers. Only meaningful when
+            ``self.capabilities.extended_thinking`` is ``True``; a provider
+            without reasoning support ignores it.
+        **kwargs : Any
+            Additional provider-specific arguments, passed through
+            unchanged. ``stream`` is rejected: this method always returns
+            a ``ChatCompletion``, never a chunk iterator, and streaming is
+            not designed or supported here yet.
+
+        Returns
+        -------
+        ChatCompletion
+            The completion response.
+        """
+        call_kwargs = self._build_call_kwargs(
+            tools=tools, response_format=response_format, max_tokens=max_tokens,
+            temperature=temperature, reasoning_effort=reasoning_effort, extra=kwargs,
+        )
+        return await self._client.acompletion(  # ty: ignore[no-matching-overload]
+            model=self.model, messages=messages, **call_kwargs
+        )
+
+    def embed_texts(self, texts: list[str]) -> list[list[float]]:
+        """Embed a batch of texts synchronously. See :meth:`async_embed_texts` for parameters."""
+        self._require_embeddings()
+        response = self._client._embedding(
+            model=self.model, inputs=texts, **self.configuration
+        )
+        return [item.embedding for item in response.data]
+
+    async def async_embed_texts(self, texts: list[str]) -> list[list[float]]:
+        """Embed a batch of texts.
+
+        Parameters
+        ----------
+        texts : list of str
+            Texts to embed.
+
+        Returns
+        -------
+        list of list of float
+            One embedding vector per input text, in the same order.
+
+        Raises
+        ------
+        UnsupportedCapabilityError
+            If ``self.capabilities.embeddings`` is ``False`` (e.g. for an
+            ``anthropic`` backend, which has no embeddings API).
+        """
+        self._require_embeddings()
+        response = await self._client.aembedding(
+            model=self.model, inputs=texts, **self.configuration
+        )
+        return [item.embedding for item in response.data]
+
+    def _require_embeddings(self) -> None:
+        if not self.capabilities.embeddings:
+            raise UnsupportedCapabilityError(
+                f"backend for model {self.model!r} does not support embeddings"
+            )
+
+    def dimensions(self) -> int:
+        """Discover this model's embedding dimensionality synchronously.
+
+        See :meth:`async_dimensions` for the three-tier lookup order.
+
+        Returns
+        -------
+        int
+            The embedding vector length.
+        """
+        configured = self.configuration.get("embedding_dim")
+        if configured is not None:
+            return int(configured)
+        assert isinstance(self._client, ProviderMixin)
+        hint = self._client.embedding_dimension_hint(self.model, api_base=self._api_base)
+        if hint is not None:
+            return hint
+        [vector] = self.embed_texts(["dimension probe"])
+        return len(vector)
+
+    async def async_dimensions(self) -> int:
+        """Discover this model's embedding dimensionality.
+
+        Three tiers: a configured override (``configuration["embedding_dim"]``),
+        then a provider-specific fast path (e.g. Ollama's
+        ``POST /api/show``), then a live probe (embed one short string and
+        measure the vector).
+
+        Returns
+        -------
+        int
+            The embedding vector length.
+        """
+        configured = self.configuration.get("embedding_dim")
+        if configured is not None:
+            return int(configured)
+        assert isinstance(self._client, ProviderMixin)
+        hint = await self._client.async_embedding_dimension_hint(self.model, api_base=self._api_base)
+        if hint is not None:
+            return hint
+        [vector] = await self.async_embed_texts(["dimension probe"])
+        return len(vector)
+
+    def extract[T: BaseModel](
+        self,
+        messages: list[dict[str, Any]],
+        response_model: type[T],
+        **kwargs: Any,
+    ) -> T:
+        """Extract one validated ``response_model`` instance synchronously.
+
+        See :meth:`async_extract` for parameters.
+        """
+        self._require_structured_output()
+        completion = self.complete(messages, response_format=response_model, **kwargs)
+        return self._unwrap_parsed(completion, response_model)
+
+    async def async_extract[T: BaseModel](
+        self,
+        messages: list[dict[str, Any]],
+        response_model: type[T],
+        **kwargs: Any,
+    ) -> T:
+        """Extract one validated ``response_model`` instance from a chat call.
+
+        A thin convenience method built on :meth:`async_complete` with
+        ``response_format=response_model``: checks that a parsed instance
+        actually came back, and unwraps it. See :mod:`omop_llm.structured`
+        for ``extract_with_retry``, a separate, optional fallback for
+        callers that want validate-and-retry resilience instead of relying
+        on native structured decoding.
+
+        Parameters
+        ----------
+        messages : list of dict
+            Chat history in OpenAI message format.
+        response_model : type of BaseModel
+            The Pydantic model to constrain and validate the response
+            against.
+        **kwargs : Any
+            Additional arguments forwarded to :meth:`async_complete`.
+
+        Returns
+        -------
+        BaseModel
+            A validated instance of ``response_model``.
+
+        Raises
+        ------
+        UnsupportedCapabilityError
+            If ``self.capabilities.structured_output`` is ``False``, or if
+            the provider accepted ``response_format`` but returned no
+            parsed instance.
+        """
+        self._require_structured_output()
+        completion = await self.async_complete(messages, response_format=response_model, **kwargs)
+        return self._unwrap_parsed(completion, response_model)
+
+    def _require_structured_output(self) -> None:
+        if not self.capabilities.structured_output:
+            raise UnsupportedCapabilityError(
+                f"backend for model {self.model!r} does not declare structured_output support"
+            )
+
+    @staticmethod
+    def _unwrap_parsed[T: BaseModel](completion: ChatCompletion, response_model: type[T]) -> T:
+        message = completion.choices[0].message
+        parsed = getattr(message, "parsed", None)
+        if parsed is None:
+            raise UnsupportedCapabilityError(
+                f"provider returned no parsed {response_model.__name__} instance "
+                "(response_format was accepted but not honored)"
+            )
+        return parsed  # type: ignore[no-any-return]
+
+    def is_available(self, **kwargs: Any) -> bool:
+        """Check whether this backend can actually be reached, synchronously.
+
+        Probes ``list_models`` against the resolved provider. Swallows any
+        error and reports ``False`` rather than raising, since the point of
+        a health check is to answer "can I use this," not to propagate the
+        specific failure.
+
+        Parameters
+        ----------
+        **kwargs : Any
+            Forwarded to the underlying ``list_models`` call, e.g.
+            ``timeout=2.0``.
+
+        Returns
+        -------
+        bool
+            Whether listing models against this backend succeeded.
+        """
+        try:
+            self._client.list_models(**kwargs)
+        except Exception:  # noqa: BLE001 (deliberately broad: any failure means "unavailable")
+            return False
+        return True
+
+    async def async_is_available(self, **kwargs: Any) -> bool:
+        """Check whether this backend can actually be reached.
+
+        See :meth:`is_available` for details.
+
+        Parameters
+        ----------
+        **kwargs : Any
+            Forwarded to the underlying ``alist_models`` call, e.g.
+            ``timeout=2.0``.
+
+        Returns
+        -------
+        bool
+            Whether listing models against this backend succeeded.
+        """
+        try:
+            await self._client.alist_models(**kwargs)
+        except Exception:  # noqa: BLE001 (deliberately broad: any failure means "unavailable")
+            return False
+        return True
+
+
+def build_backend(
+    provider: str,
+    model: str,
+    *,
+    base_url: str | None = None,
+    api_key: str | None = None,
+    configuration: dict[str, Any] | None = None,
+) -> ModelBackend:
+    """Resolve a provider and model into a ready-to-call backend.
+
+    Plain keyword arguments in, a :class:`ModelBackend` out, mirroring the
+    shape ``oa-configurator``'s own database resolution already uses
+    (``Resolver(stack).resolve_resource(name).create_engine(**kwargs)``
+    returns a plain ``sqlalchemy.Engine``, no intermediate config object).
+    See :func:`build_backend_from_resolved` for the ``oa-configurator``
+    integration built on top of this function.
+
+    Canonicalizes ``model`` for the resolved provider (see
+    :func:`omop_llm.providers.registry.canonical_model_name`), so a
+    :class:`ModelBackend`'s ``model`` attribute is always canonical.
+
+    Parameters
+    ----------
+    provider : str
+        A key in :data:`omop_llm.providers.registry.PROVIDER_REGISTRY`.
+    model : str
+        Raw model name or identifier; canonicalized before use.
+    base_url : str, optional
+        The base URL for this specific deployment of the provider.
+    api_key : str, optional
+        The API key for this specific deployment, if one is required.
+    configuration : dict, optional
+        Default keyword arguments merged into every call this backend
+        makes (e.g. ``max_tokens``, ``temperature``, ``embedding_dim``).
+
+    Returns
+    -------
+    ModelBackend
+        A backend ready to call, for example, :meth:`ModelBackend.complete`
+        or :meth:`ModelBackend.async_complete`.
+
+    Raises
+    ------
+    ValueError
+        If ``model`` cannot be made canonical for the resolved provider
+        (e.g. an Ollama name with no explicit tag).
+    """
+    provider_class = provider_class_for(provider)
+    capabilities = capabilities_for(provider)
+    canonical_model = canonical_model_name(provider, model)
+    client = provider_class(api_key=api_key, api_base=base_url)
+    return ModelBackend(
+        _client=client,
+        model=canonical_model,
+        capabilities=capabilities,
+        configuration=dict(configuration) if configuration else {},
+        _api_base=base_url,
+    )
+
+
+def build_backend_from_resolved(resolved: ResolvedModel) -> ModelBackend:
+    """Build a backend from an ``oa-configurator`` ``ResolvedModel``.
+
+    The ``oa-configurator`` integration point: ``oa-configurator`` itself
+    knows nothing about ``omop-llm`` (its ``ResolvedModel`` is plain data,
+    the same way ``ResolvedResource`` is), so this glue lives here instead,
+    mirroring ``omop_alchemy.config.create_cdm_engine(resolved: ResolvedResource) -> sa.Engine``:
+    a consumer of ``oa-configurator`` takes its plain resolved output and
+    does its own construction from it.
+
+    A typical caller (e.g. a package's own config module) does::
+
+        from oa_configurator import Resolver, load_stack_config
+        from omop_llm import build_backend_from_resolved
+
+        stack = load_stack_config()
+        resolved = Resolver(stack).resolve_model(config.embedding_model)
+        backend = build_backend_from_resolved(resolved)
+
+    Parameters
+    ----------
+    resolved : ResolvedModel
+        A model resolved via ``oa_configurator.Resolver.resolve_model()``.
+
+    Returns
+    -------
+    ModelBackend
+        A backend ready to call, for example, :meth:`ModelBackend.complete`
+        or :meth:`ModelBackend.async_complete`.
+
+    Raises
+    ------
+    ValueError
+        If ``resolved.model`` cannot be made canonical for the resolved
+        provider (e.g. an Ollama name with no explicit tag).
+    """
+    return build_backend(
+        provider=resolved.provider.provider,
+        model=resolved.model,
+        base_url=resolved.provider.base_url,
+        api_key=resolved.provider.api_key,
+        configuration=resolved.configuration,
+    )
