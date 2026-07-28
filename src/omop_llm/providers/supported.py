@@ -142,6 +142,7 @@ class OllamaProvider(ProviderMixin, AnyLLMOllamaProvider):
         Notes
         -----
         - poppped_before_options: Popped in any_llm/providers/ollama/ollama.py:L.202-203
+        - Tracked in: https://github.com/mozilla-ai/any-llm/issues/1206
         """
         popped_before_options = frozenset({"tools", "think"})
         converted = AnyLLMOllamaProvider._convert_completion_params(params, **kwargs)
