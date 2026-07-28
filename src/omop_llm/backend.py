@@ -18,6 +18,7 @@ If any-llm needed replacing, only this module's method bodies, and the
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -34,6 +35,27 @@ from omop_llm.providers.registry import (
     capabilities_for,
     provider_class_for,
 )
+
+
+def _chunked[T](items: list[T], size: int) -> Iterator[list[T]]:
+    """Yield successive sub-lists of ``items``, each at most ``size`` long.
+
+    Parameters
+    ----------
+    items : list
+        The items to chunk.
+    size : int
+        Maximum length of each yielded chunk. Must be positive.
+
+    Raises
+    ------
+    ValueError
+        If ``size`` is not a positive integer.
+    """
+    if size <= 0:
+        raise ValueError(f"batch_size must be a positive integer, got {size!r}")
+    for start in range(0, len(items), size):
+        yield items[start : start + size]
 
 
 @dataclass
@@ -189,13 +211,19 @@ class ModelBackend:
             model=self.model, messages=messages, **call_kwargs
         )
 
-    def embed_texts(self, texts: list[str]) -> list[list[float]]:
+    def embed_texts(self, texts: list[str], *, batch_size: int | None = None) -> list[list[float]]:
         """Embed a batch of texts.
 
         Parameters
         ----------
         texts : list of str
             Texts to embed.
+        batch_size : int, optional
+            If given, ``texts`` is chunked into sub-batches of at most this
+            size, each sent as its own call, rather than one call with the
+            entire list. Useful for bulk callers embedding more texts than
+            a single provider request should carry. Default is ``None``
+            (one call for the whole list).
 
         Returns
         -------
@@ -206,20 +234,34 @@ class ModelBackend:
         ------
         UnsupportedCapabilityError
             If ``self.capabilities.embeddings`` is ``False``.
+        ValueError
+            If ``batch_size`` is not a positive integer.
         """
         self._require_embeddings()
-        response = self._client._embedding(
-            model=self.model, inputs=texts, **self.configuration
-        )
-        return [item.embedding for item in response.data]
+        if batch_size is None:
+            response = self._client._embedding(model=self.model, inputs=texts, **self.configuration)
+            return [item.embedding for item in response.data]
+        vectors: list[list[float]] = []
+        for chunk in _chunked(texts, batch_size):
+            response = self._client._embedding(model=self.model, inputs=chunk, **self.configuration)
+            vectors.extend(item.embedding for item in response.data)
+        return vectors
 
-    async def async_embed_texts(self, texts: list[str]) -> list[list[float]]:
+    async def async_embed_texts(
+        self, texts: list[str], *, batch_size: int | None = None
+    ) -> list[list[float]]:
         """Embed a batch of texts asynchronously.
 
         Parameters
         ----------
         texts : list of str
             Texts to embed.
+        batch_size : int, optional
+            If given, ``texts`` is chunked into sub-batches of at most this
+            size, each sent as its own call, rather than one call with the
+            entire list. Useful for bulk callers embedding more texts than
+            a single provider request should carry. Default is ``None``
+            (one call for the whole list).
 
         Returns
         -------
@@ -230,12 +272,18 @@ class ModelBackend:
         ------
         UnsupportedCapabilityError
             If ``self.capabilities.embeddings`` is ``False``.
+        ValueError
+            If ``batch_size`` is not a positive integer.
         """
         self._require_embeddings()
-        response = await self._client.aembedding(
-            model=self.model, inputs=texts, **self.configuration
-        )
-        return [item.embedding for item in response.data]
+        if batch_size is None:
+            response = await self._client.aembedding(model=self.model, inputs=texts, **self.configuration)
+            return [item.embedding for item in response.data]
+        vectors: list[list[float]] = []
+        for chunk in _chunked(texts, batch_size):
+            response = await self._client.aembedding(model=self.model, inputs=chunk, **self.configuration)
+            vectors.extend(item.embedding for item in response.data)
+        return vectors
 
     def _require_embeddings(self) -> None:
         if not self.capabilities.embeddings:
