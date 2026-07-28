@@ -15,21 +15,15 @@ checked directly against ``instructor``'s own source
 - ``ollama`` is not safe to route through it: instructor's own Ollama
   builder constructs a plain ``openai.AsyncOpenAI(base_url=".../v1")``
   client, the OpenAI-compat shim, not native ``/api/chat``, and picks
-  TOOLS-vs-JSON mode from a hardcoded model-name-substring list (the exact
-  "guess capability from the model name" anti-pattern this whole package
-  exists to retire). Using it for ``ollama`` would silently regress the
-  native-transport fidelity ``cava-nlp-shard`` depends on today.
-- ``llamacpp``/``vllm`` have no dedicated builder in ``instructor`` at all
-  (its provider list tops out at roughly 23 hosted vendors). They are
-  reachable only by routing through instructor's ``openai`` builder with
+  TOOLS-vs-JSON mode from a hardcoded model-name-substring list
+- ``llamacpp``/``vllm`` have no dedicated builder in ``instructor`` at all.
+  They are  reachable only by routing through instructor's ``openai`` builder with
   an explicit ``base_url`` override, which is what
   :func:`extract_with_retry`/:func:`async_extract_with_retry` do.
 - ``anthropic``/``gemini`` are not offered here either: this module only
   vouches for providers whose any-llm integration is already
   OpenAI-compat-native, so there is no native-transport distinction to
-  lose. Requesting anything outside ``{"openai", "llamacpp", "vllm"}``
-  raises :class:`~omop_llm.errors.UnsupportedCapabilityError` rather than
-  silently downgrading transport.
+  lose.
 """
 
 from __future__ import annotations
@@ -42,6 +36,7 @@ from omop_llm.errors import UnsupportedCapabilityError
 from omop_llm.providers.supported import LlamacppProvider, OpenaiProvider, VllmProvider
 
 # Compatible with instructor's generic OpenAI-API client builder.
+# See docstring above for details
 _INSTRUCTOR_SAFE_PROVIDERS = frozenset({
     OpenaiProvider.PROVIDER_NAME, 
     LlamacppProvider.PROVIDER_NAME, 

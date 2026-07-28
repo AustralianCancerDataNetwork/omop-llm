@@ -1,26 +1,15 @@
-"""The six providers omop_llm supports, as explicit classes.
+"""The providers omop_llm supports, as explicit classes.
 
 any-llm itself supports around fifty providers (see its own reference:
-https://docs.mozilla.ai/any-llm/providers/); omop_llm intentionally
-supports six, matched to what this stack actually runs: local (``ollama``,
-``llama-server`` via ``llamacpp``, ``vllm``) and cloud (``openai``,
-``anthropic``, ``gemini``). See :mod:`omop_llm.providers.registry` for how
-this closed set becomes the allow-list.
+https://docs.mozilla.ai/any-llm/providers/).
+omop_llm currently supports the following models: 
+- local (``ollama``, ``llama-server`` via ``llamacpp``, ``vllm``), and
+- cloud (``openai``, ``anthropic``, ``gemini``). 
 
 Each class here subclasses both :class:`~omop_llm.providers.base.ProviderMixin`
 (our contract: ``TOOL_USE``/``STRUCTURED_OUTPUT``, and the required
 ``canonical_model_name`` override) and any-llm's own provider class for
-that provider. any-llm's own classes are imported under an ``AnyLLM``-
-prefixed alias specifically so ours can keep the same short name
-any-llm uses (``OllamaProvider``, not ``OmopLlmOllamaProvider``) without
-colliding: the two are distinguished by which module they live in
-(``omop_llm.providers`` vs. ``any_llm.providers.ollama.ollama``), not by a
-repeated prefix on every reference to our own class.
-
-Written out explicitly rather than generated from a loop or factory, on
-purpose: ``canonical_model_name`` is a required override specifically so
-adding a provider forces a conscious decision about its naming rules,
-which a generated class would silently default around.
+that provider.
 """
 
 from __future__ import annotations
@@ -47,12 +36,10 @@ class OllamaProvider(ProviderMixin, AnyLLMOllamaProvider):
     """Wrapped Ollama provider, for local dev and TRE fallback.
     Extends any-llm's own ``OllamaProvider`` with canonical model naming and
     embedding-dimension lookup via Ollama's native ``POST /api/show``.
-
     Supports structured output natively using ``response_format``.
 
-    No default ``base_url``: falls through to the official ``ollama``
-    SDK's own default (``http://localhost:11434``). No ``api_key``
-    required.
+    ``base_url`` defaults to ``http://localhost:11434`` if not given.
+    ``api_key`` is not required.
     """
 
     TOOL_USE = True
@@ -161,10 +148,8 @@ class OllamaProvider(ProviderMixin, AnyLLMOllamaProvider):
 class LlamacppProvider(ProviderMixin, AnyLLMLlamacppProvider):
     """llama.cpp's ``llama-server``. Covers local dev and a CUDA/TRE fallback profile.
 
-    The wire contract is the same either way; only ``base_url`` changes.
-    Defaults to ``http://127.0.0.1:8080/v1`` (any-llm's own default,
-    matching ``llama-server``'s conventional port) when ``base_url`` is
-    not given. No ``api_key`` required.
+    ``base_url`` defaults to ``http://127.0.0.1:8080/v1`` if not given.
+    ``api_key`` is not required.
     """
 
     TOOL_USE = True
@@ -179,11 +164,8 @@ class LlamacppProvider(ProviderMixin, AnyLLMLlamacppProvider):
 class VllmProvider(ProviderMixin, AnyLLMVllmProvider):
     """vLLM, the preferred TRE/NVIDIA backend.
 
-    Defaults to ``http://localhost:8000/v1`` (any-llm's own default,
-    matching vLLM's conventional port) when ``base_url`` is not given.
-    ``api_key`` is optional (confirmed: any-llm's ``VllmProvider``
-    overrides key verification to make it so, since self-hosted vLLM
-    commonly runs without auth).
+    ``base_url`` defaults to ``http://localhost:8000/v1`` if not given.
+    ``api_key`` is optional since self-hosted vLLM commonly runs without auth.
     """
 
     TOOL_USE = True
@@ -217,17 +199,15 @@ class OpenaiProvider(ProviderMixin, AnyLLMOpenaiProvider):
 class AnthropicProvider(ProviderMixin, AnyLLMAnthropicProvider):
     """Anthropic (Claude).
 
-    any-llm sets no explicit default ``base_url`` for this provider; it
-    falls through to the ``anthropic`` SDK's own default (the real
-    Anthropic API) when not given. Requires ``api_key`` (explicit, or the
-    ``ANTHROPIC_API_KEY`` environment variable).
+    ``base_url`` defaults to ``anthropic`` SDK default when not given.
+    ``api_key`` is required (explicit, or the ``ANTHROPIC_API_KEY`` env var).
 
-    Note: any-llm's ``get_provider_metadata()`` reports ``embedding=False``
+    Notes
+    -----
+    any-llm's ``get_provider_metadata()`` reports ``embedding=False``
     for Anthropic (it has no embeddings API), so
     :meth:`omop_llm.backend.ModelBackend.embed_texts` refuses this
-    provider. That is unrelated to ``TOOL_USE``/``STRUCTURED_OUTPUT``
-    below: Anthropic's Messages API supports tool calling and tool-based
-    structured output regardless of the missing embeddings surface.
+    provider.
     """
 
     TOOL_USE = True
@@ -242,10 +222,8 @@ class AnthropicProvider(ProviderMixin, AnyLLMAnthropicProvider):
 class GeminiProvider(ProviderMixin, AnyLLMGeminiProvider):
     """Gemini, e.g. ``gemini-2.5-pro``.
 
-    any-llm sets no explicit default ``base_url`` for this provider; it
-    falls through to the ``google-genai`` SDK's own default (the real
-    Gemini API) when not given. Requires ``api_key`` (explicit, or the
-    ``GEMINI_API_KEY``/``GOOGLE_API_KEY`` environment variables).
+    ``base_url`` defaults to ``gemini`` SDK default when not given.
+    ``api_key`` is required (explicit, or the ``GEMINI_API_KEY``/``GOOGLE_API_KEY`` env var).
     """
 
     TOOL_USE = True

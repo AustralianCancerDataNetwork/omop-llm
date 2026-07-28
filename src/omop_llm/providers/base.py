@@ -40,8 +40,7 @@ class ProviderMixin(ABC):
         """Return the canonical form of a model name for this provider.
 
         The canonical form is the identifier used as a stable key
-        wherever a consumer persists model identity (e.g. ``omop-emb``'s
-        embedding registry), and the ``model`` value
+        wherever a consumer persists model identity, and the ``model`` value
         :func:`~omop_llm.backend.build_backend` resolves to. Implementations
         must be idempotent: calling this on an already-canonical name
         returns the same string unchanged.
