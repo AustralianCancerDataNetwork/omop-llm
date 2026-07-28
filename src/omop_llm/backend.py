@@ -25,7 +25,7 @@ from typing import Any
 from any_llm.any_llm import AnyLLM
 from any_llm.types.completion import ChatCompletion, ReasoningEffort
 from oa_configurator import ResolvedModel
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
 from omop_llm.capabilities import ModelCapabilities
 from omop_llm.errors import NoParsedOutputError, UnsupportedCapabilityError
@@ -339,19 +339,20 @@ class ModelBackend:
         self,
         messages: list[dict[str, Any]],
         response_model: type[T],
+        *,
+        max_retries: int = 0,
         **kwargs: Any,
     ) -> T:
         """Extract one validated ``response_model`` instance from a chat call synchronously.
 
         A thin convenience method built on :meth:`complete` with
         ``response_format=response_model``. Checks that a parsed instance
-        actually came back, and unwraps it. 
-        
+        actually came back, and unwraps it.
+
         Notes
         -----
-        See :mod:`omop_llm.structured` for ``extract_with_retry``, a separate, optional fallback 
-        for callers that want validate-and-retry resilience instead of relying
-        on native structured decoding.
+        ``max_retries`` is native (not `instructor`-based), so it works for
+        all providers, unlike :func:`omop_llm.structured.extract_with_retry`.
 
         Parameters
         ----------
@@ -360,6 +361,9 @@ class ModelBackend:
         response_model : type of BaseModel
             The Pydantic model to constrain and validate the response
             against.
+        max_retries : int, optional
+            Number of additional attempts after a validation failure.
+            Default is 0, i.e. fail immediately.
         **kwargs : Any
             Additional arguments forwarded to :meth:`complete`.
 
@@ -374,35 +378,45 @@ class ModelBackend:
             If ``self.capabilities.structured_output`` is ``False``.
         NoParsedOutputError
             If the provider returned no parsed instance (refusal or empty
-            content).
+            content), after exhausting ``max_retries``.
         any_llm.exceptions.LengthFinishReasonError
             If the response was truncated before completing.
         any_llm.exceptions.ContentFilterFinishReasonError
             If a content filter blocked the response.
         pydantic.ValidationError
-            If the model's output does not match ``response_model``'s schema.
+            If the model's output does not match ``response_model``'s
+            schema, after exhausting ``max_retries``.
         """
         self._require_structured_output()
-        completion = self.complete(messages, response_format=response_model, **kwargs)
-        return self._unwrap_parsed(completion, response_model)
+        conversation = list(messages)
+        for attempt in range(max_retries + 1):
+            try:
+                completion = self.complete(conversation, response_format=response_model, **kwargs)
+                return self._unwrap_parsed(completion, response_model)
+            except (NoParsedOutputError, ValidationError) as exc:
+                if attempt >= max_retries:
+                    raise
+                conversation = [*conversation, self._retry_extract_message(exc, response_model)]
+        raise AssertionError("unreachable")
 
     async def async_extract[T: BaseModel](
         self,
         messages: list[dict[str, Any]],
         response_model: type[T],
+        *,
+        max_retries: int = 0,
         **kwargs: Any,
     ) -> T:
         """Extract one validated ``response_model`` instance from a chat call.
 
         A thin convenience method built on :meth:`async_complete` with
         ``response_format=response_model``. Checks that a parsed instance
-        actually came back, and unwraps it. 
-        
+        actually came back, and unwraps it.
+
         Notes
         -----
-        See :mod:`omop_llm.structured` for ``extract_with_retry``, a separate, optional fallback 
-        for callers that want validate-and-retry resilience instead of relying
-        on native structured decoding.
+        ``max_retries`` is native (not `instructor`-based), so it works for
+        all providers, unlike :func:`omop_llm.structured.extract_with_retry`.
 
         Parameters
         ----------
@@ -411,6 +425,9 @@ class ModelBackend:
         response_model : type of BaseModel
             The Pydantic model to constrain and validate the response
             against.
+        max_retries : int, optional
+            Number of additional attempts after a validation failure.
+            Default is 0, i.e. fail immediately.
         **kwargs : Any
             Additional arguments forwarded to :meth:`async_complete`.
 
@@ -425,23 +442,43 @@ class ModelBackend:
             If ``self.capabilities.structured_output`` is ``False``.
         NoParsedOutputError
             If the provider returned no parsed instance (refusal or empty
-            content).
+            content), after exhausting ``max_retries``.
         any_llm.exceptions.LengthFinishReasonError
             If the response was truncated before completing.
         any_llm.exceptions.ContentFilterFinishReasonError
             If a content filter blocked the response.
         pydantic.ValidationError
-            If the model's output does not match ``response_model``'s schema.
+            If the model's output does not match ``response_model``'s
+            schema, after exhausting ``max_retries``.
         """
         self._require_structured_output()
-        completion = await self.async_complete(messages, response_format=response_model, **kwargs)
-        return self._unwrap_parsed(completion, response_model)
+        conversation = list(messages)
+        for attempt in range(max_retries + 1):
+            try:
+                completion = await self.async_complete(conversation, response_format=response_model, **kwargs)
+                return self._unwrap_parsed(completion, response_model)
+            except (NoParsedOutputError, ValidationError) as exc:
+                if attempt >= max_retries:
+                    raise
+                conversation = [*conversation, self._retry_extract_message(exc, response_model)]
+        raise AssertionError("unreachable")
 
     def _require_structured_output(self) -> None:
         if not self.capabilities.structured_output:
             raise UnsupportedCapabilityError(
                 f"backend for model {self.model!r} does not declare structured_output support"
             )
+
+    @staticmethod
+    def _retry_extract_message[T: BaseModel](exc: Exception, response_model: type[T]) -> dict[str, Any]:
+        """Build a follow-up user message asking the model to correct a failed extraction."""
+        return {
+            "role": "user",
+            "content": (
+                f"Your previous response was invalid: {exc}. "
+                f"Respond again with valid JSON matching {response_model.__name__}'s schema."
+            ),
+        }
 
     @staticmethod
     def _unwrap_parsed[T: BaseModel](completion: ChatCompletion, response_model: type[T]) -> T:
