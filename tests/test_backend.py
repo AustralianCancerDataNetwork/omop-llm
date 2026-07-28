@@ -13,7 +13,7 @@ from pydantic import BaseModel
 
 from omop_llm.backend import ModelBackend, build_backend
 from omop_llm.capabilities import ModelCapabilities
-from omop_llm.errors import UnsupportedCapabilityError
+from omop_llm.errors import NoParsedOutputError, UnsupportedCapabilityError
 from tests.conftest import (
     FakeAnyLLMClient,
     FakeChatCompletion,
@@ -33,7 +33,7 @@ class Answer(BaseModel):
 
 
 def _backend(fake_client: FakeAnyLLMClient, **kwargs) -> ModelBackend:
-    return ModelBackend(_client=fake_client, model="m", capabilities=_CAPS, **kwargs)  # type: ignore[arg-type]
+    return ModelBackend(_client=fake_client, model="m", capabilities=_CAPS, **kwargs)  # ty: ignore[invalid-argument-type]
 
 
 @pytest.mark.parametrize("sync", [True, False])
@@ -96,7 +96,7 @@ async def test_embed_texts_rejects_backend_without_embeddings(fake_client: FakeA
     no_embed_caps = ModelCapabilities(
         streaming=True, embeddings=False, extended_thinking=True, tool_use=True, structured_output=True
     )
-    backend = ModelBackend(_client=fake_client, model="m", capabilities=no_embed_caps)  # type: ignore[arg-type]
+    backend = ModelBackend(_client=fake_client, model="m", capabilities=no_embed_caps)  # ty: ignore[invalid-argument-type]
     with pytest.raises(UnsupportedCapabilityError):
         if sync:
             backend.embed_texts(["a"])
@@ -134,7 +134,7 @@ async def test_extract_rejects_backend_without_structured_output(fake_client: Fa
     no_structured_caps = ModelCapabilities(
         streaming=True, embeddings=True, extended_thinking=True, tool_use=True, structured_output=False
     )
-    backend = ModelBackend(_client=fake_client, model="m", capabilities=no_structured_caps)  # type: ignore[arg-type]
+    backend = ModelBackend(_client=fake_client, model="m", capabilities=no_structured_caps)  # ty: ignore[invalid-argument-type]
     fake_client.completion_response = FakeChatCompletion(choices=[FakeChoice(message=FakeChatCompletionMessage())])
     with pytest.raises(UnsupportedCapabilityError):
         if sync:
@@ -165,7 +165,7 @@ async def test_extract_raises_when_provider_did_not_honor_schema(fake_client: Fa
         choices=[FakeChoice(message=FakeChatCompletionMessage(parsed=None))]
     )
     backend = _backend(fake_client)
-    with pytest.raises(UnsupportedCapabilityError):
+    with pytest.raises(NoParsedOutputError):
         if sync:
             backend.extract([{"role": "user", "content": "hi"}], Answer)
         else:

@@ -53,19 +53,11 @@ class FakeAnyLLMClient(ProviderMixin):
     Records every call it receives so tests can assert on exactly what
     :class:`omop_llm.backend.ModelBackend` passed through, without needing
     a real provider or network access. Method names match the real
-    ``AnyLLM`` surface :class:`~omop_llm.backend.ModelBackend` calls:
-    ``completion``/``acompletion`` for chat, ``_embedding``/``aembedding``
-    for embeddings (matching any-llm's own asymmetric naming, confirmed by
-    reading ``any_llm/api.py`` and ``any_llm/any_llm.py`` directly), and
-    ``embedding_dimension_hint``/``async_embedding_dimension_hint`` for the
-    provider-specific dimension fast path.
+    ``AnyLLM`` surface :class:`~omop_llm.backend.ModelBackend` calls.
 
-    Subclasses :class:`~omop_llm.providers.base.ProviderMixin`, not just
-    ``AnyLLM``'s duck-typed surface: every real ``_client`` a
-    :class:`~omop_llm.backend.ModelBackend` is ever built with also is one,
-    since :data:`~omop_llm.providers.registry.PROVIDER_REGISTRY` only
-    contains classes that are both. Not doing so here would make this fake
-    a less accurate stand-in than the objects it replaces.
+    Only subclasses ``ProviderMixin``, for ``ModelBackend``'s
+    ``isinstance`` check; the rest of ``AnyLLM``'s surface is duck-typed
+    below, not inherited.
     """
 
     TOOL_USE = True

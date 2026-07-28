@@ -9,21 +9,11 @@ rather than split across separate classes per modality.
 Every method has a synchronous form and an ``async_``-prefixed
 asynchronous form (``complete``/``async_complete``,
 ``embed_texts``/``async_embed_texts``, and so on). This was a deliberate
-choice, not an oversight: ``omop-emb``'s current codebase has no
-``async``/``await`` anywhere (confirmed by inspecting it directly), so a
-consumer that has to synchronously wait on a result needs a real sync
-path, not one hand-rolled per call site. any-llm already supplies the sync
-bridging for chat (``AnyLLM.completion()`` wraps ``acompletion()``
-internally) and for embeddings (``AnyLLM._embedding()``'s own default
-implementation wraps ``aembedding()`` the same way, confirmed by reading
-its source, and it is exactly what any-llm's own module-level
-``embedding()`` function calls). Neither sync method is reimplemented
-here; both are called directly.
+choice, not an oversight. 
 
 Consumers only ever see this class, never a raw any-llm provider instance.
 If any-llm needed replacing, only this module's method bodies, and the
-``providers/`` subclasses, would change; the public methods below would
-not.
+``providers/`` subclasses, would need to change.
 """
 
 from __future__ import annotations
@@ -37,7 +27,7 @@ from oa_configurator import ResolvedModel
 from pydantic import BaseModel
 
 from omop_llm.capabilities import ModelCapabilities
-from omop_llm.errors import UnsupportedCapabilityError
+from omop_llm.errors import NoParsedOutputError, UnsupportedCapabilityError
 from omop_llm.providers.base import ProviderMixin
 from omop_llm.providers.registry import (
     canonical_model_name,
@@ -135,10 +125,8 @@ class ModelBackend:
             tools=tools, response_format=response_format, max_tokens=max_tokens,
             temperature=temperature, reasoning_effort=reasoning_effort, extra=kwargs,
         )
-        # call_kwargs is built dynamically, so its exact keys are not
-        # visible to the type checker at this call site, so it cannot pick
-        # a specific overload. stream is rejected above, so this is always
-        # the non-streaming ChatCompletion branch.
+        # always non-streaming and typed to return a ChatCompletion
+        # but not captured by any single any-llm overload
         return self._client.completion(  # ty: ignore[no-matching-overload]
             model=self.model, messages=messages, **call_kwargs
         )
@@ -195,19 +183,13 @@ class ModelBackend:
             tools=tools, response_format=response_format, max_tokens=max_tokens,
             temperature=temperature, reasoning_effort=reasoning_effort, extra=kwargs,
         )
+        # See the matching comment in complete(): our response_format
+        # union doesn't match any single any-llm acompletion() overload.
         return await self._client.acompletion(  # ty: ignore[no-matching-overload]
             model=self.model, messages=messages, **call_kwargs
         )
 
     def embed_texts(self, texts: list[str]) -> list[list[float]]:
-        """Embed a batch of texts synchronously. See :meth:`async_embed_texts` for parameters."""
-        self._require_embeddings()
-        response = self._client._embedding(
-            model=self.model, inputs=texts, **self.configuration
-        )
-        return [item.embedding for item in response.data]
-
-    async def async_embed_texts(self, texts: list[str]) -> list[list[float]]:
         """Embed a batch of texts.
 
         Parameters
@@ -223,8 +205,31 @@ class ModelBackend:
         Raises
         ------
         UnsupportedCapabilityError
-            If ``self.capabilities.embeddings`` is ``False`` (e.g. for an
-            ``anthropic`` backend, which has no embeddings API).
+            If ``self.capabilities.embeddings`` is ``False``.
+        """
+        self._require_embeddings()
+        response = self._client._embedding(
+            model=self.model, inputs=texts, **self.configuration
+        )
+        return [item.embedding for item in response.data]
+
+    async def async_embed_texts(self, texts: list[str]) -> list[list[float]]:
+        """Embed a batch of texts asynchronously.
+
+        Parameters
+        ----------
+        texts : list of str
+            Texts to embed.
+
+        Returns
+        -------
+        list of list of float
+            One embedding vector per input text, in the same order.
+
+        Raises
+        ------
+        UnsupportedCapabilityError
+            If ``self.capabilities.embeddings`` is ``False``.
         """
         self._require_embeddings()
         response = await self._client.aembedding(
@@ -240,8 +245,10 @@ class ModelBackend:
 
     def dimensions(self) -> int:
         """Discover this model's embedding dimensionality synchronously.
-
-        See :meth:`async_dimensions` for the three-tier lookup order.
+        Three tiers: 
+            1. a configured override (``configuration["embedding_dim"]``),
+            2. a provider-specific fast path (e.g. Ollama's ``POST /api/show``), and
+            3. a live probe (embed one short string and measure the vector).
 
         Returns
         -------
@@ -260,11 +267,10 @@ class ModelBackend:
 
     async def async_dimensions(self) -> int:
         """Discover this model's embedding dimensionality.
-
-        Three tiers: a configured override (``configuration["embedding_dim"]``),
-        then a provider-specific fast path (e.g. Ollama's
-        ``POST /api/show``), then a live probe (embed one short string and
-        measure the vector).
+        Three tiers: 
+            1. a configured override (``configuration["embedding_dim"]``),
+            2. a provider-specific fast path (e.g. Ollama's ``POST /api/show``), and
+            3. a live probe (embed one short string and measure the vector).
 
         Returns
         -------
@@ -287,9 +293,46 @@ class ModelBackend:
         response_model: type[T],
         **kwargs: Any,
     ) -> T:
-        """Extract one validated ``response_model`` instance synchronously.
+        """Extract one validated ``response_model`` instance from a chat call synchronously.
 
-        See :meth:`async_extract` for parameters.
+        A thin convenience method built on :meth:`complete` with
+        ``response_format=response_model``. Checks that a parsed instance
+        actually came back, and unwraps it. 
+        
+        Notes
+        -----
+        See :mod:`omop_llm.structured` for ``extract_with_retry``, a separate, optional fallback 
+        for callers that want validate-and-retry resilience instead of relying
+        on native structured decoding.
+
+        Parameters
+        ----------
+        messages : list of dict
+            Chat history in OpenAI message format.
+        response_model : type of BaseModel
+            The Pydantic model to constrain and validate the response
+            against.
+        **kwargs : Any
+            Additional arguments forwarded to :meth:`complete`.
+
+        Returns
+        -------
+        BaseModel
+            A validated instance of ``response_model``.
+
+        Raises
+        ------
+        UnsupportedCapabilityError
+            If ``self.capabilities.structured_output`` is ``False``.
+        NoParsedOutputError
+            If the provider returned no parsed instance (refusal or empty
+            content).
+        any_llm.exceptions.LengthFinishReasonError
+            If the response was truncated before completing.
+        any_llm.exceptions.ContentFilterFinishReasonError
+            If a content filter blocked the response.
+        pydantic.ValidationError
+            If the model's output does not match ``response_model``'s schema.
         """
         self._require_structured_output()
         completion = self.complete(messages, response_format=response_model, **kwargs)
@@ -304,10 +347,13 @@ class ModelBackend:
         """Extract one validated ``response_model`` instance from a chat call.
 
         A thin convenience method built on :meth:`async_complete` with
-        ``response_format=response_model``: checks that a parsed instance
-        actually came back, and unwraps it. See :mod:`omop_llm.structured`
-        for ``extract_with_retry``, a separate, optional fallback for
-        callers that want validate-and-retry resilience instead of relying
+        ``response_format=response_model``. Checks that a parsed instance
+        actually came back, and unwraps it. 
+        
+        Notes
+        -----
+        See :mod:`omop_llm.structured` for ``extract_with_retry``, a separate, optional fallback 
+        for callers that want validate-and-retry resilience instead of relying
         on native structured decoding.
 
         Parameters
@@ -328,9 +374,16 @@ class ModelBackend:
         Raises
         ------
         UnsupportedCapabilityError
-            If ``self.capabilities.structured_output`` is ``False``, or if
-            the provider accepted ``response_format`` but returned no
-            parsed instance.
+            If ``self.capabilities.structured_output`` is ``False``.
+        NoParsedOutputError
+            If the provider returned no parsed instance (refusal or empty
+            content).
+        any_llm.exceptions.LengthFinishReasonError
+            If the response was truncated before completing.
+        any_llm.exceptions.ContentFilterFinishReasonError
+            If a content filter blocked the response.
+        pydantic.ValidationError
+            If the model's output does not match ``response_model``'s schema.
         """
         self._require_structured_output()
         completion = await self.async_complete(messages, response_format=response_model, **kwargs)
@@ -344,12 +397,34 @@ class ModelBackend:
 
     @staticmethod
     def _unwrap_parsed[T: BaseModel](completion: ChatCompletion, response_model: type[T]) -> T:
+        """Unwrap a completion's parsed instance, or raise if there is none to unwrap.
+
+        Parameters
+        ----------
+        completion : ChatCompletion
+            The completion returned from a call made with
+            ``response_format=response_model``.
+        response_model : type of BaseModel
+            The Pydantic model the caller expected back.
+
+        Returns
+        -------
+        BaseModel
+            The validated ``response_model`` instance any-llm attached to
+            the completion.
+
+        Raises
+        ------
+        NoParsedOutputError
+            If no parsed instance is present.
+        """
         message = completion.choices[0].message
         parsed = getattr(message, "parsed", None)
         if parsed is None:
-            raise UnsupportedCapabilityError(
+            raise NoParsedOutputError(
                 f"provider returned no parsed {response_model.__name__} instance "
-                "(response_format was accepted but not honored)"
+                "(no validation or length/content-filter error was raised, so the "
+                "model likely refused to answer or returned empty content)"
             )
         return parsed  # type: ignore[no-any-return]
 
@@ -374,14 +449,17 @@ class ModelBackend:
         """
         try:
             self._client.list_models(**kwargs)
-        except Exception:  # noqa: BLE001 (deliberately broad: any failure means "unavailable")
+        except Exception:  # noqa: BLE001 (any exception means "unavailable")
             return False
         return True
 
     async def async_is_available(self, **kwargs: Any) -> bool:
-        """Check whether this backend can actually be reached.
+        """Check whether this backend can actually be reached, asynchronously.
 
-        See :meth:`is_available` for details.
+        Probes ``list_models`` against the resolved provider. Swallows any
+        error and reports ``False`` rather than raising, since the point of
+        a health check is to answer "can I use this," not to propagate the
+        specific failure.
 
         Parameters
         ----------
@@ -396,7 +474,7 @@ class ModelBackend:
         """
         try:
             await self._client.alist_models(**kwargs)
-        except Exception:  # noqa: BLE001 (deliberately broad: any failure means "unavailable")
+        except Exception:  # noqa: BLE001 (any exception means "unavailable")
             return False
         return True
 

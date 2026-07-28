@@ -10,13 +10,10 @@ class ModelCapabilities:
     """Capability declaration for one provider.
 
     ``streaming``, ``embeddings``, and ``extended_thinking`` are read
-    directly from any-llm's own ``ProviderMetadata``. That data is accurate
-    per provider and not worth re-declaring by hand.
+    directly from any-llm's own ``ProviderMetadata``.
 
-    ``tool_use`` and ``structured_output`` have no equivalent in any-llm:
-    it exposes no capability flag for either, for any provider (confirmed
-    by inspecting ``any_llm.types.provider.ProviderMetadata``). These two
-    are declared by omop_llm itself in ``providers.registry`` and must not
+    ``tool_use`` and ``structured_output`` have no equivalent in any-llm. 
+    These two are declared by omop_llm itself in ``providers.registry`` and must not
     be inferred from any-llm's own introspection.
 
     Parameters

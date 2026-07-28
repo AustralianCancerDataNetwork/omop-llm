@@ -13,7 +13,8 @@ from omop_llm.providers import (
 )
 
 
-def test_supported_providers_is_the_closed_six() -> None:
+def test_registry_has_no_unexpected_providers() -> None:
+    """Pins exact registry membership, so a stray ProviderMixin subclass (e.g. a test fixture) fails loudly instead of silently entering PROVIDER_REGISTRY."""
     assert supported_providers() == (
         "anthropic",
         "gemini",

@@ -41,6 +41,7 @@ from pydantic import BaseModel
 from omop_llm.errors import UnsupportedCapabilityError
 from omop_llm.providers.supported import LlamacppProvider, OpenaiProvider, VllmProvider
 
+# Compatible with instructor's generic OpenAI-API client builder.
 _INSTRUCTOR_SAFE_PROVIDERS = frozenset({
     OpenaiProvider.PROVIDER_NAME, 
     LlamacppProvider.PROVIDER_NAME, 
@@ -87,7 +88,10 @@ def extract_with_retry[T: BaseModel](
 ) -> T:
     """Extract via ``instructor``'s validate-and-retry loop, synchronously.
 
-    See :func:`async_extract_with_retry` for parameters.
+    Always builds instructor's ``openai`` client, a generic
+    OpenAI-API-compatible constructor, to pass through all providers
+    ``_INSTRUCTOR_SAFE_PROVIDERS`` allows. See :func:`async_extract_with_retry`
+    for parameters.
     """
     _check_provider_and_base_url(provider, base_url)
     instructor = _require_instructor()
@@ -119,6 +123,10 @@ async def async_extract_with_retry[T: BaseModel](
     **kwargs: Any,
 ) -> T:
     """Extract via ``instructor``'s validate-and-retry loop.
+
+    Always builds instructor's ``openai`` client, a generic
+    OpenAI-API-compatible constructor, to pass through all providers
+    ``_INSTRUCTOR_SAFE_PROVIDERS`` allows.
 
     Requires the ``instructor`` optional extra
     (``pip install 'omop-llm[instructor]'``).

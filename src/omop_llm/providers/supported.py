@@ -37,22 +37,11 @@ from omop_llm.providers.base import ProviderMixin
 
 
 class OllamaProvider(ProviderMixin, AnyLLMOllamaProvider):
-    """Ollama. Native ``/api/chat`` via the official ``ollama`` SDK, not the OpenAI-compat shim.
+    """Wrapped Ollama provider, for local dev and TRE fallback.
+    Extends any-llm's own ``OllamaProvider`` with canonical model naming and
+    embedding-dimension lookup via Ollama's native ``POST /api/show``.
 
-    Verified by reading ``any_llm.providers.ollama.ollama`` directly:
-    ``_init_client`` constructs ``ollama.AsyncClient``, and
-    ``_convert_response_format`` maps an OpenAI-style ``response_format``
-    onto Ollama's native ``format`` field. See :mod:`omop_llm.structured`
-    for why ``instructor``'s own Ollama support is deliberately not wired
-    in as an alternative.
-
-    The one provider here with real behavior beyond any-llm's own,
-    ported from ``omop-emb/src/omop_emb/embeddings/embedding_providers.py``'s
-    ``OllamaProvider``: canonical model naming (rejects untagged names and
-    the mutable ``:latest`` tag) and a fast embedding-dimension lookup via
-    Ollama's native ``POST /api/show``, over ``httpx`` (already a
-    transitive dependency of ``any-llm-sdk``) since any-llm has no
-    equivalent call.
+    Supports structured output natively using ``response_format``.
 
     No default ``base_url``: falls through to the official ``ollama``
     SDK's own default (``http://localhost:11434``). No ``api_key``
@@ -66,9 +55,8 @@ class OllamaProvider(ProviderMixin, AnyLLMOllamaProvider):
     def canonical_model_name(cls, name: str) -> str:
         """Require an explicit, immutable Ollama model tag.
 
-        Rejects both untagged names and the mutable ``:latest`` tag, for
-        the same reason ``omop-emb`` already enforces this: ``:latest``
-        can silently repoint after an ``ollama pull``, breaking
+        Rejects both untagged names and the mutable ``:latest`` tag: 
+        ``:latest`` can silently repoint after an ``ollama pull``, breaking
         consistency between stored embeddings and new query embeddings.
 
         Parameters
@@ -114,7 +102,7 @@ class OllamaProvider(ProviderMixin, AnyLLMOllamaProvider):
         if api_base is None:
             return None
         response = httpx.post(f"{api_base.rstrip('/')}/api/show", json={"name": model}).json()
-        return _extract_embedding_length(response)
+        return self._extract_embedding_length(response)
 
     async def async_embedding_dimension_hint(self, model: str, *, api_base: str | None) -> int | None:
         """See :meth:`omop_llm.providers.base.ProviderMixin.async_embedding_dimension_hint`."""
@@ -122,17 +110,18 @@ class OllamaProvider(ProviderMixin, AnyLLMOllamaProvider):
             return None
         async with httpx.AsyncClient() as client:
             response = await client.post(f"{api_base.rstrip('/')}/api/show", json={"name": model})
-        return _extract_embedding_length(response.json())
+        return self._extract_embedding_length(response.json())
 
-
-def _extract_embedding_length(response: dict) -> int | None:
-    model_info = response.get("model_info", {})
-    if not model_info:
-        return None
-    embedding_keys = [key for key in model_info if "embedding_length" in key]
-    if len(embedding_keys) != 1:
-        return None
-    return int(model_info[embedding_keys[0]])
+    @staticmethod
+    def _extract_embedding_length(response: dict) -> int | None:
+        """Extract the embedding length from an Ollama ``/api/show`` response."""
+        model_info = response.get("model_info", {})
+        if not model_info:
+            return None
+        embedding_keys = [key for key in model_info if "embedding_length" in key]
+        if len(embedding_keys) != 1:
+            return None
+        return int(model_info[embedding_keys[0]])
 
 
 class LlamacppProvider(ProviderMixin, AnyLLMLlamacppProvider):

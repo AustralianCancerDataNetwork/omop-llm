@@ -13,3 +13,7 @@ class UnsupportedProviderError(OmopLlmError):
 
 class UnsupportedCapabilityError(OmopLlmError):
     """Raised when a requested capability is not available on the resolved backend."""
+
+
+class NoParsedOutputError(OmopLlmError):
+    """Raised when a structured-output call produced no parsed instance to unwrap."""

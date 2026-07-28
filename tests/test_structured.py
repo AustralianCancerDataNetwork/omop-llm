@@ -11,6 +11,7 @@ import pytest
 from pydantic import BaseModel
 
 from omop_llm.errors import UnsupportedCapabilityError
+from omop_llm.providers import supported_providers
 from omop_llm.structured import (
     _INSTRUCTOR_SAFE_PROVIDERS,
     async_extract_with_retry,
@@ -22,6 +23,9 @@ class Answer(BaseModel):
     value: str
 
 
+
+_UNSAFE_PROVIDERS = sorted(set(supported_providers()) - _INSTRUCTOR_SAFE_PROVIDERS) + ["azure"]
+
 def test_instructor_safe_providers_is_the_openai_compat_native_set() -> None:
     # Deliberately excludes ollama (instructor's own Ollama builder uses the
     # OpenAI-compat shim, not native /api/chat, see structured.py's module
@@ -29,13 +33,13 @@ def test_instructor_safe_providers_is_the_openai_compat_native_set() -> None:
     assert _INSTRUCTOR_SAFE_PROVIDERS == frozenset({"openai", "llamacpp", "vllm"})
 
 
-@pytest.mark.parametrize("provider", ["ollama", "anthropic", "gemini", "azure"])
+@pytest.mark.parametrize("provider", _UNSAFE_PROVIDERS)
 def test_extract_with_retry_rejects_unsafe_providers(provider: str) -> None:
     with pytest.raises(UnsupportedCapabilityError):
         extract_with_retry(provider, "some-model", [{"role": "user", "content": "hi"}], Answer, base_url="http://x")
 
 
-@pytest.mark.parametrize("provider", ["ollama", "anthropic", "gemini", "azure"])
+@pytest.mark.parametrize("provider", _UNSAFE_PROVIDERS)
 async def test_async_extract_with_retry_rejects_unsafe_providers(provider: str) -> None:
     with pytest.raises(UnsupportedCapabilityError):
         await async_extract_with_retry(
