@@ -25,6 +25,8 @@ which a generated class would silently default around.
 
 from __future__ import annotations
 
+from typing import Any
+
 import httpx
 from any_llm.providers.anthropic.anthropic import AnthropicProvider as AnyLLMAnthropicProvider
 from any_llm.providers.gemini.gemini import GeminiProvider as AnyLLMGeminiProvider
@@ -32,8 +34,13 @@ from any_llm.providers.llamacpp.llamacpp import LlamacppProvider as AnyLLMLlamac
 from any_llm.providers.ollama.ollama import OllamaProvider as AnyLLMOllamaProvider
 from any_llm.providers.openai.openai import OpenaiProvider as AnyLLMOpenaiProvider
 from any_llm.providers.vllm.vllm import VllmProvider as AnyLLMVllmProvider
+from any_llm.types.completion import CompletionParams
+from oa_configurator import get_logger
+from ollama import Options
 
 from omop_llm.providers.base import ProviderMixin
+
+_logger = get_logger(__name__)
 
 
 class OllamaProvider(ProviderMixin, AnyLLMOllamaProvider):
@@ -122,6 +129,32 @@ class OllamaProvider(ProviderMixin, AnyLLMOllamaProvider):
         if len(embedding_keys) != 1:
             return None
         return int(model_info[embedding_keys[0]])
+
+    @staticmethod
+    def _convert_completion_params(params: CompletionParams, **kwargs: Any) -> dict[str, Any]:
+        """Override any-llm's param conversion to fix/flag what Ollama's ``Options`` would silently drop.
+
+        - ``max_tokens`` -> ``num_predict`` (Ollama's native name; ``num_predict``
+          wins if both are present).
+        - Any other key not in ``Options.model_fields`` or popped elsewhere
+          is logged as a warning instead of silently vanishing.
+
+        Notes
+        -----
+        - poppped_before_options: Popped in any_llm/providers/ollama/ollama.py:L.202-203
+        """
+        popped_before_options = frozenset({"tools", "think"})
+        converted = AnyLLMOllamaProvider._convert_completion_params(params, **kwargs)
+        if "max_tokens" in converted:
+            max_tokens = converted.pop("max_tokens")
+            converted.setdefault("num_predict", max_tokens)
+        unrecognized = converted.keys() - Options.model_fields.keys() - popped_before_options
+        if unrecognized:
+            _logger.warning(
+                "Ollama will silently ignore unrecognized completion kwargs: %s",
+                sorted(unrecognized),
+            )
+        return converted
 
 
 class LlamacppProvider(ProviderMixin, AnyLLMLlamacppProvider):
