@@ -92,6 +92,42 @@ async def test_embed_texts_unpacks_embedding_vectors(fake_client: FakeAnyLLMClie
 
 
 @pytest.mark.parametrize("sync", [True, False])
+async def test_embed_texts_batch_size_chunks_and_preserves_order(fake_client: FakeAnyLLMClient, sync: bool) -> None:
+    texts = ["a", "bb", "ccc", "dddd", "e"]
+
+    def fake_embedding(**kwargs) -> FakeEmbeddingResponse:
+        fake_client.embedding_calls.append(kwargs)
+        return FakeEmbeddingResponse(data=[FakeEmbeddingItem(embedding=[float(len(t))]) for t in kwargs["inputs"]])
+
+    async def fake_aembedding(**kwargs) -> FakeEmbeddingResponse:
+        return fake_embedding(**kwargs)
+
+    # Instance attribute assignment doesn't need a `self` parameter, unlike
+    # the class-declared bound method ty checks this against.
+    fake_client._embedding = fake_embedding  # ty: ignore[invalid-assignment]
+    fake_client.aembedding = fake_aembedding  # ty: ignore[invalid-assignment]
+    backend = _backend(fake_client)
+
+    vectors = (
+        backend.embed_texts(texts, batch_size=2)
+        if sync
+        else await backend.async_embed_texts(texts, batch_size=2)
+    )
+    assert vectors == [[1.0], [2.0], [3.0], [4.0], [1.0]]
+    assert [len(call["inputs"]) for call in fake_client.embedding_calls] == [2, 2, 1]
+
+
+@pytest.mark.parametrize("sync", [True, False])
+async def test_embed_texts_rejects_non_positive_batch_size(fake_client: FakeAnyLLMClient, sync: bool) -> None:
+    backend = _backend(fake_client)
+    with pytest.raises(ValueError, match="positive"):
+        if sync:
+            backend.embed_texts(["a"], batch_size=0)
+        else:
+            await backend.async_embed_texts(["a"], batch_size=0)
+
+
+@pytest.mark.parametrize("sync", [True, False])
 async def test_embed_texts_rejects_backend_without_embeddings(fake_client: FakeAnyLLMClient, sync: bool) -> None:
     no_embed_caps = ModelCapabilities(
         streaming=True, embeddings=False, extended_thinking=True, tool_use=True, structured_output=True
@@ -170,6 +206,90 @@ async def test_extract_raises_when_provider_did_not_honor_schema(fake_client: Fa
             backend.extract([{"role": "user", "content": "hi"}], Answer)
         else:
             await backend.async_extract([{"role": "user", "content": "hi"}], Answer)
+
+
+@pytest.mark.parametrize("sync", [True, False])
+async def test_extract_raises_after_exhausting_max_retries(fake_client: FakeAnyLLMClient, sync: bool) -> None:
+    fake_client.completion_response = FakeChatCompletion(
+        choices=[FakeChoice(message=FakeChatCompletionMessage(parsed=None))]
+    )
+    backend = _backend(fake_client)
+    with pytest.raises(NoParsedOutputError):
+        if sync:
+            backend.extract([{"role": "user", "content": "hi"}], Answer, max_retries=2)
+        else:
+            await backend.async_extract([{"role": "user", "content": "hi"}], Answer, max_retries=2)
+    assert len(fake_client.completion_calls) == 3  # initial attempt + 2 retries
+
+
+@pytest.mark.parametrize("sync", [True, False])
+async def test_extract_retries_after_no_parsed_output_and_succeeds(
+    fake_client: FakeAnyLLMClient, sync: bool
+) -> None:
+    responses = [
+        FakeChatCompletion(choices=[FakeChoice(message=FakeChatCompletionMessage(parsed=None))]),
+        FakeChatCompletion(choices=[FakeChoice(message=FakeChatCompletionMessage(parsed=Answer(value="42")))]),
+    ]
+    calls: list[dict] = []
+
+    def fake_completion(**kwargs) -> FakeChatCompletion:
+        calls.append(kwargs)
+        return responses[len(calls) - 1]
+
+    async def fake_acompletion(**kwargs) -> FakeChatCompletion:
+        return fake_completion(**kwargs)
+
+    # Instance attribute assignment doesn't need a `self` parameter, unlike
+    # the class-declared bound method ty checks this against.
+    fake_client.completion = fake_completion  # ty: ignore[invalid-assignment]
+    fake_client.acompletion = fake_acompletion  # ty: ignore[invalid-assignment]
+    backend = _backend(fake_client)
+
+    result = (
+        backend.extract([{"role": "user", "content": "hi"}], Answer, max_retries=1)
+        if sync
+        else await backend.async_extract([{"role": "user", "content": "hi"}], Answer, max_retries=1)
+    )
+    assert result == Answer(value="42")
+    assert len(calls) == 2
+    # the retried call carries the original message plus a corrective follow-up
+    assert calls[1]["messages"][0] == {"role": "user", "content": "hi"}
+    assert len(calls[1]["messages"]) == 2
+    assert calls[1]["messages"][1]["role"] == "user"
+
+
+@pytest.mark.parametrize("sync", [True, False])
+async def test_extract_retries_after_validation_error_and_succeeds(
+    fake_client: FakeAnyLLMClient, sync: bool
+) -> None:
+    fake_client.completion_response = FakeChatCompletion(
+        choices=[FakeChoice(message=FakeChatCompletionMessage(parsed=Answer(value="42")))]
+    )
+    calls: list[dict] = []
+
+    def fake_completion(**kwargs) -> FakeChatCompletion:
+        calls.append(kwargs)
+        if len(calls) == 1:
+            Answer.model_validate({})  # raises pydantic.ValidationError: 'value' is required
+        assert fake_client.completion_response is not None
+        return fake_client.completion_response
+
+    async def fake_acompletion(**kwargs) -> FakeChatCompletion:
+        return fake_completion(**kwargs)
+
+    # Instance attribute assignment doesn't need a `self` parameter, unlike
+    # the class-declared bound method ty checks this against.
+    fake_client.completion = fake_completion  # ty: ignore[invalid-assignment]
+    fake_client.acompletion = fake_acompletion  # ty: ignore[invalid-assignment]
+    backend = _backend(fake_client)
+
+    result = (
+        backend.extract([{"role": "user", "content": "hi"}], Answer, max_retries=1)
+        if sync
+        else await backend.async_extract([{"role": "user", "content": "hi"}], Answer, max_retries=1)
+    )
+    assert result == Answer(value="42")
+    assert len(calls) == 2
 
 
 def test_build_backend_constructs_offline_for_local_provider() -> None:

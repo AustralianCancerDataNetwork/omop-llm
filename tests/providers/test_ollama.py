@@ -11,6 +11,7 @@ from typing import Any
 
 import httpx
 import pytest
+from any_llm.types.completion import CompletionParams
 
 from omop_llm.providers.supported import OllamaProvider
 
@@ -80,3 +81,38 @@ async def test_async_embedding_dimension_hint_parses_api_show_response(monkeypat
         "nomic-embed-text:v1.5", api_base="http://localhost:11434"
     )
     assert result == 768
+
+
+def test_convert_completion_params_translates_max_tokens_to_num_predict() -> None:
+    params = CompletionParams(model_id="llama3:8b", messages=[{"role": "user", "content": "hi"}], max_tokens=512)
+    converted = OllamaProvider._convert_completion_params(params)
+    assert "max_tokens" not in converted
+    assert converted["num_predict"] == 512
+
+
+def test_convert_completion_params_prefers_explicit_num_predict_over_max_tokens() -> None:
+    params = CompletionParams(model_id="llama3:8b", messages=[{"role": "user", "content": "hi"}], max_tokens=512)
+    converted = OllamaProvider._convert_completion_params(params, num_predict=128)
+    assert converted["num_predict"] == 128
+    assert "max_tokens" not in converted
+
+
+def test_convert_completion_params_omits_num_predict_when_max_tokens_not_set() -> None:
+    params = CompletionParams(model_id="llama3:8b", messages=[{"role": "user", "content": "hi"}])
+    converted = OllamaProvider._convert_completion_params(params)
+    assert "num_predict" not in converted
+
+
+def test_convert_completion_params_warns_on_unrecognized_kwargs(caplog: pytest.LogCaptureFixture) -> None:
+    params = CompletionParams(model_id="llama3:8b", messages=[{"role": "user", "content": "hi"}])
+    with caplog.at_level("WARNING", logger="omop_llm.providers.supported"):
+        converted = OllamaProvider._convert_completion_params(params, bogus_kwarg="x")
+    assert converted["bogus_kwarg"] == "x"
+    assert "bogus_kwarg" in caplog.text
+
+
+def test_convert_completion_params_does_not_warn_on_tools_or_think(caplog: pytest.LogCaptureFixture) -> None:
+    params = CompletionParams(model_id="llama3:8b", messages=[{"role": "user", "content": "hi"}])
+    with caplog.at_level("WARNING", logger="omop_llm.providers.supported"):
+        OllamaProvider._convert_completion_params(params, tools=[{"type": "function"}], think=True)
+    assert caplog.text == ""
