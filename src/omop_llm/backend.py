@@ -62,7 +62,7 @@ def _chunked[T](items: list[T], size: int) -> Iterator[list[T]]:
 class ModelBackend:
     """One resolved, ready-to-call model.
 
-    Built by :func:`build_backend`. Wraps a single constructed any-llm
+    Built by :func:`build_model_backend`. Wraps a single constructed any-llm
     provider instance and binds ``model``/``configuration`` to it, so
     callers do not repeat them on every call.
 
@@ -564,7 +564,7 @@ class ModelBackend:
         return True
 
 
-def build_backend(
+def build_model_backend(
     provider: str,
     model: str,
     *,
@@ -578,7 +578,7 @@ def build_backend(
     shape ``oa-configurator``'s own database resolution already uses
     (``Resolver(stack).resolve_resource(name).create_engine(**kwargs)``
     returns a plain ``sqlalchemy.Engine``, no intermediate config object).
-    See :func:`build_backend_from_resolved` for the ``oa-configurator``
+    See :func:`build_model_backend_from_resolved` for the ``oa-configurator``
     integration built on top of this function.
 
     Canonicalizes ``model`` for the resolved provider (see
@@ -624,7 +624,7 @@ def build_backend(
     )
 
 
-def build_backend_from_resolved(resolved: ResolvedModel) -> ModelBackend:
+def build_model_backend_from_resolved(resolved: ResolvedModel) -> ModelBackend:
     """Build a backend from an ``oa-configurator`` ``ResolvedModel``.
 
     The ``oa-configurator`` integration point: ``oa-configurator`` itself
@@ -637,11 +637,11 @@ def build_backend_from_resolved(resolved: ResolvedModel) -> ModelBackend:
     A typical caller (e.g. a package's own config module) does::
 
         from oa_configurator import Resolver, load_stack_config
-        from omop_llm import build_backend_from_resolved
+        from omop_llm import build_model_backend_from_resolved
 
         stack = load_stack_config()
         resolved = Resolver(stack).resolve_model(config.embedding_model)
-        backend = build_backend_from_resolved(resolved)
+        backend = build_model_backend_from_resolved(resolved)
 
     Parameters
     ----------
@@ -660,7 +660,7 @@ def build_backend_from_resolved(resolved: ResolvedModel) -> ModelBackend:
         If ``resolved.model`` cannot be made canonical for the resolved
         provider (e.g. an Ollama name with no explicit tag).
     """
-    return build_backend(
+    return build_model_backend(
         provider=resolved.provider.provider,
         model=resolved.model,
         base_url=resolved.provider.base_url,

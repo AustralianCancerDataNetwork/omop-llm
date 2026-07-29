@@ -116,7 +116,7 @@ def canonical_model_name(provider_key: str, name: str) -> str:
 
     Useful for deciding what to persist as a model's stable identity (e.g.
     in a database) independently of building a full
-    :class:`~omop_llm.backend.ModelBackend`. :func:`~omop_llm.backend.build_backend`
+    :class:`~omop_llm.backend.ModelBackend`. :func:`~omop_llm.backend.build_model_backend`
     also calls this internally, so a backend's ``model`` attribute is
     always canonical without callers needing to remember to do it
     themselves.

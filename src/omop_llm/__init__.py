@@ -1,6 +1,6 @@
 from omop_llm.backend import ModelBackend as ModelBackend
-from omop_llm.backend import build_backend as build_backend
-from omop_llm.backend import build_backend_from_resolved as build_backend_from_resolved
+from omop_llm.backend import build_model_backend as build_model_backend
+from omop_llm.backend import build_model_backend_from_resolved as build_model_backend_from_resolved
 from omop_llm.capabilities import ModelCapabilities as ModelCapabilities
 from omop_llm.errors import OmopLlmError as OmopLlmError
 from omop_llm.errors import UnsupportedCapabilityError as UnsupportedCapabilityError
@@ -15,8 +15,8 @@ __all__ = [
     "OmopLlmError",
     "UnsupportedCapabilityError",
     "UnsupportedProviderError",
-    "build_backend",
-    "build_backend_from_resolved",
+    "build_model_backend",
+    "build_model_backend_from_resolved",
     "canonical_model_name",
     "capabilities_for",
     "supported_providers",

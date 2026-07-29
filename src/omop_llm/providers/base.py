@@ -41,7 +41,7 @@ class ProviderMixin(ABC):
 
         The canonical form is the identifier used as a stable key
         wherever a consumer persists model identity, and the ``model`` value
-        :func:`~omop_llm.backend.build_backend` resolves to. Implementations
+        :func:`~omop_llm.backend.build_model_backend` resolves to. Implementations
         must be idempotent: calling this on an already-canonical name
         returns the same string unchanged.
 

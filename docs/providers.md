@@ -9,7 +9,7 @@ Given the interface we have devised, future providers will be extended in the fu
 
 ## `base_url` and `api_key`
 
-Every one of these fields is optional on `build_backend(provider, model, base_url=None, api_key=None, ...)`. What "not set" resolves to differs per provider.
+Every one of these fields is optional on `build_model_backend(provider, model, base_url=None, api_key=None, ...)`. What "not set" resolves to differs per provider.
 Resolution order for both, always: **explicit argument → the provider's own environment variable → a class-level default (if any)**.
 
 | Provider | Default `base_url` when not set | `api_key` required? |

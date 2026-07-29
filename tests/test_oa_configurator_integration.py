@@ -1,4 +1,4 @@
-"""``build_backend_from_resolved``: the oa-configurator integration point.
+"""``build_model_backend_from_resolved``: the oa-configurator integration point.
 
 Constructs ``oa_configurator.ResolvedModel``/``ResolvedProvider`` directly
 (no TOML file, no stack config needed) to test the field mapping in
@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from oa_configurator.resolver import ResolvedModel, ResolvedProvider
 
-from omop_llm.backend import build_backend_from_resolved
+from omop_llm.backend import build_model_backend_from_resolved
 
 
 def test_maps_resolved_fields_onto_build_backend() -> None:
@@ -24,7 +24,7 @@ def test_maps_resolved_fields_onto_build_backend() -> None:
         model="local-chat",
         configuration={"max_tokens": 8000, "temperature": 0.0},
     )
-    backend = build_backend_from_resolved(resolved)
+    backend = build_model_backend_from_resolved(resolved)
     assert backend.model == "local-chat"
     assert backend.configuration == {"max_tokens": 8000, "temperature": 0.0}
     assert backend.capabilities.tool_use is True
@@ -37,5 +37,5 @@ def test_canonicalizes_the_model_name() -> None:
         model="llama3:8b",
         configuration={},
     )
-    backend = build_backend_from_resolved(resolved)
+    backend = build_model_backend_from_resolved(resolved)
     assert backend.model == "llama3:8b"

@@ -2,7 +2,7 @@
 
 Uses ``FakeAnyLLMClient`` (see conftest.py) to test omop_llm's own wrapper
 logic in isolation, plus real (offline-constructed, never called over the
-network) provider instances to test ``build_backend``'s construction,
+network) provider instances to test ``build_model_backend``'s construction,
 canonicalization, and capability-gate behavior.
 """
 
@@ -11,7 +11,7 @@ from __future__ import annotations
 import pytest
 from pydantic import BaseModel
 
-from omop_llm.backend import ModelBackend, build_backend
+from omop_llm.backend import ModelBackend, build_model_backend
 from omop_llm.capabilities import ModelCapabilities
 from omop_llm.errors import NoParsedOutputError, UnsupportedCapabilityError
 from tests.conftest import (
@@ -293,7 +293,7 @@ async def test_extract_retries_after_validation_error_and_succeeds(
 
 
 def test_build_backend_constructs_offline_for_local_provider() -> None:
-    backend = build_backend(
+    backend = build_model_backend(
         provider="llamacpp", model="local-chat", base_url="http://localhost:8080/v1"
     )
     assert backend.model == "local-chat"
@@ -301,12 +301,12 @@ def test_build_backend_constructs_offline_for_local_provider() -> None:
 
 
 def test_provider_property_reads_from_the_constructed_client_not_a_stored_field() -> None:
-    backend = build_backend(provider="llamacpp", model="local-chat", base_url="http://localhost:8080/v1")
+    backend = build_model_backend(provider="llamacpp", model="local-chat", base_url="http://localhost:8080/v1")
     assert backend.provider == "llamacpp"
 
 
 def test_build_backend_passes_configuration_through() -> None:
-    backend = build_backend(
+    backend = build_model_backend(
         provider="llamacpp",
         model="local-chat",
         base_url="http://localhost:8080/v1",
@@ -316,17 +316,17 @@ def test_build_backend_passes_configuration_through() -> None:
 
 
 def test_build_backend_canonicalizes_the_model_name() -> None:
-    backend = build_backend(provider="ollama", model="llama3:8b", base_url="http://localhost:11434")
+    backend = build_model_backend(provider="ollama", model="llama3:8b", base_url="http://localhost:11434")
     assert backend.model == "llama3:8b"
 
 
 def test_build_backend_rejects_non_canonical_ollama_name() -> None:
     with pytest.raises(ValueError, match="explicit tag"):
-        build_backend(provider="ollama", model="llama3", base_url="http://localhost:11434")
+        build_model_backend(provider="ollama", model="llama3", base_url="http://localhost:11434")
 
 
 def test_build_backend_constructs_offline_for_embedding_capable_provider() -> None:
-    backend = build_backend(
+    backend = build_model_backend(
         provider="ollama", model="qwen3-embedding:0.6b", base_url="http://localhost:11434"
     )
     assert backend.model == "qwen3-embedding:0.6b"
