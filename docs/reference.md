@@ -7,6 +7,7 @@ This reference is automatically generated from the source code.
       members:
         - backend
         - capabilities
+        - embeddings
         - errors
         - providers
         - structured

@@ -13,6 +13,7 @@ from pydantic import BaseModel
 
 from omop_llm.backend import ModelBackend, build_model_backend
 from omop_llm.capabilities import ModelCapabilities
+from omop_llm.embeddings import EmbeddingRole
 from omop_llm.errors import NoParsedOutputError, UnsupportedCapabilityError
 from tests.conftest import (
     FakeAnyLLMClient,
@@ -125,6 +126,64 @@ async def test_embed_texts_rejects_non_positive_batch_size(fake_client: FakeAnyL
             backend.embed_texts(["a"], batch_size=0)
         else:
             await backend.async_embed_texts(["a"], batch_size=0)
+
+
+@pytest.mark.parametrize("sync", [True, False])
+async def test_embed_texts_applies_role_prefix(fake_client: FakeAnyLLMClient, sync: bool) -> None:
+    fake_client.embedding_response = FakeEmbeddingResponse(data=[FakeEmbeddingItem(embedding=[0.1])])
+    backend = _backend(
+        fake_client, configuration={"document_prefix": "passage: ", "query_prefix": "query: "}
+    )
+
+    if sync:
+        backend.embed_texts(["diabetes"], role=EmbeddingRole.DOCUMENT)
+    else:
+        await backend.async_embed_texts(["diabetes"], role=EmbeddingRole.DOCUMENT)
+    [call] = fake_client.embedding_calls
+    assert call["inputs"] == ["passage: diabetes"]
+
+
+@pytest.mark.parametrize("sync", [True, False])
+async def test_embed_texts_query_role_uses_query_prefix(fake_client: FakeAnyLLMClient, sync: bool) -> None:
+    fake_client.embedding_response = FakeEmbeddingResponse(data=[FakeEmbeddingItem(embedding=[0.1])])
+    backend = _backend(
+        fake_client, configuration={"document_prefix": "passage: ", "query_prefix": "query: "}
+    )
+
+    if sync:
+        backend.embed_texts(["hypertension"], role=EmbeddingRole.QUERY)
+    else:
+        await backend.async_embed_texts(["hypertension"], role=EmbeddingRole.QUERY)
+    [call] = fake_client.embedding_calls
+    assert call["inputs"] == ["query: hypertension"]
+
+
+@pytest.mark.parametrize("sync", [True, False])
+async def test_embed_texts_no_role_leaves_text_untouched(fake_client: FakeAnyLLMClient, sync: bool) -> None:
+    fake_client.embedding_response = FakeEmbeddingResponse(data=[FakeEmbeddingItem(embedding=[0.1])])
+    backend = _backend(fake_client, configuration={"document_prefix": "passage: "})
+
+    if sync:
+        backend.embed_texts(["diabetes"])
+    else:
+        await backend.async_embed_texts(["diabetes"])
+    [call] = fake_client.embedding_calls
+    assert call["inputs"] == ["diabetes"]
+
+
+@pytest.mark.parametrize("sync", [True, False])
+async def test_embed_texts_role_with_no_configured_prefix_is_a_noop(
+    fake_client: FakeAnyLLMClient, sync: bool
+) -> None:
+    fake_client.embedding_response = FakeEmbeddingResponse(data=[FakeEmbeddingItem(embedding=[0.1])])
+    backend = _backend(fake_client)
+
+    if sync:
+        backend.embed_texts(["diabetes"], role=EmbeddingRole.DOCUMENT)
+    else:
+        await backend.async_embed_texts(["diabetes"], role=EmbeddingRole.DOCUMENT)
+    [call] = fake_client.embedding_calls
+    assert call["inputs"] == ["diabetes"]
 
 
 @pytest.mark.parametrize("sync", [True, False])
@@ -331,3 +390,28 @@ def test_build_backend_constructs_offline_for_embedding_capable_provider() -> No
     )
     assert backend.model == "qwen3-embedding:0.6b"
     assert backend.capabilities.embeddings is True
+
+
+def test_build_backend_warns_on_missing_prefixes_for_embedding_model(caplog: pytest.LogCaptureFixture) -> None:
+    with caplog.at_level("WARNING", logger="omop_llm.embeddings"):
+        build_model_backend(provider="ollama", model="qwen3-embedding:0.6b", base_url="http://localhost:11434")
+    assert "document_prefix" in caplog.text
+    assert "query_prefix" in caplog.text
+
+
+def test_build_backend_no_warning_when_prefixes_configured(caplog: pytest.LogCaptureFixture) -> None:
+    with caplog.at_level("WARNING", logger="omop_llm.embeddings"):
+        build_model_backend(
+            provider="ollama",
+            model="qwen3-embedding:0.6b",
+            base_url="http://localhost:11434",
+            configuration={"document_prefix": "search_document: ", "query_prefix": "search_query: "},
+        )
+    assert caplog.text == ""
+
+
+def test_build_backend_no_prefix_warning_for_non_embedding_provider(caplog: pytest.LogCaptureFixture) -> None:
+    # anthropic is the one provider in the registry with embeddings=False.
+    with caplog.at_level("WARNING", logger="omop_llm.embeddings"):
+        build_model_backend(provider="anthropic", model="claude-haiku-4-5", api_key="sk-test")
+    assert caplog.text == ""

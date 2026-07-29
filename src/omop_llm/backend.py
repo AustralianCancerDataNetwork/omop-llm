@@ -28,6 +28,7 @@ from oa_configurator import ResolvedModel
 from pydantic import BaseModel, ValidationError
 
 from omop_llm.capabilities import ModelCapabilities
+from omop_llm.embeddings import EmbeddingRole, apply_embedding_prefix, warn_if_prefixes_look_wrong
 from omop_llm.errors import NoParsedOutputError, UnsupportedCapabilityError
 from omop_llm.providers.base import ProviderMixin
 from omop_llm.providers.registry import (
@@ -211,13 +212,26 @@ class ModelBackend:
             model=self.model, messages=messages, **call_kwargs
         )
 
-    def embed_texts(self, texts: list[str], *, batch_size: int | None = None) -> list[list[float]]:
+    def embed_texts(
+        self,
+        texts: list[str],
+        *,
+        role: EmbeddingRole | None = None,
+        batch_size: int | None = None,
+    ) -> list[list[float]]:
         """Embed a batch of texts.
 
         Parameters
         ----------
         texts : list of str
             Texts to embed.
+        role : EmbeddingRole, optional
+            Whether ``texts`` are being indexed (``DOCUMENT``) or used to
+            search (``QUERY``). When given, prepends whichever of
+            ``configuration["document_prefix"]``/``["query_prefix"]``
+            matches, needed for asymmetric embedding models (e.g.
+            nomic-embed-text, E5, BGE). Omit for symmetric models, or when
+            texts are already prefixed.
         batch_size : int, optional
             If given, ``texts`` is chunked into sub-batches of at most this
             size, each sent as its own call, rather than one call with the
@@ -238,6 +252,8 @@ class ModelBackend:
             If ``batch_size`` is not a positive integer.
         """
         self._require_embeddings()
+        if role is not None:
+            texts = apply_embedding_prefix(texts, role, self.configuration)
         if batch_size is None:
             response = self._client._embedding(model=self.model, inputs=texts, **self.configuration)
             return [item.embedding for item in response.data]
@@ -248,7 +264,11 @@ class ModelBackend:
         return vectors
 
     async def async_embed_texts(
-        self, texts: list[str], *, batch_size: int | None = None
+        self,
+        texts: list[str],
+        *,
+        role: EmbeddingRole | None = None,
+        batch_size: int | None = None,
     ) -> list[list[float]]:
         """Embed a batch of texts asynchronously.
 
@@ -256,6 +276,13 @@ class ModelBackend:
         ----------
         texts : list of str
             Texts to embed.
+        role : EmbeddingRole, optional
+            Whether ``texts`` are being indexed (``DOCUMENT``) or used to
+            search (``QUERY``). When given, prepends whichever of
+            ``configuration["document_prefix"]``/``["query_prefix"]``
+            matches, needed for asymmetric embedding models (e.g.
+            nomic-embed-text, E5, BGE). Omit for symmetric models, or when
+            texts are already prefixed.
         batch_size : int, optional
             If given, ``texts`` is chunked into sub-batches of at most this
             size, each sent as its own call, rather than one call with the
@@ -276,6 +303,8 @@ class ModelBackend:
             If ``batch_size`` is not a positive integer.
         """
         self._require_embeddings()
+        if role is not None:
+            texts = apply_embedding_prefix(texts, role, self.configuration)
         if batch_size is None:
             response = await self._client.aembedding(model=self.model, inputs=texts, **self.configuration)
             return [item.embedding for item in response.data]
@@ -614,12 +643,15 @@ def build_model_backend(
     provider_class = provider_class_for(provider)
     capabilities = capabilities_for(provider)
     canonical_model = canonical_model_name(provider, model)
+    resolved_configuration = dict(configuration) if configuration else {}
+    if capabilities.embeddings:
+        warn_if_prefixes_look_wrong(model=canonical_model, configuration=resolved_configuration)
     client = provider_class(api_key=api_key, api_base=base_url)
     return ModelBackend(
         _client=client,
         model=canonical_model,
         capabilities=capabilities,
-        configuration=dict(configuration) if configuration else {},
+        configuration=resolved_configuration,
         _api_base=base_url,
     )
 
@@ -643,6 +675,12 @@ def build_model_backend_from_resolved(resolved: ResolvedModel) -> ModelBackend:
         resolved = Resolver(stack).resolve_model(config.embedding_model)
         backend = build_model_backend_from_resolved(resolved)
 
+    ``resolved.embedding_dim``/``document_prefix``/``query_prefix`` (typed
+    ``ModelConfig`` fields) are folded into the ``configuration`` dict under
+    their matching keys before construction, taking precedence over the same
+    keys if also present in ``resolved.configuration`` (the free-form
+    fallback for knobs with no dedicated field).
+
     Parameters
     ----------
     resolved : ResolvedModel
@@ -660,10 +698,17 @@ def build_model_backend_from_resolved(resolved: ResolvedModel) -> ModelBackend:
         If ``resolved.model`` cannot be made canonical for the resolved
         provider (e.g. an Ollama name with no explicit tag).
     """
+    configuration = dict(resolved.configuration)
+    if resolved.embedding_dim is not None:
+        configuration["embedding_dim"] = resolved.embedding_dim
+    if resolved.document_prefix is not None:
+        configuration["document_prefix"] = resolved.document_prefix
+    if resolved.query_prefix is not None:
+        configuration["query_prefix"] = resolved.query_prefix
     return build_model_backend(
         provider=resolved.provider.provider,
         model=resolved.model,
         base_url=resolved.provider.base_url,
         api_key=resolved.provider.api_key,
-        configuration=resolved.configuration,
+        configuration=configuration,
     )
