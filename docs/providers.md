@@ -21,8 +21,8 @@ Resolution order for both, always: **explicit argument → the provider's own en
 | `anthropic` | any-llm sets none; falls through to the `anthropic` SDK's own default (the real Anthropic API) | Yes |
 | `gemini` | any-llm sets none; falls through to the `google-genai` SDK's own default (the real Gemini API) | Yes |
 
-! note "The pattern"
-Local providers either have no sensible universal default or a conventional local-dev default. You'll almost always want to set `base_url` explicitly once you're pointed at anything other than a single local instance on the default port. Cloud providers need no `base_url` at all for the normal case: leaving it unset resolves to the real vendor API, exactly as if you were calling that vendor's own SDK directly with no `base_url` override. You only set `base_url` for a cloud provider to point at something *other* than the vendor's real endpoint (an Azure OpenAI-style proxy, for instance).
+!!! note "The pattern"
+    Local providers either have no sensible universal default or a conventional local-dev default. You'll almost always want to set `base_url` explicitly once you're pointed at anything other than a single local instance on the default port. Cloud providers need no `base_url` at all for the normal case: leaving it unset resolves to the real vendor API, exactly as if you were calling that vendor's own SDK directly with no `base_url` override. You only set `base_url` for a cloud provider to point at something *other* than the vendor's real endpoint (an Azure OpenAI-style proxy, for instance).
 
 | Provider | Env var for `base_url` | Env var for `api_key` |
 |---|---|---|
