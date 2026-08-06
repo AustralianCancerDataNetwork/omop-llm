@@ -30,6 +30,8 @@ theme:
 nav:
   - Home: index.md
   - Installation: usage/installation.md
+  - Asymmetric Embeddings: usage/asymmetric-embeddings.md
+  - Providers: providers.md
   - "API Reference": reference.md
 
 plugins:
