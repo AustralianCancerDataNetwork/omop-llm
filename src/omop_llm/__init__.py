@@ -10,6 +10,7 @@ from omop_llm.embeddings import (
     KNOWN_EMBEDDING_PREFIXES
 )
 from omop_llm.errors import (
+    NoParsedOutputError,
     OmopLlmError,
     UnsupportedCapabilityError,
     UnsupportedProviderError
@@ -25,6 +26,7 @@ __all__ = [
     "KNOWN_EMBEDDING_PREFIXES",
     "ModelBackend",
     "Capabilities",
+    "NoParsedOutputError",
     "OmopLlmError",
     "UnsupportedCapabilityError",
     "UnsupportedProviderError",

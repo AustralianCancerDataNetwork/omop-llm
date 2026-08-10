@@ -5,11 +5,10 @@ description = "LLM interfaces for OMOP"
 authors = [
   {name = "Nico Loesch", email = "n.loesch@unsw.edu.au"}
 ]
-license = "Apache-2.0"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "any-llm-sdk[ollama,gemini]>=1.22.0",
+    "any-llm-sdk[ollama,gemini]>=1.22.0,<2.0.0",
     "httpx",
     "oa-configurator>=0.2.0,<1.0.0",  # TODO: raise to >=0.2.0,<2.0.0
     "ollama",  # already imported by any-llm-sdk
