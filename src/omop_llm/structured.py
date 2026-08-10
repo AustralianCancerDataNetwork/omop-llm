@@ -51,7 +51,7 @@ def _check_provider_and_base_url(provider: str, base_url: str | None) -> None:
             f"only {sorted(_INSTRUCTOR_SAFE_PROVIDERS)} are confirmed to share any-llm's "
             "transport for this provider, see the omop_llm.structured module docstring"
         )
-    if provider != "openai" and base_url is None:
+    if provider != OpenaiProvider.PROVIDER_NAME and base_url is None:
         raise ValueError(
             f"base_url is required for provider={provider!r} "
             "(without it, instructor's 'openai' builder would silently target "
@@ -68,6 +68,31 @@ def _require_instructor() -> Any:
             "pip install 'omop-llm[instructor]'"
         ) from exc
     return instructor
+
+
+# llamacpp/vllm don't require real credentials, but the openai SDK client
+# instructor builds underneath still requires a non-empty api_key string
+# to construct at all, regardless of whether the target server checks it.
+_LOCAL_PLACEHOLDER_API_KEY = "not-needed"
+
+
+def _instructor_client_kwargs(
+    provider: str, *, base_url: str | None, api_key: str | None, async_client: bool
+) -> dict[str, Any]:
+    """Build the kwargs for instructor's 'openai' client builder.
+
+    Substitutes ``_LOCAL_PLACEHOLDER_API_KEY`` when the caller gave no key
+    and the provider isn't real OpenAI; ``openai`` itself still falls
+    through to ``OPENAI_API_KEY`` as before.
+    """
+    client_kwargs: dict[str, Any] = {"async_client": async_client}
+    if base_url is not None:
+        client_kwargs["base_url"] = base_url
+    if api_key is not None:
+        client_kwargs["api_key"] = api_key
+    elif provider != OpenaiProvider.PROVIDER_NAME:
+        client_kwargs["api_key"] = _LOCAL_PLACEHOLDER_API_KEY
+    return client_kwargs
 
 
 def extract_with_retry[T: BaseModel](
@@ -90,12 +115,7 @@ def extract_with_retry[T: BaseModel](
     """
     _check_provider_and_base_url(provider, base_url)
     instructor = _require_instructor()
-
-    client_kwargs: dict[str, Any] = {"async_client": False}
-    if base_url is not None:
-        client_kwargs["base_url"] = base_url
-    if api_key is not None:
-        client_kwargs["api_key"] = api_key
+    client_kwargs = _instructor_client_kwargs(provider, base_url=base_url, api_key=api_key, async_client=False)
 
     client = instructor.from_provider(f"openai/{model}", **client_kwargs)
     return client.chat.completions.create(
@@ -166,12 +186,7 @@ async def async_extract_with_retry[T: BaseModel](
     """
     _check_provider_and_base_url(provider, base_url)
     instructor = _require_instructor()
-
-    client_kwargs: dict[str, Any] = {"async_client": True}
-    if base_url is not None:
-        client_kwargs["base_url"] = base_url
-    if api_key is not None:
-        client_kwargs["api_key"] = api_key
+    client_kwargs = _instructor_client_kwargs(provider, base_url=base_url, api_key=api_key, async_client=True)
 
     client = instructor.from_provider(f"openai/{model}", **client_kwargs)
     return await client.chat.completions.create(
