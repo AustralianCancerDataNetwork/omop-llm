@@ -15,29 +15,31 @@ from omop_llm.embeddings import (
 class TestApplyEmbeddingPrefix:
     def test_document_prefix_applied(self) -> None:
         result = apply_embedding_prefix(
-            ["diabetes"], EmbeddingRole.DOCUMENT, {"document_prefix": "passage: "}
+            ["diabetes"], EmbeddingRole.DOCUMENT, document_prefix="passage: ", query_prefix=None
         )
         assert result == ["passage: diabetes"]
 
     def test_query_prefix_applied(self) -> None:
         result = apply_embedding_prefix(
-            ["hypertension"], EmbeddingRole.QUERY, {"query_prefix": "query: "}
+            ["hypertension"], EmbeddingRole.QUERY, document_prefix=None, query_prefix="query: "
         )
         assert result == ["query: hypertension"]
 
     def test_no_configured_prefix_is_a_noop(self) -> None:
-        result = apply_embedding_prefix(["diabetes"], EmbeddingRole.DOCUMENT, {})
+        result = apply_embedding_prefix(
+            ["diabetes"], EmbeddingRole.DOCUMENT, document_prefix=None, query_prefix=None
+        )
         assert result == ["diabetes"]
 
     def test_wrong_role_key_is_ignored(self) -> None:
         result = apply_embedding_prefix(
-            ["diabetes"], EmbeddingRole.DOCUMENT, {"query_prefix": "query: "}
+            ["diabetes"], EmbeddingRole.DOCUMENT, document_prefix=None, query_prefix="query: "
         )
         assert result == ["diabetes"]
 
     def test_applies_to_every_text(self) -> None:
         result = apply_embedding_prefix(
-            ["a", "b", "c"], EmbeddingRole.DOCUMENT, {"document_prefix": "p: "}
+            ["a", "b", "c"], EmbeddingRole.DOCUMENT, document_prefix="p: ", query_prefix=None
         )
         assert result == ["p: a", "p: b", "p: c"]
 
@@ -45,7 +47,7 @@ class TestApplyEmbeddingPrefix:
 class TestWarnIfPrefixesLookWrong:
     def test_warns_when_both_missing(self, caplog: pytest.LogCaptureFixture) -> None:
         with caplog.at_level("WARNING", logger="omop_llm.embeddings"):
-            warn_if_prefixes_look_wrong(model="nomic-embed-text:v1.5", configuration={})
+            warn_if_prefixes_look_wrong(model="nomic-embed-text:v1.5", document_prefix=None, query_prefix=None)
         assert "document_prefix" in caplog.text
         assert "query_prefix" in caplog.text
 
@@ -53,27 +55,22 @@ class TestWarnIfPrefixesLookWrong:
         with caplog.at_level("WARNING", logger="omop_llm.embeddings"):
             warn_if_prefixes_look_wrong(
                 model="nomic-embed-text:v1.5",
-                configuration={
-                    "document_prefix": "search_document: ",
-                    "query_prefix": "search_query: ",
-                },
+                document_prefix="search_document: ",
+                query_prefix="search_query: ",
             )
         assert caplog.text == ""
 
     def test_warns_on_unrecognized_prefix(self, caplog: pytest.LogCaptureFixture) -> None:
         with caplog.at_level("WARNING", logger="omop_llm.embeddings"):
             warn_if_prefixes_look_wrong(
-                model="some-new-model",
-                configuration={"document_prefix": "totally_made_up: ", "query_prefix": "query: "},
+                model="some-new-model", document_prefix="totally_made_up: ", query_prefix="query: "
             )
         assert "totally_made_up: " in caplog.text
         assert "doesn't match a commonly recognized" in caplog.text
 
     def test_does_not_raise_for_unrecognized_prefix(self) -> None:
         # A prefix outside KNOWN_EMBEDDING_PREFIXES is a heads-up, not an error.
-        warn_if_prefixes_look_wrong(
-            model="some-new-model", configuration={"document_prefix": "custom: ", "query_prefix": "custom: "}
-        )
+        warn_if_prefixes_look_wrong(model="some-new-model", document_prefix="custom: ", query_prefix="custom: ")
 
     def test_every_known_prefix_is_a_non_empty_string(self) -> None:
         for prefix in KNOWN_EMBEDDING_PREFIXES:

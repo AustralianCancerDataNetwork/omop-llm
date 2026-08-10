@@ -11,7 +11,6 @@ from __future__ import annotations
 
 import logging
 from enum import StrEnum
-from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -22,11 +21,6 @@ class EmbeddingRole(StrEnum):
     DOCUMENT = "document"
     QUERY = "query"
 
-
-CONFIGURATION_KEY_BY_ROLE: dict[EmbeddingRole, str] = {
-    EmbeddingRole.DOCUMENT: "document_prefix",
-    EmbeddingRole.QUERY: "query_prefix",
-}
 
 # Prefix conventions used by common asymmetric embedding models. Not
 # exhaustive, and not meant to be: used only to flag a configured prefix
@@ -45,31 +39,33 @@ KNOWN_EMBEDDING_PREFIXES: frozenset[str] = frozenset(
 
 
 def apply_embedding_prefix(
-    texts: list[str], role: EmbeddingRole, configuration: dict[str, Any]
+    texts: list[str], role: EmbeddingRole, *, document_prefix: str | None, query_prefix: str | None
 ) -> list[str]:
-    """Prepend *role*'s configured prefix to each of *texts*, if one is set."""
-    prefix = configuration.get(CONFIGURATION_KEY_BY_ROLE[role], "")
+    """Prepend *role*'s prefix to each of *texts*, if one is given."""
+    prefix = document_prefix if role is EmbeddingRole.DOCUMENT else query_prefix
     if not prefix:
         return texts
     return [f"{prefix}{text}" for text in texts]
 
 
-def warn_if_prefixes_look_wrong(*, model: str, configuration: dict[str, Any]) -> None:
-    """Log a warning for a missing or unrecognized configured prefix.
+def warn_if_prefixes_look_wrong(*, model: str, document_prefix: str | None, query_prefix: str | None) -> None:
+    """Log a warning for a missing or unrecognized prefix.
 
     Called once, at :func:`~omop_llm.backend.build_model_backend` time, for
     any backend that declares embeddings support. Never raises: a prefix
     outside :data:`KNOWN_EMBEDDING_PREFIXES` is not necessarily wrong, this
     is a heads-up, not validation.
     """
-    for role, key in CONFIGURATION_KEY_BY_ROLE.items():
-        prefix = configuration.get(key)
+    for role, prefix in (
+        (EmbeddingRole.DOCUMENT, document_prefix),
+        (EmbeddingRole.QUERY, query_prefix),
+    ):
         if not prefix:
             logger.warning(
-                "%s: no %s configured for model %r. Fine for symmetric models; "
+                "%s: no %s_prefix configured for model %r. Fine for symmetric models; "
                 "asymmetric models (e.g. nomic-embed-text, E5, BGE) need one "
                 "to retrieve correctly.",
-                role.value.capitalize(), key, model,
+                role.value.capitalize(), role.value, model,
             )
         elif prefix not in KNOWN_EMBEDDING_PREFIXES:
             logger.warning(

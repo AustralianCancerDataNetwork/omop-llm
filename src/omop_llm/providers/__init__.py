@@ -1,7 +1,7 @@
 from omop_llm.providers.registry import (
     PROVIDER_REGISTRY,
     canonical_model_name,
-    capabilities_for,
+    provider_capabilities_for,
     provider_class_for,
     supported_providers,
 )
@@ -10,7 +10,7 @@ from omop_llm.providers.registry import (
 __all__ = [
     "PROVIDER_REGISTRY",
     "canonical_model_name",
-    "capabilities_for",
+    "provider_capabilities_for",
     "provider_class_for",
     "supported_providers",
 ]

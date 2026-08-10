@@ -26,7 +26,7 @@ from typing import Final
 
 from any_llm.any_llm import AnyLLM
 
-from omop_llm.capabilities import ModelCapabilities
+from omop_llm.capabilities import Capabilities
 from omop_llm.errors import UnsupportedProviderError
 from omop_llm.providers import supported as _supported  # noqa: F401  (required for PROVIDER_REGISTRY to be populated)
 from omop_llm.providers.base import ProviderMixin
@@ -76,8 +76,11 @@ def provider_class_for(provider_key: str) -> type[AnyLLM]:
         ) from None
 
 
-def capabilities_for(provider_key: str) -> ModelCapabilities:
-    """Build the capability declaration for one registered provider.
+def provider_capabilities_for(provider_key: str) -> Capabilities:
+    """Build the provider-wide capability ceiling for one registered provider.
+
+    This is the *provider's* transport-level ceiling, not a specific
+    model's effective capabilities.
 
     ``streaming``, ``embeddings``, and ``extended_thinking`` come straight
     from any-llm's own ``get_provider_metadata()``. ``tool_use`` and
@@ -91,7 +94,7 @@ def capabilities_for(provider_key: str) -> ModelCapabilities:
 
     Returns
     -------
-    ModelCapabilities
+    Capabilities
         The capability declaration for this provider.
 
     Raises
@@ -102,7 +105,7 @@ def capabilities_for(provider_key: str) -> ModelCapabilities:
     provider_class = provider_class_for(provider_key)
     meta = provider_class.get_provider_metadata()
     assert issubclass(provider_class, ProviderMixin)
-    return ModelCapabilities(
+    return Capabilities(
         streaming=meta.streaming,
         embeddings=meta.embedding,
         extended_thinking=meta.reasoning,

@@ -3,9 +3,12 @@
 Shared chat/embedding backend contract for the OMOP stack, built on [any-llm](https://github.com/mozilla-ai/any-llm). One typed `ModelBackend` interface (sync and async methods, both real), a closed set of supported providers (local: `ollama`, `llamacpp`, `vllm`; cloud: `openai`, `anthropic`, `gemini`), and explicit capability declarations instead of provider-name guessing. Extended documentation can be found [here](https://AustralianCancerDataNetwork.github.io/omop-llm).
 
 ```python
-from omop_llm import build_model_backend
+from omop_llm import build_model_backend, Capabilities
 
-backend = build_model_backend(provider="ollama", model="llama3.2:8b", base_url="http://localhost:11434")
+backend = build_model_backend(
+    provider="ollama", model="llama3:8b", base_url="http://localhost:11434",
+    model_capabilities=Capabilities(),  # plain chat only -- nothing else needed here
+)
 
 # async
 response = await backend.async_complete([{"role": "user", "content": "Hello"}])

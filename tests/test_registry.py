@@ -7,7 +7,7 @@ import pytest
 from omop_llm.errors import UnsupportedProviderError
 from omop_llm.providers import (
     canonical_model_name,
-    capabilities_for,
+    provider_capabilities_for,
     provider_class_for,
     supported_providers,
 )
@@ -44,13 +44,13 @@ def test_unregistered_provider_rejected() -> None:
 def test_capabilities_embeddings_match_any_llm_metadata(
     provider: str, expect_embeddings: bool
 ) -> None:
-    caps = capabilities_for(provider)
+    caps = provider_capabilities_for(provider)
     assert caps.embeddings is expect_embeddings
 
 
 def test_capabilities_tool_use_and_structured_output_are_declared_not_inferred() -> None:
     for provider in supported_providers():
-        caps = capabilities_for(provider)
+        caps = provider_capabilities_for(provider)
         # These two are never read off any-llm's own metadata; it has no
         # such fields at all. Every registered provider currently declares
         # both True; this just pins that it comes from our own registry.
@@ -60,7 +60,7 @@ def test_capabilities_tool_use_and_structured_output_are_declared_not_inferred()
 
 def test_unregistered_provider_capabilities_rejected() -> None:
     with pytest.raises(UnsupportedProviderError):
-        capabilities_for("bedrock")
+        provider_capabilities_for("bedrock")
 
 
 def test_canonical_model_name_dispatches_to_the_right_provider() -> None:

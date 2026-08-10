@@ -44,7 +44,7 @@ Resolution order for both, always: **explicit argument → the provider's own en
 | `anthropic` | ✅ | ❌ | ✅ | ✅ | ✅ | No embeddings API; `ModelBackend.embed_texts`/`async_embed_texts` refuse this provider. |
 | `gemini` | ✅ | ✅ | ✅ | ✅ | ✅ | |
 
-`streaming`/`embeddings`/`extended_thinking` come from any-llm's own `get_provider_metadata()`, verified directly against the installed package for these six providers. `tool_use`/`structured_output` are declared by `omop-llm` itself, since any-llm tracks neither (see [`ModelCapabilities`](reference.md#omop_llm.capabilities)).
+`streaming`/`embeddings`/`extended_thinking` come from any-llm's own `get_provider_metadata()`, verified directly against the installed package for these six providers. `tool_use`/`structured_output` are declared by `omop-llm` itself, since any-llm tracks neither (see [`Capabilities`](reference.md#omop_llm.capabilities)).
 
 ## Adding a provider
 

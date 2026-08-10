@@ -3,7 +3,7 @@
 A thin wrapper around a single, already-constructed any-llm provider
 instance (an entry of :data:`omop_llm.providers.registry.PROVIDER_REGISTRY`).
 Chat completion, embeddings, and structured extraction are all methods on
-one object, gated by :class:`~omop_llm.capabilities.ModelCapabilities`,
+one object, gated by :class:`~omop_llm.capabilities.Capabilities`,
 rather than split across separate classes per modality.
 
 Every method has a synchronous form and an ``async_``-prefixed
@@ -18,6 +18,7 @@ If any-llm needed replacing, only this module's method bodies, and the
 
 from __future__ import annotations
 
+import dataclasses
 from collections.abc import Iterator
 from dataclasses import dataclass, field
 from typing import Any
@@ -27,13 +28,13 @@ from any_llm.types.completion import ChatCompletion, ReasoningEffort
 from oa_configurator import ResolvedModel
 from pydantic import BaseModel, ValidationError
 
-from omop_llm.capabilities import ModelCapabilities
+from omop_llm.capabilities import Capabilities
 from omop_llm.embeddings import EmbeddingRole, apply_embedding_prefix, warn_if_prefixes_look_wrong
 from omop_llm.errors import NoParsedOutputError, UnsupportedCapabilityError
 from omop_llm.providers.base import ProviderMixin
 from omop_llm.providers.registry import (
     canonical_model_name,
-    capabilities_for,
+    provider_capabilities_for,
     provider_class_for,
 )
 
@@ -74,11 +75,18 @@ class ModelBackend:
     model : str
         The canonical model name or identifier passed to the underlying
         provider.
-    capabilities : ModelCapabilities
+    capabilities : Capabilities
         What this resolved backend can actually do.
     configuration : dict, optional
         Default keyword arguments merged into every call, overridden by
-        any argument the caller passes explicitly.
+        any argument the caller passes explicitly. Pure provider passthrough
+        only, and doesn't include any of the other fields below.
+    embedding_dim : int, optional
+        Configured embedding dimension override, read by :meth:`dimensions`.
+    document_prefix : str, optional
+        Prefix prepended to document/passage text before embedding.
+    query_prefix : str, optional
+        Prefix prepended to query text before embedding.
     _api_base : str, optional
         The base URL this backend was constructed with, if any. Threaded
         through to provider-specific fast paths such as
@@ -87,8 +95,11 @@ class ModelBackend:
 
     _client: AnyLLM
     model: str
-    capabilities: ModelCapabilities
+    capabilities: Capabilities
     configuration: dict[str, Any] = field(default_factory=dict)
+    embedding_dim: int | None = None
+    document_prefix: str | None = None
+    query_prefix: str | None = None
     _api_base: str | None = None
 
     @property
@@ -228,10 +239,10 @@ class ModelBackend:
         role : EmbeddingRole, optional
             Whether ``texts`` are being indexed (``DOCUMENT``) or used to
             search (``QUERY``). When given, prepends whichever of
-            ``configuration["document_prefix"]``/``["query_prefix"]``
-            matches, needed for asymmetric embedding models (e.g.
-            nomic-embed-text, E5, BGE). Omit for symmetric models, or when
-            texts are already prefixed.
+            ``self.document_prefix``/``self.query_prefix`` matches, needed
+            for asymmetric embedding models (e.g. nomic-embed-text, E5,
+            BGE). Omit for symmetric models, or when texts are already
+            prefixed.
         batch_size : int, optional
             If given, ``texts`` is chunked into sub-batches of at most this
             size, each sent as its own call, rather than one call with the
@@ -253,7 +264,9 @@ class ModelBackend:
         """
         self._require_embeddings()
         if role is not None:
-            texts = apply_embedding_prefix(texts, role, self.configuration)
+            texts = apply_embedding_prefix(
+                texts, role, document_prefix=self.document_prefix, query_prefix=self.query_prefix
+            )
         if batch_size is None:
             response = self._client._embedding(model=self.model, inputs=texts, **self.configuration)
             return [item.embedding for item in response.data]
@@ -279,10 +292,10 @@ class ModelBackend:
         role : EmbeddingRole, optional
             Whether ``texts`` are being indexed (``DOCUMENT``) or used to
             search (``QUERY``). When given, prepends whichever of
-            ``configuration["document_prefix"]``/``["query_prefix"]``
-            matches, needed for asymmetric embedding models (e.g.
-            nomic-embed-text, E5, BGE). Omit for symmetric models, or when
-            texts are already prefixed.
+            ``self.document_prefix``/``self.query_prefix`` matches, needed
+            for asymmetric embedding models (e.g. nomic-embed-text, E5,
+            BGE). Omit for symmetric models, or when texts are already
+            prefixed.
         batch_size : int, optional
             If given, ``texts`` is chunked into sub-batches of at most this
             size, each sent as its own call, rather than one call with the
@@ -304,7 +317,9 @@ class ModelBackend:
         """
         self._require_embeddings()
         if role is not None:
-            texts = apply_embedding_prefix(texts, role, self.configuration)
+            texts = apply_embedding_prefix(
+                texts, role, document_prefix=self.document_prefix, query_prefix=self.query_prefix
+            )
         if batch_size is None:
             response = await self._client.aembedding(model=self.model, inputs=texts, **self.configuration)
             return [item.embedding for item in response.data]
@@ -322,8 +337,8 @@ class ModelBackend:
 
     def dimensions(self) -> int:
         """Discover this model's embedding dimensionality synchronously.
-        Three tiers: 
-            1. a configured override (``configuration["embedding_dim"]``),
+        Three tiers:
+            1. a configured override (``self.embedding_dim``),
             2. a provider-specific fast path (e.g. Ollama's ``POST /api/show``), and
             3. a live probe (embed one short string and measure the vector).
 
@@ -331,10 +346,15 @@ class ModelBackend:
         -------
         int
             The embedding vector length.
+
+        Raises
+        ------
+        UnsupportedCapabilityError
+            If ``self.capabilities.embeddings`` is ``False``.
         """
-        configured = self.configuration.get("embedding_dim")
-        if configured is not None:
-            return int(configured)
+        self._require_embeddings()
+        if self.embedding_dim is not None:
+            return self.embedding_dim
         assert isinstance(self._client, ProviderMixin)
         hint = self._client.embedding_dimension_hint(self.model, api_base=self._api_base)
         if hint is not None:
@@ -344,8 +364,8 @@ class ModelBackend:
 
     async def async_dimensions(self) -> int:
         """Discover this model's embedding dimensionality.
-        Three tiers: 
-            1. a configured override (``configuration["embedding_dim"]``),
+        Three tiers:
+            1. a configured override (``self.embedding_dim``),
             2. a provider-specific fast path (e.g. Ollama's ``POST /api/show``), and
             3. a live probe (embed one short string and measure the vector).
 
@@ -353,10 +373,15 @@ class ModelBackend:
         -------
         int
             The embedding vector length.
+
+        Raises
+        ------
+        UnsupportedCapabilityError
+            If ``self.capabilities.embeddings`` is ``False``.
         """
-        configured = self.configuration.get("embedding_dim")
-        if configured is not None:
-            return int(configured)
+        self._require_embeddings()
+        if self.embedding_dim is not None:
+            return self.embedding_dim
         assert isinstance(self._client, ProviderMixin)
         hint = await self._client.async_embedding_dimension_hint(self.model, api_base=self._api_base)
         if hint is not None:
@@ -597,9 +622,13 @@ def build_model_backend(
     provider: str,
     model: str,
     *,
+    model_capabilities: Capabilities,
     base_url: str | None = None,
     api_key: str | None = None,
     configuration: dict[str, Any] | None = None,
+    embedding_dim: int | None = None,
+    document_prefix: str | None = None,
+    query_prefix: str | None = None,
 ) -> ModelBackend:
     """Resolve a provider and model into a ready-to-call backend.
 
@@ -620,13 +649,26 @@ def build_model_backend(
         A key in :data:`omop_llm.providers.registry.PROVIDER_REGISTRY`.
     model : str
         Raw model name or identifier; canonicalized before use.
+    model_capabilities : Capabilities
+        What this specific model is declared to support. Required, not
+        optional: neither any-llm nor omop-llm can introspect this per
+        model, so the caller has to say. Pass ``Capabilities()`` to
+        declare none of them, explicitly rather than by omission.
     base_url : str, optional
         The base URL for this specific deployment of the provider.
     api_key : str, optional
         The API key for this specific deployment, if one is required.
     configuration : dict, optional
         Default keyword arguments merged into every call this backend
-        makes (e.g. ``max_tokens``, ``temperature``, ``embedding_dim``).
+        makes (e.g. ``max_tokens``, ``temperature``). Pure provider
+        passthrough -- use ``embedding_dim``/``document_prefix``/``query_prefix``
+        below for those, never this dict.
+    embedding_dim : int, optional
+        Configured embedding dimension override.
+    document_prefix : str, optional
+        Prefix prepended to document/passage text before embedding.
+    query_prefix : str, optional
+        Prefix prepended to query text before embedding.
 
     Returns
     -------
@@ -638,20 +680,33 @@ def build_model_backend(
     ------
     ValueError
         If ``model`` cannot be made canonical for the resolved provider
-        (e.g. an Ollama name with no explicit tag).
+        (e.g. an Ollama name with no explicit tag), or if ``embedding_dim``
+        is given but the effective capabilities don't include embeddings.
     """
     provider_class = provider_class_for(provider)
-    capabilities = capabilities_for(provider)
+    provider_caps = provider_capabilities_for(provider)
+    effective_caps = provider_caps & model_capabilities
+    effective_caps = dataclasses.replace(effective_caps, streaming=False)  # ModelBackend doesn't implement streaming as of now (see complete()/async_complete() docstring)
     canonical_model = canonical_model_name(provider, model)
+    if embedding_dim is not None and not effective_caps.embeddings:
+        raise ValueError(
+            f"embedding_dim={embedding_dim!r} given for model {canonical_model!r}, "
+            "but its effective capabilities don't include embeddings."
+        )
     resolved_configuration = dict(configuration) if configuration else {}
-    if capabilities.embeddings:
-        warn_if_prefixes_look_wrong(model=canonical_model, configuration=resolved_configuration)
+    if effective_caps.embeddings:
+        warn_if_prefixes_look_wrong(
+            model=canonical_model, document_prefix=document_prefix, query_prefix=query_prefix
+        )
     client = provider_class(api_key=api_key, api_base=base_url)
     return ModelBackend(
         _client=client,
         model=canonical_model,
-        capabilities=capabilities,
+        capabilities=effective_caps,
         configuration=resolved_configuration,
+        embedding_dim=embedding_dim,
+        document_prefix=document_prefix,
+        query_prefix=query_prefix,
         _api_base=base_url,
     )
 
@@ -675,11 +730,11 @@ def build_model_backend_from_resolved(resolved: ResolvedModel) -> ModelBackend:
         resolved = Resolver(stack).resolve_model(config.embedding_model)
         backend = build_model_backend_from_resolved(resolved)
 
-    ``resolved.embedding_dim``/``document_prefix``/``query_prefix`` (typed
-    ``ModelConfig`` fields) are folded into the ``configuration`` dict under
-    their matching keys before construction, taking precedence over the same
-    keys if also present in ``resolved.configuration`` (the free-form
-    fallback for knobs with no dedicated field).
+    A thin translator: ``resolved.embedding_dim``/``document_prefix``/``query_prefix``
+    are forwarded as-is, and ``resolved.embeddings``/``tool_use``/``structured_output``/``extended_thinking``
+    are collected into one :class:`~omop_llm.capabilities.Capabilities`.
+    ``resolved.configuration`` is passed through untouched -- nothing
+    gets folded into it.
 
     Parameters
     ----------
@@ -698,17 +753,19 @@ def build_model_backend_from_resolved(resolved: ResolvedModel) -> ModelBackend:
         If ``resolved.model`` cannot be made canonical for the resolved
         provider (e.g. an Ollama name with no explicit tag).
     """
-    configuration = dict(resolved.configuration)
-    if resolved.embedding_dim is not None:
-        configuration["embedding_dim"] = resolved.embedding_dim
-    if resolved.document_prefix is not None:
-        configuration["document_prefix"] = resolved.document_prefix
-    if resolved.query_prefix is not None:
-        configuration["query_prefix"] = resolved.query_prefix
     return build_model_backend(
         provider=resolved.provider.provider,
         model=resolved.model,
         base_url=resolved.provider.base_url,
         api_key=resolved.provider.api_key,
-        configuration=configuration,
+        configuration=dict(resolved.configuration),
+        embedding_dim=resolved.embedding_dim,
+        document_prefix=resolved.document_prefix,
+        query_prefix=resolved.query_prefix,
+        model_capabilities=Capabilities(
+            embeddings=resolved.embeddings,
+            tool_use=resolved.tool_use,
+            structured_output=resolved.structured_output,
+            extended_thinking=resolved.extended_thinking,
+        ),
     )

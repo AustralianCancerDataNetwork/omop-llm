@@ -33,27 +33,26 @@ Passing `role=` is optional. Omit it (or leave it `None`) for a symmetric model,
 
 ## Where the prefix values come from
 
-Prefix strings are configured once per model, not per caller. Two ways to supply them:
+Prefix strings are configured once per model via dedicated `document_prefix`/`query_prefix` parameters. Two ways to supply them:
 
-1. **Direct `configuration` dict**, when calling `build_model_backend` with plain keyword arguments:
+1. **Direct keyword arguments**, when calling `build_model_backend`:
 
     ```python
-    from omop_llm import build_model_backend
+    from omop_llm import build_model_backend, Capabilities
 
     backend = build_model_backend(
         "ollama",
         "nomic-embed-text:v1.5",
         base_url="http://localhost:11434",
-        configuration={
-            "document_prefix": "search_document: ",
-            "query_prefix": "search_query: ",
-        },
+        model_capabilities=Capabilities(embeddings=True),
+        document_prefix="search_document: ",
+        query_prefix="search_query: ",
     )
     ```
 
-2. **`oa-configurator`'s `[models.*]` entry**, when calling `build_model_backend_from_resolved(resolved)`. `ModelConfig` has typed `document_prefix`/`query_prefix` fields (alongside `embedding_dim`) specifically for this — see `oa-configurator`'s [config reference](https://AustralianCancerDataNetwork.github.io/OA_Configurator/config-reference/#modelsname) for the TOML shape and `omop-config models add`/`list` for managing it via CLI. `build_model_backend_from_resolved` folds these typed fields into the `configuration` dict before constructing the backend, so the mechanism is identical either way — only the source of the values differs.
+2. **`oa-configurator`'s `[models.*]` entry**, when calling `build_model_backend_from_resolved(resolved)`. `ModelConfig` has typed `document_prefix`/`query_prefix` fields (alongside `embedding_dim`) specifically for this — see `oa-configurator`'s [config reference](https://AustralianCancerDataNetwork.github.io/OA_Configurator/config-reference/#modelsname) for the TOML shape and `omop-config models add`/`list` for managing it via CLI. `build_model_backend_from_resolved` forwards these typed fields straight through as the same keyword arguments.
 
-Either way, the resolved `configuration` dict is what `apply_embedding_prefix`/`embed_texts(role=...)` actually reads at call time; `ModelBackend` itself doesn't care whether the values came from a literal dict or a resolved config entry.
+Either way, the resolved backend stores them on `ModelBackend.document_prefix`/`.query_prefix`, which is what `apply_embedding_prefix`/`embed_texts(role=...)` actually reads at call time.
 
 ## Construction-time sanity check
 
