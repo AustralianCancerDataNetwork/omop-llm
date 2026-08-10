@@ -124,6 +124,9 @@ def canonical_model_name(provider_key: str, name: str) -> str:
     always canonical without callers needing to remember to do it
     themselves.
 
+    Strips surrounding whitespace and rejects an empty result *before*
+    dispatching to the provider's own ``canonical_model_name``.
+
     Parameters
     ----------
     provider_key : str
@@ -141,9 +144,13 @@ def canonical_model_name(provider_key: str, name: str) -> str:
     UnsupportedProviderError
         If ``provider_key`` is not registered.
     ValueError
-        If ``name`` cannot be made canonical for this provider (e.g. an
-        Ollama name with no explicit tag).
+        If ``name`` is empty or whitespace-only, or cannot otherwise be
+        made canonical for this provider (e.g. an Ollama name with no
+        explicit tag).
     """
     provider_class = provider_class_for(provider_key)
     assert issubclass(provider_class, ProviderMixin)
+    name = name.strip()
+    if not name:
+        raise ValueError(f"Model name cannot be empty or whitespace-only for provider {provider_key!r}.")
     return provider_class.canonical_model_name(name)

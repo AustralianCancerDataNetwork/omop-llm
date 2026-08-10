@@ -62,14 +62,13 @@ class OllamaProvider(ProviderMixin, AnyLLMOllamaProvider):
         Returns
         -------
         str
-            The input name, validated and stripped of whitespace.
+            The input name, validated.
 
         Raises
         ------
         ValueError
             If the name has no tag, or if the tag is ``:latest``.
         """
-        name = name.strip()
         if ":" not in name:
             raise ValueError(
                 f"Ollama model name {name!r} must include an explicit tag. "

@@ -73,3 +73,17 @@ def test_canonical_model_name_dispatches_to_the_right_provider() -> None:
 def test_canonical_model_name_unregistered_provider_rejected() -> None:
     with pytest.raises(UnsupportedProviderError):
         canonical_model_name("bedrock", "some-model")
+
+
+@pytest.mark.parametrize("provider", ["openai", "anthropic", "gemini", "llamacpp", "vllm"])
+def test_canonical_model_name_strips_whitespace(provider: str) -> None:
+    # Previously only ollama stripped whitespace; the other 5 providers
+    # returned the name unchanged, preserving stray whitespace in what's
+    # meant to be a stable storage key.
+    assert canonical_model_name(provider, " gpt-4o ") == "gpt-4o"
+
+
+@pytest.mark.parametrize("name", ["", "   ", "\t\n"])
+def test_canonical_model_name_rejects_empty_after_strip(name: str) -> None:
+    with pytest.raises(ValueError, match="empty or whitespace"):
+        canonical_model_name("openai", name)
