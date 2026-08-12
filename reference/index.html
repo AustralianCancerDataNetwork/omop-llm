@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://AustralianCancerDataNetwork.github.io/omop-llm/reference/">
       
       
-        <link rel="prev" href="../usage/installation/">
+        <link rel="prev" href="../providers/">
       
       
       
@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -311,6 +311,60 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/asymmetric-embeddings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Asymmetric Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../providers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Providers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -386,46 +440,34 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface" class="md-nav__link">
+  <a href="#omop_llm.backend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        interface
+        backend
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="interface">
+    <nav class="md-nav" aria-label="backend">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface.client" class="md-nav__link">
+  <a href="#omop_llm.backend.ModelBackend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        client
+        ModelBackend
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="client">
+    <nav class="md-nav" aria-label="ModelBackend">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface.client.LLMClient" class="md-nav__link">
+  <a href="#omop_llm.backend.ModelBackend.provider" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLMClient
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="LLMClient">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#omop_llm.interface.client.LLMClient.embedding_dim" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        embedding_dim
+        provider
       
     </span>
   </a>
@@ -433,10 +475,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface.client.LLMClient.cosine_similarity" class="md-nav__link">
+  <a href="#omop_llm.backend.ModelBackend.async_complete" class="md-nav__link">
     <span class="md-ellipsis">
       
-        cosine_similarity
+        async_complete
       
     </span>
   </a>
@@ -444,10 +486,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface.client.LLMClient.embeddings" class="md-nav__link">
+  <a href="#omop_llm.backend.ModelBackend.async_dimensions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        embeddings
+        async_dimensions
       
     </span>
   </a>
@@ -455,10 +497,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface.client.LLMClient.euclidean_distance" class="md-nav__link">
+  <a href="#omop_llm.backend.ModelBackend.async_embed_texts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        euclidean_distance
+        async_embed_texts
       
     </span>
   </a>
@@ -466,66 +508,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface.client.LLMClient.similarity" class="md-nav__link">
+  <a href="#omop_llm.backend.ModelBackend.async_extract" class="md-nav__link">
     <span class="md-ellipsis">
       
-        similarity
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#omop_llm.interface.client.LLMClientError" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LLMClientError
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#omop_llm.interface.instructor_client" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        instructor_client
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="instructor_client">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#omop_llm.interface.instructor_client.InstructorClient" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        InstructorClient
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="InstructorClient">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#omop_llm.interface.instructor_client.InstructorClient.__post_init__" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        __post_init__
+        async_extract
       
     </span>
   </a>
@@ -533,7 +519,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface.instructor_client.InstructorClient.complete" class="md-nav__link">
+  <a href="#omop_llm.backend.ModelBackend.async_is_available" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        async_is_available
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.backend.ModelBackend.complete" class="md-nav__link">
     <span class="md-ellipsis">
       
         complete
@@ -544,10 +541,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface.instructor_client.InstructorClient.messages_from_prompt_template" class="md-nav__link">
+  <a href="#omop_llm.backend.ModelBackend.dimensions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        messages_from_prompt_template
+        dimensions
       
     </span>
   </a>
@@ -555,10 +552,99 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface.instructor_client.InstructorClient.render_prompt_messages" class="md-nav__link">
+  <a href="#omop_llm.backend.ModelBackend.embed_texts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        render_prompt_messages
+        embed_texts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.backend.ModelBackend.extract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.backend.ModelBackend.is_available" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        is_available
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.backend.build_model_backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        build_model_backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.backend.build_model_backend_from_resolved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        build_model_backend_from_resolved
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        capabilities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="capabilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.capabilities.Capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capabilities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Capabilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.capabilities.Capabilities.__and__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __and__
       
     </span>
   </a>
@@ -572,6 +658,547 @@
         
       </ul>
     </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.embeddings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        embeddings
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="embeddings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.embeddings.EmbeddingRole" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EmbeddingRole
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.embeddings.apply_embedding_prefix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        apply_embedding_prefix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.embeddings.warn_if_prefixes_look_wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        warn_if_prefixes_look_wrong
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        errors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="errors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.errors.NoParsedOutputError" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NoParsedOutputError
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.errors.OmopLlmError" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OmopLlmError
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.errors.UnsupportedCapabilityError" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UnsupportedCapabilityError
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.errors.UnsupportedProviderError" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UnsupportedProviderError
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        providers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="providers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.canonical_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        canonical_model_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.provider_capabilities_for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        provider_capabilities_for
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.provider_class_for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        provider_class_for
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported_providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        supported_providers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        base
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="base">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.base.ProviderMixin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ProviderMixin
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ProviderMixin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.base.ProviderMixin.async_embedding_dimension_hint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        async_embedding_dimension_hint
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.base.ProviderMixin.canonical_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        canonical_model_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.base.ProviderMixin.embedding_dimension_hint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        embedding_dimension_hint
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        registry
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="registry">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.registry.canonical_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        canonical_model_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.registry.provider_capabilities_for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        provider_capabilities_for
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.registry.provider_class_for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        provider_class_for
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.registry.supported_providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        supported_providers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        supported
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="supported">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.AnthropicProvider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AnthropicProvider
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AnthropicProvider">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.AnthropicProvider.canonical_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        canonical_model_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.GeminiProvider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GeminiProvider
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GeminiProvider">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.GeminiProvider.canonical_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        canonical_model_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.LlamacppProvider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LlamacppProvider
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="LlamacppProvider">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.LlamacppProvider.canonical_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        canonical_model_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.OllamaProvider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OllamaProvider
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="OllamaProvider">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.OllamaProvider.async_embedding_dimension_hint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        async_embedding_dimension_hint
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.OllamaProvider.canonical_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        canonical_model_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.OllamaProvider.embedding_dimension_hint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        embedding_dimension_hint
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.OpenaiProvider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenaiProvider
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="OpenaiProvider">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.OpenaiProvider.canonical_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        canonical_model_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.VllmProvider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VllmProvider
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VllmProvider">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.VllmProvider.canonical_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        canonical_model_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.structured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        structured
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="structured">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.structured.async_extract_with_retry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        async_extract_with_retry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.structured.extract_with_retry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_with_retry
+      
+    </span>
+  </a>
   
 </li>
         
@@ -632,46 +1259,34 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface" class="md-nav__link">
+  <a href="#omop_llm.backend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        interface
+        backend
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="interface">
+    <nav class="md-nav" aria-label="backend">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface.client" class="md-nav__link">
+  <a href="#omop_llm.backend.ModelBackend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        client
+        ModelBackend
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="client">
+    <nav class="md-nav" aria-label="ModelBackend">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface.client.LLMClient" class="md-nav__link">
+  <a href="#omop_llm.backend.ModelBackend.provider" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLMClient
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="LLMClient">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#omop_llm.interface.client.LLMClient.embedding_dim" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        embedding_dim
+        provider
       
     </span>
   </a>
@@ -679,10 +1294,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface.client.LLMClient.cosine_similarity" class="md-nav__link">
+  <a href="#omop_llm.backend.ModelBackend.async_complete" class="md-nav__link">
     <span class="md-ellipsis">
       
-        cosine_similarity
+        async_complete
       
     </span>
   </a>
@@ -690,10 +1305,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface.client.LLMClient.embeddings" class="md-nav__link">
+  <a href="#omop_llm.backend.ModelBackend.async_dimensions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        embeddings
+        async_dimensions
       
     </span>
   </a>
@@ -701,10 +1316,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface.client.LLMClient.euclidean_distance" class="md-nav__link">
+  <a href="#omop_llm.backend.ModelBackend.async_embed_texts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        euclidean_distance
+        async_embed_texts
       
     </span>
   </a>
@@ -712,66 +1327,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface.client.LLMClient.similarity" class="md-nav__link">
+  <a href="#omop_llm.backend.ModelBackend.async_extract" class="md-nav__link">
     <span class="md-ellipsis">
       
-        similarity
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#omop_llm.interface.client.LLMClientError" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LLMClientError
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#omop_llm.interface.instructor_client" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        instructor_client
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="instructor_client">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#omop_llm.interface.instructor_client.InstructorClient" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        InstructorClient
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="InstructorClient">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#omop_llm.interface.instructor_client.InstructorClient.__post_init__" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        __post_init__
+        async_extract
       
     </span>
   </a>
@@ -779,7 +1338,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface.instructor_client.InstructorClient.complete" class="md-nav__link">
+  <a href="#omop_llm.backend.ModelBackend.async_is_available" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        async_is_available
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.backend.ModelBackend.complete" class="md-nav__link">
     <span class="md-ellipsis">
       
         complete
@@ -790,10 +1360,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface.instructor_client.InstructorClient.messages_from_prompt_template" class="md-nav__link">
+  <a href="#omop_llm.backend.ModelBackend.dimensions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        messages_from_prompt_template
+        dimensions
       
     </span>
   </a>
@@ -801,10 +1371,99 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#omop_llm.interface.instructor_client.InstructorClient.render_prompt_messages" class="md-nav__link">
+  <a href="#omop_llm.backend.ModelBackend.embed_texts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        render_prompt_messages
+        embed_texts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.backend.ModelBackend.extract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.backend.ModelBackend.is_available" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        is_available
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.backend.build_model_backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        build_model_backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.backend.build_model_backend_from_resolved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        build_model_backend_from_resolved
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        capabilities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="capabilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.capabilities.Capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capabilities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Capabilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.capabilities.Capabilities.__and__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __and__
       
     </span>
   </a>
@@ -818,6 +1477,547 @@
         
       </ul>
     </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.embeddings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        embeddings
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="embeddings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.embeddings.EmbeddingRole" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EmbeddingRole
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.embeddings.apply_embedding_prefix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        apply_embedding_prefix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.embeddings.warn_if_prefixes_look_wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        warn_if_prefixes_look_wrong
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        errors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="errors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.errors.NoParsedOutputError" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NoParsedOutputError
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.errors.OmopLlmError" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OmopLlmError
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.errors.UnsupportedCapabilityError" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UnsupportedCapabilityError
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.errors.UnsupportedProviderError" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UnsupportedProviderError
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        providers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="providers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.canonical_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        canonical_model_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.provider_capabilities_for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        provider_capabilities_for
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.provider_class_for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        provider_class_for
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported_providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        supported_providers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        base
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="base">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.base.ProviderMixin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ProviderMixin
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ProviderMixin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.base.ProviderMixin.async_embedding_dimension_hint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        async_embedding_dimension_hint
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.base.ProviderMixin.canonical_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        canonical_model_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.base.ProviderMixin.embedding_dimension_hint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        embedding_dimension_hint
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        registry
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="registry">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.registry.canonical_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        canonical_model_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.registry.provider_capabilities_for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        provider_capabilities_for
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.registry.provider_class_for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        provider_class_for
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.registry.supported_providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        supported_providers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        supported
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="supported">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.AnthropicProvider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AnthropicProvider
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AnthropicProvider">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.AnthropicProvider.canonical_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        canonical_model_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.GeminiProvider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GeminiProvider
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GeminiProvider">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.GeminiProvider.canonical_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        canonical_model_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.LlamacppProvider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LlamacppProvider
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="LlamacppProvider">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.LlamacppProvider.canonical_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        canonical_model_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.OllamaProvider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OllamaProvider
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="OllamaProvider">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.OllamaProvider.async_embedding_dimension_hint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        async_embedding_dimension_hint
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.OllamaProvider.canonical_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        canonical_model_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.OllamaProvider.embedding_dimension_hint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        embedding_dimension_hint
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.OpenaiProvider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenaiProvider
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="OpenaiProvider">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.OpenaiProvider.canonical_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        canonical_model_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.VllmProvider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VllmProvider
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VllmProvider">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.providers.supported.VllmProvider.canonical_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        canonical_model_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.structured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        structured
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="structured">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.structured.async_extract_with_retry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        async_extract_with_retry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#omop_llm.structured.extract_with_retry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_with_retry
+      
+    </span>
+  </a>
   
 </li>
         
@@ -900,46 +2100,27 @@
 
 
 
-<h3 id="omop_llm.interface" class="doc doc-heading">
-            <code>interface</code>
+<h3 id="omop_llm.backend" class="doc doc-heading">
+            <code>backend</code>
 
 
 </h3>
 
     <div class="doc doc-contents ">
 
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-module">
-
-
-
-<h4 id="omop_llm.interface.client" class="doc doc-heading">
-            <code>client</code>
-
-
-</h4>
-
-    <div class="doc doc-contents ">
+        <p><code>ModelBackend</code>: the one calling contract every consumer uses.</p>
+<p>A thin wrapper around a single, already-constructed any-llm provider
+instance (an entry of :data:<code>omop_llm.providers.registry.PROVIDER_REGISTRY</code>).
+Chat completion, embeddings, and structured extraction are all methods on
+one object, gated by :class:<code>~omop_llm.capabilities.Capabilities</code>,
+rather than split across separate classes per modality.</p>
+<p>Every method has a synchronous form and an <code>async_</code>-prefixed
+asynchronous form (<code>complete</code>/<code>async_complete</code>,
+<code>embed_texts</code>/<code>async_embed_texts</code>, and so on). This was a deliberate
+choice, not an oversight. </p>
+<p>Consumers only ever see this class, never a raw any-llm provider instance.
+If any-llm needed replacing, only this module's method bodies, and the
+<code>providers/</code> subclasses, would need to change.</p>
 
 
 
@@ -964,25 +2145,25 @@
 
 
 
-<h5 id="omop_llm.interface.client.LLMClient" class="doc doc-heading">
-            <code>LLMClient</code>
+<h4 id="omop_llm.backend.ModelBackend" class="doc doc-heading">
+            <code>ModelBackend</code>
 
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
   </span>
 
-</h5>
+</h4>
 
 
     <div class="doc doc-contents ">
 
 
 
-        <p>Base class for LLM clients.</p>
-<p>This class replicates the API of the OntoGPT LLMClient but serves as a
-base for other implementations (e.g., InstructorClient). Relies on the
-OpenAI client for core functionality.</p>
+        <p>One resolved, ready-to-call model.</p>
+<p>Built by :func:<code>build_model_backend</code>. Wraps a single constructed any-llm
+provider instance and binds <code>model</code>/<code>configuration</code> to it, so
+callers do not repeat them on every call.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -998,6 +2179,22 @@ OpenAI client for core functionality.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
+                <code>_client</code>
+            </td>
+            <td>
+                  <code><span title="any_llm.any_llm.AnyLLM">AnyLLM</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The constructed any-llm provider instance backing this backend.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
                 <code>model</code>
             </td>
             <td>
@@ -1005,7 +2202,8 @@ OpenAI client for core functionality.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The name of the model to use (e.g., 'gpt-4', 'llama3').</p>
+                <p>The canonical model name or identifier passed to the underlying
+provider.</p>
               </div>
             </td>
             <td>
@@ -1014,14 +2212,19 @@ OpenAI client for core functionality.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>api_base</code>
+                <code>capabilities</code>
             </td>
             <td>
-                  <code><span title="str">str</span></code>
+                  <code><a class="autorefs autorefs-internal" title="Capabilities
+
+
+  
+      dataclass
+   (omop_llm.capabilities.Capabilities)" href="#omop_llm.capabilities.Capabilities">Capabilities</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The base URL for the API endpoint.</p>
+                <p>What this resolved backend can actually do.</p>
               </div>
             </td>
             <td>
@@ -1030,86 +2233,86 @@ OpenAI client for core functionality.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>api_key</code>
+                <code>configuration</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Default keyword arguments merged into every call, overridden by
+any argument the caller passes explicitly. Pure provider passthrough
+only, and doesn't include any of the other fields below.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span>()</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>embedding_dim</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Configured embedding dimension override, read by :meth:<code>dimensions</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>document_prefix</code>
             </td>
             <td>
                   <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The API key for authentication.</p>
+                <p>Prefix prepended to document/passage text before embedding.</p>
               </div>
             </td>
             <td>
-                  <code>&#39;ollama&#39;</code>
+                  <code>None</code>
             </td>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>temperature</code>
-            </td>
-            <td>
-                  <code><span title="float">float</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The temperature parameter for generation. Default is 1.0.</p>
-              </div>
-            </td>
-            <td>
-                  <code>1.0</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>system_message</code>
+                <code>query_prefix</code>
             </td>
             <td>
                   <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The default system message to prepend to chats. Default is "".</p>
+                <p>Prefix prepended to query text before embedding.</p>
               </div>
             </td>
             <td>
-                  <code>&#39;&#39;</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<p><span class="doc-section-title">Attributes:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code><span title="omop_llm.interface.client.LLMClient._base_client">_base_client</span></code></td>
-            <td>
-                  <code><span title="openai.OpenAI">OpenAI</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The initialized OpenAI client instance.</p>
-              </div>
+                  <code>None</code>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code><span title="omop_llm.interface.client.LLMClient._embedding_dim">_embedding_dim</span></code></td>
             <td>
-                  <code><span title="int">int</span> or None</code>
+                <code>_api_base</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Cached embedding dimension size.</p>
+                <p>The base URL this backend was constructed with, if any. Threaded
+through to provider-specific fast paths such as
+:meth:<code>~omop_llm.providers.supported.OllamaProvider.embedding_dimension_hint</code>.</p>
               </div>
+            </td>
+            <td>
+                  <code>None</code>
             </td>
           </tr>
       </tbody>
@@ -1137,21 +2340,237 @@ OpenAI client for core functionality.</p>
 
 
 
-<h6 id="omop_llm.interface.client.LLMClient.embedding_dim" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">embedding_dim</span></code>
+<h5 id="omop_llm.backend.ModelBackend.provider" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">provider</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
 
-</h6>
+</h5>
 
 
     <div class="doc doc-contents ">
 
-        <p>Retrieve the embedding dimension for the current model.</p>
-<p>If the dimension is not cached, it attempts to fetch it from the API.
-Currently supports Ollama endpoints.</p>
+        <p>The provider key this backend was resolved to, e.g. <code>"ollama"</code>.</p>
+<p>Read directly off <code>_client</code>'s own any-llm <code>PROVIDER_NAME</code> class
+attribute rather than stored separately at construction time, so
+there is exactly one place this string is ever defined (see
+:data:<code>omop_llm.providers.registry.PROVIDER_REGISTRY</code>, whose keys
+are derived from the same attribute).</p>
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="omop_llm.backend.ModelBackend.async_complete" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">async_complete</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">response_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reasoning_effort</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Run one chat completion.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>messages</code>
+            </td>
+            <td>
+                  <code>list of dict</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Chat history in OpenAI message format.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>tools</code>
+            </td>
+            <td>
+                  <code>list of dict</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Raw OpenAI-style tool schema list. any-llm normalizes tool-call
+parsing per provider, so callers doing multi-turn agentic tool
+use pass the same schema regardless of which provider is
+resolved. Requires <code>self.capabilities.tool_use</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>response_format</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span> or <span title="type">type</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A raw JSON-schema dict, or a Pydantic model class. any-llm
+translates a Pydantic class into each provider's own native
+structured-output mechanism. See :meth:<code>extract</code>/:meth:<code>async_extract</code>
+for a convenience method that validates and unwraps the
+result.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>max_tokens</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Maximum number of tokens to generate.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>temperature</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Sampling temperature.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>reasoning_effort</code>
+            </td>
+            <td>
+                  <code><span title="any_llm.types.completion.ReasoningEffort">ReasoningEffort</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Requested extended-thinking effort, any-llm's own normalized
+parameter across providers. Only meaningful when
+<code>self.capabilities.extended_thinking</code> is <code>True</code>; a provider
+without reasoning support ignores it.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>**kwargs</code>
+            </td>
+            <td>
+                  <code><span title="typing.Any">Any</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Additional provider-specific arguments, passed through
+unchanged. <code>stream</code> is rejected: this method always returns
+a <code>ChatCompletion</code>, never a chunk iterator, and streaming is
+not designed or supported here yet.</p>
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="any_llm.types.completion.ChatCompletion">ChatCompletion</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The completion response.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="omop_llm.backend.ModelBackend.async_dimensions" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">async_dimensions</span><span class="p">()</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Discover this model's embedding dimensionality.
+Three tiers:
+    1. a configured override (<code>self.embedding_dim</code>),
+    2. a provider-specific fast path (e.g. Ollama's <code>POST /api/show</code>), and
+    3. a live probe (embed one short string and measure the vector).</p>
 
 
     <p><span class="doc-section-title">Returns:</span></p>
@@ -1169,7 +2588,7 @@ Currently supports Ollama endpoints.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The size of the embedding vector.</p>
+                <p>The embedding vector length.</p>
               </div>
             </td>
           </tr>
@@ -1188,50 +2607,38 @@ Currently supports Ollama endpoints.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="ValueError">ValueError</span></code>
+                  <code><a class="autorefs autorefs-internal" title="UnsupportedCapabilityError (omop_llm.errors.UnsupportedCapabilityError)" href="#omop_llm.errors.UnsupportedCapabilityError">UnsupportedCapabilityError</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>If model information cannot be found in the Ollama response.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="NotImplementedError">NotImplementedError</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If the API base is not supported for automatic dimension retrieval.</p>
+                <p>If <code>self.capabilities.embeddings</code> is <code>False</code>.</p>
               </div>
             </td>
           </tr>
       </tbody>
     </table>
 
+
     </div>
 
 </div>
 
-
-
-
 <div class="doc doc-object doc-function">
 
 
-<h6 id="omop_llm.interface.client.LLMClient.cosine_similarity" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">cosine_similarity</span><span class="p">(</span><span class="n">vecs_a</span><span class="p">,</span> <span class="n">vecs_b</span><span class="p">)</span></code>
+<h5 id="omop_llm.backend.ModelBackend.async_embed_texts" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">async_embed_texts</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
   <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
   </span>
 
-</h6>
+</h5>
 
 
     <div class="doc doc-contents ">
 
-        <p>Compute the cosine similarity between two matrices of vectors.</p>
+        <p>Embed a batch of texts asynchronously.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1247,14 +2654,14 @@ Currently supports Ollama endpoints.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>vecs_a</code>
+                <code>texts</code>
             </td>
             <td>
-                  <code><span title="numpy.ndarray">ndarray</span></code>
+                  <code>list of str</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>A 2D array of vectors (Shape: M x D).</p>
+                <p>Texts to embed.</p>
               </div>
             </td>
             <td>
@@ -1263,95 +2670,23 @@ Currently supports Ollama endpoints.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>vecs_b</code>
+                <code>role</code>
             </td>
             <td>
-                  <code><span title="numpy.ndarray">ndarray</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>A 2D array of vectors (Shape: N x D).</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="numpy.ndarray">ndarray</span></code>
+                  <code><a class="autorefs autorefs-internal" title="EmbeddingRole (omop_llm.embeddings.EmbeddingRole)" href="#omop_llm.embeddings.EmbeddingRole">EmbeddingRole</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The dot product of the normalized vectors (Shape: M x N).</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<details class="note" open>
-  <summary>Notes</summary>
-  <p>A small epsilon (1e-10) is added to the norms to prevent division by zero.</p>
-</details>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h6 id="omop_llm.interface.client.LLMClient.embeddings" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">embeddings</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
-
-</h6>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Retrieve embeddings for the given text.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>text</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span> or <span title="typing.List">List</span>[<span title="str">str</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The input text or list of texts to embed.</p>
+                <p>Whether <code>texts</code> are being indexed (<code>DOCUMENT</code>) or used to
+search (<code>QUERY</code>). When given, prepends whichever of
+<code>self.document_prefix</code>/<code>self.query_prefix</code> matches, needed
+for asymmetric embedding models (e.g. nomic-embed-text, E5,
+BGE). Omit for symmetric models, or when texts are already
+prefixed.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>None</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -1363,7 +2698,11 @@ Currently supports Ollama endpoints.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The number of texts to process in a single API call. Default is 32.</p>
+                <p>If given, <code>texts</code> is chunked into sub-batches of at most this
+size, each sent as its own call, rather than one call with the
+entire list. Useful for bulk callers embedding more texts than
+a single provider request should carry. Default is <code>None</code>
+(one call for the whole list).</p>
               </div>
             </td>
             <td>
@@ -1385,11 +2724,11 @@ Currently supports Ollama endpoints.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="numpy.ndarray">ndarray</span></code>
+                  <code>list of list of float</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>A 2D numpy array containing the embeddings.</p>
+                <p>One embedding vector per input text, in the same order.</p>
               </div>
             </td>
           </tr>
@@ -1408,11 +2747,21 @@ Currently supports Ollama endpoints.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="AssertionError">AssertionError</span></code>
+                  <code><a class="autorefs autorefs-internal" title="UnsupportedCapabilityError (omop_llm.errors.UnsupportedCapabilityError)" href="#omop_llm.errors.UnsupportedCapabilityError">UnsupportedCapabilityError</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>If the base client has not been initialized.</p>
+                <p>If <code>self.capabilities.embeddings</code> is <code>False</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>batch_size</code> is not a positive integer.</p>
               </div>
             </td>
           </tr>
@@ -1427,16 +2776,29 @@ Currently supports Ollama endpoints.</p>
 <div class="doc doc-object doc-function">
 
 
-<h6 id="omop_llm.interface.client.LLMClient.euclidean_distance" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">euclidean_distance</span><span class="p">(</span><span class="n">text1</span><span class="p">,</span> <span class="n">text2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<h5 id="omop_llm.backend.ModelBackend.async_extract" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">async_extract</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">response_model</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
-</h6>
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+</h5>
 
 
     <div class="doc doc-contents ">
 
-        <p>Calculate the Euclidean distance between embeddings of two texts.</p>
+        <p>Extract one validated <code>response_model</code> instance from a chat call.</p>
+<p>A thin convenience method built on :meth:<code>async_complete</code> with
+<code>response_format=response_model</code>. Checks that a parsed instance
+actually came back, and unwraps it.</p>
 
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p><code>max_retries</code> is native (not <code>instructor</code>-based), so it works for
+all providers, unlike :func:<code>omop_llm.structured.extract_with_retry</code>.</p>
+</details>
 
 <p><span class="doc-section-title">Parameters:</span></p>
     <table>
@@ -1451,14 +2813,14 @@ Currently supports Ollama endpoints.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>text1</code>
+                <code>messages</code>
             </td>
             <td>
-                  <code><span title="str">str</span></code>
+                  <code>list of dict</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The first text string.</p>
+                <p>Chat history in OpenAI message format.</p>
               </div>
             </td>
             <td>
@@ -1467,18 +2829,36 @@ Currently supports Ollama endpoints.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>text2</code>
+                <code>response_model</code>
             </td>
             <td>
-                  <code><span title="str">str</span></code>
+                  <code>type of BaseModel</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The second text string.</p>
+                <p>The Pydantic model to constrain and validate the response
+against.</p>
               </div>
             </td>
             <td>
                 <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>max_retries</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of additional attempts after a validation failure.
+Default is 0, i.e. fail immediately.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -1490,7 +2870,7 @@ Currently supports Ollama endpoints.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Additional arguments passed to the embedding function.</p>
+                <p>Additional arguments forwarded to :meth:<code>async_complete</code>.</p>
               </div>
             </td>
             <td>
@@ -1512,11 +2892,76 @@ Currently supports Ollama endpoints.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="float">float</span></code>
+                  <code><span title="pydantic.BaseModel">BaseModel</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The Euclidean distance (L2 norm) between the two embedding vectors.</p>
+                <p>A validated instance of <code>response_model</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="UnsupportedCapabilityError (omop_llm.errors.UnsupportedCapabilityError)" href="#omop_llm.errors.UnsupportedCapabilityError">UnsupportedCapabilityError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>self.capabilities.structured_output</code> is <code>False</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="NoParsedOutputError (omop_llm.errors.NoParsedOutputError)" href="#omop_llm.errors.NoParsedOutputError">NoParsedOutputError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the provider returned no parsed instance (refusal or empty
+content), after exhausting <code>max_retries</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="any_llm.exceptions.LengthFinishReasonError">LengthFinishReasonError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the response was truncated before completing.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="any_llm.exceptions.ContentFilterFinishReasonError">ContentFilterFinishReasonError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If a content filter blocked the response.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pydantic.ValidationError">ValidationError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the model's output does not match <code>response_model</code>'s
+schema, after exhausting <code>max_retries</code>.</p>
               </div>
             </td>
           </tr>
@@ -1531,17 +2976,23 @@ Currently supports Ollama endpoints.</p>
 <div class="doc doc-object doc-function">
 
 
-<h6 id="omop_llm.interface.client.LLMClient.similarity" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">similarity</span><span class="p">(</span><span class="n">terms</span><span class="p">,</span> <span class="n">terms_to_match</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<h5 id="omop_llm.backend.ModelBackend.async_is_available" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">async_is_available</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
-</h6>
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+</h5>
 
 
     <div class="doc doc-contents ">
 
-        <p>Calculate the cosine similarity between two sets of terms.</p>
-<p>This method handles inputs as strings, lists of strings, or pre-computed
-numpy arrays of embeddings.</p>
+        <p>Check whether this backend can actually be reached, asynchronously.</p>
+<p>Probes <code>list_models</code> against the resolved provider. Swallows any
+error and reports <code>False</code> rather than raising, since the point of
+a health check is to answer "can I use this," not to propagate the
+specific failure.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1557,38 +3008,6 @@ numpy arrays of embeddings.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>terms</code>
-            </td>
-            <td>
-                  <code>str, List[str], or np.ndarray</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The source terms or embeddings.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>terms_to_match</code>
-            </td>
-            <td>
-                  <code>str, List[str], or np.ndarray</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The target terms or embeddings to match against.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
                 <code>**kwargs</code>
             </td>
             <td>
@@ -1596,7 +3015,8 @@ numpy arrays of embeddings.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Additional arguments passed to the embedding function if embedding is required.</p>
+                <p>Forwarded to the underlying <code>alist_models</code> call, e.g.
+<code>timeout=2.0</code>.</p>
               </div>
             </td>
             <td>
@@ -1618,11 +3038,751 @@ numpy arrays of embeddings.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="numpy.ndarray">ndarray</span></code>
+                  <code><span title="bool">bool</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>A similarity matrix.</p>
+                <p>Whether listing models against this backend succeeded.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="omop_llm.backend.ModelBackend.complete" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">complete</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">response_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reasoning_effort</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Run one chat completion synchronously. See :meth:<code>async_complete</code> for parameters.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="omop_llm.backend.ModelBackend.dimensions" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">dimensions</span><span class="p">()</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Discover this model's embedding dimensionality synchronously.
+Three tiers:
+    1. a configured override (<code>self.embedding_dim</code>),
+    2. a provider-specific fast path (e.g. Ollama's <code>POST /api/show</code>), and
+    3. a live probe (embed one short string and measure the vector).</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The embedding vector length.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="UnsupportedCapabilityError (omop_llm.errors.UnsupportedCapabilityError)" href="#omop_llm.errors.UnsupportedCapabilityError">UnsupportedCapabilityError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>self.capabilities.embeddings</code> is <code>False</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="omop_llm.backend.ModelBackend.embed_texts" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">embed_texts</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Embed a batch of texts.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>texts</code>
+            </td>
+            <td>
+                  <code>list of str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Texts to embed.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>role</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="EmbeddingRole (omop_llm.embeddings.EmbeddingRole)" href="#omop_llm.embeddings.EmbeddingRole">EmbeddingRole</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether <code>texts</code> are being indexed (<code>DOCUMENT</code>) or used to
+search (<code>QUERY</code>). When given, prepends whichever of
+<code>self.document_prefix</code>/<code>self.query_prefix</code> matches, needed
+for asymmetric embedding models (e.g. nomic-embed-text, E5,
+BGE). Omit for symmetric models, or when texts are already
+prefixed.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>batch_size</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If given, <code>texts</code> is chunked into sub-batches of at most this
+size, each sent as its own call, rather than one call with the
+entire list. Useful for bulk callers embedding more texts than
+a single provider request should carry. Default is <code>None</code>
+(one call for the whole list).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>list of list of float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>One embedding vector per input text, in the same order.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="UnsupportedCapabilityError (omop_llm.errors.UnsupportedCapabilityError)" href="#omop_llm.errors.UnsupportedCapabilityError">UnsupportedCapabilityError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>self.capabilities.embeddings</code> is <code>False</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>batch_size</code> is not a positive integer.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="omop_llm.backend.ModelBackend.extract" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">extract</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">response_model</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Extract one validated <code>response_model</code> instance from a chat call synchronously.</p>
+<p>A thin convenience method built on :meth:<code>complete</code> with
+<code>response_format=response_model</code>. Checks that a parsed instance
+actually came back, and unwraps it.</p>
+
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p><code>max_retries</code> is native (not <code>instructor</code>-based), so it works for
+all providers, unlike :func:<code>omop_llm.structured.extract_with_retry</code>.</p>
+</details>
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>messages</code>
+            </td>
+            <td>
+                  <code>list of dict</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Chat history in OpenAI message format.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>response_model</code>
+            </td>
+            <td>
+                  <code>type of BaseModel</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The Pydantic model to constrain and validate the response
+against.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>max_retries</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of additional attempts after a validation failure.
+Default is 0, i.e. fail immediately.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>**kwargs</code>
+            </td>
+            <td>
+                  <code><span title="typing.Any">Any</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Additional arguments forwarded to :meth:<code>complete</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pydantic.BaseModel">BaseModel</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A validated instance of <code>response_model</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="UnsupportedCapabilityError (omop_llm.errors.UnsupportedCapabilityError)" href="#omop_llm.errors.UnsupportedCapabilityError">UnsupportedCapabilityError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>self.capabilities.structured_output</code> is <code>False</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="NoParsedOutputError (omop_llm.errors.NoParsedOutputError)" href="#omop_llm.errors.NoParsedOutputError">NoParsedOutputError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the provider returned no parsed instance (refusal or empty
+content), after exhausting <code>max_retries</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="any_llm.exceptions.LengthFinishReasonError">LengthFinishReasonError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the response was truncated before completing.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="any_llm.exceptions.ContentFilterFinishReasonError">ContentFilterFinishReasonError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If a content filter blocked the response.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pydantic.ValidationError">ValidationError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the model's output does not match <code>response_model</code>'s
+schema, after exhausting <code>max_retries</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="omop_llm.backend.ModelBackend.is_available" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">is_available</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Check whether this backend can actually be reached, synchronously.</p>
+<p>Probes <code>list_models</code> against the resolved provider. Swallows any
+error and reports <code>False</code> rather than raising, since the point of
+a health check is to answer "can I use this," not to propagate the
+specific failure.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>**kwargs</code>
+            </td>
+            <td>
+                  <code><span title="typing.Any">Any</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Forwarded to the underlying <code>list_models</code> call, e.g.
+<code>timeout=2.0</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether listing models against this backend succeeded.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="omop_llm.backend.build_model_backend" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">build_model_backend</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">model_capabilities</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">configuration</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">document_prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">query_prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Resolve a provider and model into a ready-to-call backend.</p>
+<p>Plain keyword arguments in, a :class:<code>ModelBackend</code> out, mirroring the
+shape <code>oa-configurator</code>'s own database resolution already uses
+(<code>Resolver(stack).resolve_resource(name).create_engine(**kwargs)</code>
+returns a plain <code>sqlalchemy.Engine</code>, no intermediate config object).
+See :func:<code>build_model_backend_from_resolved</code> for the <code>oa-configurator</code>
+integration built on top of this function.</p>
+<p>Canonicalizes <code>model</code> for the resolved provider (see
+:func:<code>omop_llm.providers.registry.canonical_model_name</code>), so a
+:class:<code>ModelBackend</code>'s <code>model</code> attribute is always canonical.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>provider</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A key in :data:<code>omop_llm.providers.registry.PROVIDER_REGISTRY</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>model</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Raw model name or identifier; canonicalized before use.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>model_capabilities</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="Capabilities
+
+
+  
+      dataclass
+   (omop_llm.capabilities.Capabilities)" href="#omop_llm.capabilities.Capabilities">Capabilities</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>What this specific model is declared to support. Required, not
+optional: neither any-llm nor omop-llm can introspect this per
+model, so the caller has to say. Pass <code>Capabilities()</code> to
+declare none of them, explicitly rather than by omission.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>base_url</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The base URL for this specific deployment of the provider.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>api_key</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The API key for this specific deployment, if one is required.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>configuration</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Default keyword arguments merged into every call this backend
+makes (e.g. <code>max_tokens</code>, <code>temperature</code>). Pure provider
+passthrough -- use <code>embedding_dim</code>/<code>document_prefix</code>/<code>query_prefix</code>
+below for those, never this dict.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>embedding_dim</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Configured embedding dimension override.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>document_prefix</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Prefix prepended to document/passage text before embedding.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>query_prefix</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Prefix prepended to query text before embedding.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="ModelBackend
+
+
+  
+      dataclass
+   (omop_llm.backend.ModelBackend)" href="#omop_llm.backend.ModelBackend">ModelBackend</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A backend ready to call, for example, :meth:<code>ModelBackend.complete</code>
+or :meth:<code>ModelBackend.async_complete</code>.</p>
               </div>
             </td>
           </tr>
@@ -1645,7 +3805,130 @@ numpy arrays of embeddings.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>If inputs are not strings, lists, or numpy arrays.</p>
+                <p>If <code>model</code> cannot be made canonical for the resolved provider
+(e.g. an Ollama name with no explicit tag), or if <code>embedding_dim</code>
+is given but the effective capabilities don't include embeddings.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="omop_llm.backend.build_model_backend_from_resolved" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">build_model_backend_from_resolved</span><span class="p">(</span><span class="n">resolved</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Build a backend from an <code>oa-configurator</code> <code>ResolvedModel</code>.</p>
+<p>The <code>oa-configurator</code> integration point: <code>oa-configurator</code> itself
+knows nothing about <code>omop-llm</code> (its <code>ResolvedModel</code> is plain data,
+the same way <code>ResolvedResource</code> is), so this glue lives here instead,
+mirroring <code>omop_alchemy.config.create_cdm_engine(resolved: ResolvedResource) -&gt; sa.Engine</code>:
+a consumer of <code>oa-configurator</code> takes its plain resolved output and
+does its own construction from it.</p>
+<p>A typical caller (e.g. a package's own config module) does::</p>
+<pre><code>from oa_configurator import Resolver, load_stack_config
+from omop_llm import build_model_backend_from_resolved
+
+stack = load_stack_config()
+resolved = Resolver(stack).resolve_model(config.embedding_model)
+backend = build_model_backend_from_resolved(resolved)
+</code></pre>
+<p>A thin translator: <code>resolved.embedding_dim</code>/<code>document_prefix</code>/<code>query_prefix</code>
+are forwarded as-is, and <code>resolved.embeddings</code>/<code>tool_use</code>/<code>structured_output</code>/<code>extended_thinking</code>
+are collected into one :class:<code>~omop_llm.capabilities.Capabilities</code>.
+<code>resolved.configuration</code> is passed through untouched -- nothing
+gets folded into it.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>resolved</code>
+            </td>
+            <td>
+                  <code><span title="oa_configurator.ResolvedModel">ResolvedModel</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A model resolved via <code>oa_configurator.Resolver.resolve_model()</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="ModelBackend
+
+
+  
+      dataclass
+   (omop_llm.backend.ModelBackend)" href="#omop_llm.backend.ModelBackend">ModelBackend</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A backend ready to call, for example, :meth:<code>ModelBackend.complete</code>
+or :meth:<code>ModelBackend.async_complete</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>resolved.model</code> cannot be made canonical for the resolved
+provider (e.g. an Ollama name with no explicit tag).</p>
               </div>
             </td>
           </tr>
@@ -1665,15 +3948,423 @@ numpy arrays of embeddings.</p>
 
 </div>
 
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="omop_llm.capabilities" class="doc doc-heading">
+            <code>capabilities</code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+        <p>What something -- a provider, a model, or a resolved backend -- can do.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
 <div class="doc doc-object doc-class">
 
 
 
-<h5 id="omop_llm.interface.client.LLMClientError" class="doc doc-heading">
-            <code>LLMClientError</code>
+<h4 id="omop_llm.capabilities.Capabilities" class="doc doc-heading">
+            <code>Capabilities</code>
 
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+
+        <p>A capability declaration: what something can do.
+Used for providers, models, and resolved backends (the combination of the two).</p>
+<p>Opt-in: every field defaults to <code>False</code>. Neither any-llm nor
+omop_llm can introspect a model's real capabilities, so nothing is
+assumed.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>streaming</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether streaming completions are supported.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>embeddings</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether the embeddings endpoint is supported.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>extended_thinking</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether reasoning/extended-thinking output is supported.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>tool_use</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether tool/function calling is supported.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>structured_output</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether structured (schema-constrained) output is supported.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="omop_llm.capabilities.Capabilities.__and__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__and__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></code>
 
 </h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Element-wise AND: a capability is only available if both sides have it.</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="omop_llm.embeddings" class="doc doc-heading">
+            <code>embeddings</code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+        <p>Embedding role prefixing: <code>EmbeddingRole</code> and a best-effort sanity check.</p>
+<p>Asymmetric embedding models (nomic-embed-text, the E5 family, BGE, and
+others) are trained with distinct prefixes for the text being indexed
+versus the text used to search it. Sending text without the correct
+prefix produces a valid-looking embedding that just retrieves badly,
+with no error to notice.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="omop_llm.embeddings.EmbeddingRole" class="doc doc-heading">
+            <code>EmbeddingRole</code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
+
+
+
+        <p>Role of text being embedded, for models with asymmetric prefixes.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="omop_llm.embeddings.apply_embedding_prefix" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">apply_embedding_prefix</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">document_prefix</span><span class="p">,</span> <span class="n">query_prefix</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Prepend <em>role</em>'s prefix to each of <em>texts</em>, if one is given.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="omop_llm.embeddings.warn_if_prefixes_look_wrong" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">warn_if_prefixes_look_wrong</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">document_prefix</span><span class="p">,</span> <span class="n">query_prefix</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Log a warning for a missing or unrecognized prefix.</p>
+<p>Called once, at :func:<code>~omop_llm.backend.build_model_backend</code> time, for
+any backend that declares embeddings support. Never raises: a prefix
+outside :data:<code>KNOWN_EMBEDDING_PREFIXES</code> is not necessarily wrong, this
+is a heads-up, not validation.</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="omop_llm.errors" class="doc doc-heading">
+            <code>errors</code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+        <p>Exceptions raised by omop_llm.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="omop_llm.errors.NoParsedOutputError" class="doc doc-heading">
+            <code>NoParsedOutputError</code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="OmopLlmError (omop_llm.errors.OmopLlmError)" href="#omop_llm.errors.OmopLlmError">OmopLlmError</a></code></p>
+
+
+
+        <p>Raised when a structured-output call produced no parsed instance to unwrap.</p>
+
+
+
+
+
+
+
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="omop_llm.errors.OmopLlmError" class="doc doc-heading">
+            <code>OmopLlmError</code>
+
+
+</h4>
 
 
     <div class="doc doc-contents ">
@@ -1682,7 +4373,69 @@ numpy arrays of embeddings.</p>
 
 
 
-        <p>Custom exception for LLM Client runtime errors.</p>
+        <p>Base class for all omop_llm errors.</p>
+
+
+
+
+
+
+
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="omop_llm.errors.UnsupportedCapabilityError" class="doc doc-heading">
+            <code>UnsupportedCapabilityError</code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="OmopLlmError (omop_llm.errors.OmopLlmError)" href="#omop_llm.errors.OmopLlmError">OmopLlmError</a></code></p>
+
+
+
+        <p>Raised when a requested capability is not available on the resolved backend.</p>
+
+
+
+
+
+
+
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="omop_llm.errors.UnsupportedProviderError" class="doc doc-heading">
+            <code>UnsupportedProviderError</code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="OmopLlmError (omop_llm.errors.OmopLlmError)" href="#omop_llm.errors.OmopLlmError">OmopLlmError</a></code></p>
+
+
+
+        <p>Raised when a provider key is not in omop_llm's supported registry.</p>
 
 
 
@@ -1709,62 +4462,54 @@ numpy arrays of embeddings.</p>
 
 
 
-<h4 id="omop_llm.interface.instructor_client" class="doc doc-heading">
-            <code>instructor_client</code>
+<h3 id="omop_llm.providers" class="doc doc-heading">
+            <code>providers</code>
 
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="omop_llm.providers.canonical_model_name" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">canonical_model_name</span><span class="p">(</span><span class="n">provider_key</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></code>
 
 </h4>
 
-    <div class="doc doc-contents ">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h5 id="omop_llm.interface.instructor_client.InstructorClient" class="doc doc-heading">
-            <code>InstructorClient</code>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-</h5>
-
 
     <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="LLMClient
 
-
-  
-      dataclass
-   (omop_llm.interface.client.LLMClient)" href="#omop_llm.interface.client.LLMClient">LLMClient</a></code></p>
-
-
-
-        <p>LLMClient implementation backed by pydantic-instructor.</p>
-<p>This client extends the base LLMClient to support structured outputs
-via the <code>instructor</code> library.</p>
+        <p>Canonicalize a model name for one registered provider.</p>
+<p>Useful for deciding what to persist as a model's stable identity (e.g.
+in a database) independently of building a full
+:class:<code>~omop_llm.backend.ModelBackend</code>. :func:<code>~omop_llm.backend.build_model_backend</code>
+also calls this internally, so a backend's <code>model</code> attribute is
+always canonical without callers needing to remember to do it
+themselves.</p>
+<p>Strips surrounding whitespace and rejects an empty result <em>before</em>
+dispatching to the provider's own <code>canonical_model_name</code>.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1780,124 +4525,14 @@ via the <code>instructor</code> library.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>instructor_mode</code>
+                <code>provider_key</code>
             </td>
             <td>
-                  <code><span title="instructor.Mode">Mode</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The mode for the instructor client (e.g., JSON, TOOLS). Default is JSON.</p>
-              </div>
-            </td>
-            <td>
-                  <code><span title="instructor.Mode.JSON">JSON</span></code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<p><span class="doc-section-title">Attributes:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code><span title="omop_llm.interface.instructor_client.InstructorClient._client">_client</span></code></td>
-            <td>
-                  <code><span title="typing.Any">Any</span></code>
+                  <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The initialized instructor client wrapper.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h6 id="omop_llm.interface.instructor_client.InstructorClient.__post_init__" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">__post_init__</span><span class="p">()</span></code>
-
-</h6>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Initialize the Instructor wrapper around the OpenAI client.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h6 id="omop_llm.interface.instructor_client.InstructorClient.complete" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">complete</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show_prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
-
-</h6>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Run a chat completion.</p>
-<p>If <code>response_model</code> is provided, structured output is returned based
-on the Pydantic model. Otherwise, plain text is returned.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>messages</code>
-            </td>
-            <td>
-                  <code>list of dict</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The list of chat messages (e.g., <code>[{'role': 'user', 'content': '...'}]</code>).</p>
+                <p>A key expected to be in :data:<code>PROVIDER_REGISTRY</code>.</p>
               </div>
             </td>
             <td>
@@ -1906,183 +4541,14 @@ on the Pydantic model. Otherwise, plain text is returned.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>response_model</code>
+                <code>name</code>
             </td>
             <td>
-                  <code><span title="type">type</span>[<span title="omop_llm.interface.instructor_client.InstructorClient.complete[T]">T</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>A Pydantic model class (T) to structure the response.
-Must be a subclass of BaseModel.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>show_prompt</code>
-            </td>
-            <td>
-                  <code><span title="bool">bool</span></code>
+                  <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>If True, logs the rendered prompt before sending. Default is False.</p>
-              </div>
-            </td>
-            <td>
-                  <code>False</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>**kwargs</code>
-            </td>
-            <td>
-                  <code><span title="typing.Any">Any</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Additional arguments passed to <code>chat.completions.create</code>.</p>
-              </div>
-            </td>
-            <td>
-                  <code>{}</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="typing.Union">Union</span>[<span title="str">str</span>, <span title="omop_llm.interface.instructor_client.InstructorClient.complete[T]">T</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The response string (if no model provided) or an instance of T (the Pydantic model).</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<p><span class="doc-section-title">Raises:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="LLMClientError (omop_llm.interface.client.LLMClientError)" href="#omop_llm.interface.client.LLMClientError">LLMClientError</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If the completion request fails.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h6 id="omop_llm.interface.instructor_client.InstructorClient.messages_from_prompt_template" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">messages_from_prompt_template</span><span class="p">(</span><span class="n">prompt_template</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></code>
-
-</h6>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Generate a list of messages from a PromptTemplate.</p>
-
-
-<p><span class="doc-section-title">Raises:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="NotImplementedError">NotImplementedError</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>This method is currently dropped for Template in LinkML.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h6 id="omop_llm.interface.instructor_client.InstructorClient.render_prompt_messages" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">render_prompt_messages</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span></code>
-
-</h6>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Render a list of chat messages into a single string for logging or display.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>messages</code>
-            </td>
-            <td>
-                  <code>list of dict</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The chat history.</p>
+                <p>Raw model name to canonicalize.</p>
               </div>
             </td>
             <td>
@@ -2108,7 +4574,704 @@ Must be a subclass of BaseModel.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>A formatted string representation of the conversation.</p>
+                <p>The canonical model name for this provider.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="UnsupportedProviderError (omop_llm.errors.UnsupportedProviderError)" href="#omop_llm.errors.UnsupportedProviderError">UnsupportedProviderError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>provider_key</code> is not registered.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>name</code> is empty or whitespace-only, or cannot otherwise be
+made canonical for this provider (e.g. an Ollama name with no
+explicit tag).</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="omop_llm.providers.provider_capabilities_for" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">provider_capabilities_for</span><span class="p">(</span><span class="n">provider_key</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Build the provider-wide capability ceiling for one registered provider.</p>
+<p>This is the <em>provider's</em> transport-level ceiling, not a specific
+model's effective capabilities.</p>
+<p><code>streaming</code>, <code>embeddings</code>, and <code>extended_thinking</code> come straight
+from any-llm's own <code>get_provider_metadata()</code>. <code>tool_use</code> and
+<code>structured_output</code> come from the class attributes each provider
+subclass declares itself, since any-llm tracks neither.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>provider_key</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A key expected to be in :data:<code>PROVIDER_REGISTRY</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="Capabilities
+
+
+  
+      dataclass
+   (omop_llm.capabilities.Capabilities)" href="#omop_llm.capabilities.Capabilities">Capabilities</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The capability declaration for this provider.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="UnsupportedProviderError (omop_llm.errors.UnsupportedProviderError)" href="#omop_llm.errors.UnsupportedProviderError">UnsupportedProviderError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>provider_key</code> is not registered.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="omop_llm.providers.provider_class_for" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">provider_class_for</span><span class="p">(</span><span class="n">provider_key</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Look up a registered provider class.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>provider_key</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A key expected to be in :data:<code>PROVIDER_REGISTRY</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>type of AnyLLM</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The provider class registered for <code>provider_key</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="UnsupportedProviderError (omop_llm.errors.UnsupportedProviderError)" href="#omop_llm.errors.UnsupportedProviderError">UnsupportedProviderError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>provider_key</code> is not registered.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="omop_llm.providers.supported_providers" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">supported_providers</span><span class="p">()</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>List the provider keys omop_llm will construct a backend for.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>tuple of str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The registered provider keys, sorted alphabetically.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h4 id="omop_llm.providers.base" class="doc doc-heading">
+            <code>base</code>
+
+
+</h4>
+
+    <div class="doc doc-contents ">
+
+        <p>Shared base for omop_llm's own provider subclasses.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h5 id="omop_llm.providers.base.ProviderMixin" class="doc doc-heading">
+            <code>ProviderMixin</code>
+
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="abc.ABC">ABC</span></code></p>
+
+
+
+        <p>Marks a class as one of omop_llm's own provider subclasses.</p>
+<p>Declares the two capabilities any-llm does not track itself
+(<code>TOOL_USE</code>, <code>STRUCTURED_OUTPUT</code>) as class attributes, alongside
+any-llm's own <code>SUPPORTS_*</code> flags on the sibling base class. Also
+declares the two provider-specific hooks a resolved backend needs:
+:meth:<code>canonical_model_name</code> and :meth:<code>embedding_dimension_hint</code>.</p>
+<p>Every provider omop_llm supports gets a real subclass built on this
+mixin. Any-llm's own base class, <code>AnyLLM</code>, is already an <code>abc.ABC</code>
+with real abstract methods, so this mixin composes with it safely.
+<code>canonical_model_name</code> is a required override, not a default
+passthrough, so adding a new provider forces a deliberate decision
+about its naming rules rather than silently inheriting "no
+transformation needed."</p>
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><span title="omop_llm.providers.base.ProviderMixin.TOOL_USE">TOOL_USE</span></code></td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether this provider supports tool/function calling.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="omop_llm.providers.base.ProviderMixin.STRUCTURED_OUTPUT">STRUCTURED_OUTPUT</span></code></td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether this provider supports structured (schema-constrained)
+output.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="omop_llm.providers.base.ProviderMixin.async_embedding_dimension_hint" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">async_embedding_dimension_hint</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">api_base</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+</h6>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Look up this model's embedding dimension via a provider-specific fast path.</p>
+<p>Default: no fast path available. Override where a provider
+exposes model metadata directly (e.g. Ollama's <code>POST /api/show</code>).
+Used as the middle tier of :meth:<code>omop_llm.backend.ModelBackend.async_dimensions</code>,
+between a configured override and a live embedding probe.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>model</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The canonical model name.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>api_base</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The resolved base URL this backend was constructed with. May
+be <code>None</code> if it was not explicitly configured; providers
+that need it to build a fast-path request should return
+<code>None</code> in that case rather than guessing a default.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="int">int</span> or None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The embedding dimension, or <code>None</code> if this provider has no
+fast path for it.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="omop_llm.providers.base.ProviderMixin.canonical_model_name" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">canonical_model_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-abstractmethod"><code>abstractmethod</code></small>
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h6>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return the canonical form of a model name for this provider.</p>
+<p>The canonical form is the identifier used as a stable key
+wherever a consumer persists model identity, and the <code>model</code> value
+:func:<code>~omop_llm.backend.build_model_backend</code> resolves to. Implementations
+must be idempotent: calling this on an already-canonical name
+returns the same string unchanged.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Raw model name as supplied by the caller, e.g. <code>"llama3"</code> or
+<code>"text-embedding-3-small"</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The canonical model name for this provider.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the name cannot be made canonical (e.g. an Ollama name with
+no explicit tag).</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="omop_llm.providers.base.ProviderMixin.embedding_dimension_hint" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">embedding_dimension_hint</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">api_base</span><span class="p">)</span></code>
+
+</h6>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Synchronous counterpart to :meth:<code>async_embedding_dimension_hint</code>.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>model</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The canonical model name.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>api_base</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The resolved base URL this backend was constructed with. See
+:meth:<code>async_embedding_dimension_hint</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="int">int</span> or None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The embedding dimension, or <code>None</code> if this provider has no
+fast path for it.</p>
               </div>
             </td>
           </tr>
@@ -2136,6 +5299,1377 @@ Must be a subclass of BaseModel.</p>
     </div>
 
 </div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h4 id="omop_llm.providers.registry" class="doc doc-heading">
+            <code>registry</code>
+
+
+</h4>
+
+    <div class="doc doc-contents ">
+
+        <p>The closed set of providers omop_llm exposes.</p>
+<p>any-llm itself supports around fifty providers; omop_llm intentionally
+supports six, matched to what this stack actually runs: local (<code>ollama</code>,
+<code>llama-server</code> via <code>llamacpp</code>, <code>vllm</code>) and cloud (<code>openai</code>,
+<code>anthropic</code>, <code>gemini</code>). See :mod:<code>omop_llm.providers.supported</code> for
+the six classes themselves. A provider not defined there is structurally
+unreachable through omop_llm's public API, regardless of what any-llm
+itself supports.</p>
+<p><code>PROVIDER_REGISTRY</code> is built by discovering
+:class:<code>~omop_llm.providers.base.ProviderMixin</code>'s own subclasses,
+not by a second, separately-maintained list of classes: the set of
+supported providers is defined exactly once, in
+:mod:<code>omop_llm.providers.supported</code>, and this module can't drift out of
+sync with it because it has nothing of its own to drift. One caveat that
+comes with discovery over a class registry: any other direct subclass of
+<code>ProviderMixin</code> loaded into the process (e.g. a test fixture)
+would also appear here. Nothing in this package does that; if a test ever
+needs a fake provider, it should not subclass the mixin directly.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="omop_llm.providers.registry.canonical_model_name" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">canonical_model_name</span><span class="p">(</span><span class="n">provider_key</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Canonicalize a model name for one registered provider.</p>
+<p>Useful for deciding what to persist as a model's stable identity (e.g.
+in a database) independently of building a full
+:class:<code>~omop_llm.backend.ModelBackend</code>. :func:<code>~omop_llm.backend.build_model_backend</code>
+also calls this internally, so a backend's <code>model</code> attribute is
+always canonical without callers needing to remember to do it
+themselves.</p>
+<p>Strips surrounding whitespace and rejects an empty result <em>before</em>
+dispatching to the provider's own <code>canonical_model_name</code>.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>provider_key</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A key expected to be in :data:<code>PROVIDER_REGISTRY</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Raw model name to canonicalize.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The canonical model name for this provider.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="UnsupportedProviderError (omop_llm.errors.UnsupportedProviderError)" href="#omop_llm.errors.UnsupportedProviderError">UnsupportedProviderError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>provider_key</code> is not registered.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>name</code> is empty or whitespace-only, or cannot otherwise be
+made canonical for this provider (e.g. an Ollama name with no
+explicit tag).</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="omop_llm.providers.registry.provider_capabilities_for" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">provider_capabilities_for</span><span class="p">(</span><span class="n">provider_key</span><span class="p">)</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Build the provider-wide capability ceiling for one registered provider.</p>
+<p>This is the <em>provider's</em> transport-level ceiling, not a specific
+model's effective capabilities.</p>
+<p><code>streaming</code>, <code>embeddings</code>, and <code>extended_thinking</code> come straight
+from any-llm's own <code>get_provider_metadata()</code>. <code>tool_use</code> and
+<code>structured_output</code> come from the class attributes each provider
+subclass declares itself, since any-llm tracks neither.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>provider_key</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A key expected to be in :data:<code>PROVIDER_REGISTRY</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="Capabilities
+
+
+  
+      dataclass
+   (omop_llm.capabilities.Capabilities)" href="#omop_llm.capabilities.Capabilities">Capabilities</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The capability declaration for this provider.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="UnsupportedProviderError (omop_llm.errors.UnsupportedProviderError)" href="#omop_llm.errors.UnsupportedProviderError">UnsupportedProviderError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>provider_key</code> is not registered.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="omop_llm.providers.registry.provider_class_for" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">provider_class_for</span><span class="p">(</span><span class="n">provider_key</span><span class="p">)</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Look up a registered provider class.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>provider_key</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A key expected to be in :data:<code>PROVIDER_REGISTRY</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>type of AnyLLM</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The provider class registered for <code>provider_key</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="UnsupportedProviderError (omop_llm.errors.UnsupportedProviderError)" href="#omop_llm.errors.UnsupportedProviderError">UnsupportedProviderError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>provider_key</code> is not registered.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="omop_llm.providers.registry.supported_providers" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">supported_providers</span><span class="p">()</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>List the provider keys omop_llm will construct a backend for.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>tuple of str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The registered provider keys, sorted alphabetically.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h4 id="omop_llm.providers.supported" class="doc doc-heading">
+            <code>supported</code>
+
+
+</h4>
+
+    <div class="doc doc-contents ">
+
+        <p>The providers omop_llm supports, as explicit classes.</p>
+<p>any-llm itself supports around fifty providers (see its own reference:
+https://docs.mozilla.ai/any-llm/providers/).
+omop_llm currently supports the following models: 
+- local (<code>ollama</code>, <code>llama-server</code> via <code>llamacpp</code>, <code>vllm</code>), and
+- cloud (<code>openai</code>, <code>anthropic</code>, <code>gemini</code>). </p>
+<p>Each class here subclasses both :class:<code>~omop_llm.providers.base.ProviderMixin</code>
+(our contract: <code>TOOL_USE</code>/<code>STRUCTURED_OUTPUT</code>, and the required
+<code>canonical_model_name</code> override) and any-llm's own provider class for
+that provider.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h5 id="omop_llm.providers.supported.AnthropicProvider" class="doc doc-heading">
+            <code>AnthropicProvider</code>
+
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="ProviderMixin (omop_llm.providers.base.ProviderMixin)" href="#omop_llm.providers.base.ProviderMixin">ProviderMixin</a></code>, <code><span title="any_llm.providers.anthropic.anthropic.AnthropicProvider">AnthropicProvider</span></code></p>
+
+
+
+        <p>Anthropic (Claude).</p>
+<p><code>base_url</code> defaults to <code>anthropic</code> SDK default when not given.
+<code>api_key</code> is required (explicit, or the <code>ANTHROPIC_API_KEY</code> env var).</p>
+
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>any-llm's <code>get_provider_metadata()</code> reports <code>embedding=False</code>
+for Anthropic (it has no embeddings API), so
+:meth:<code>omop_llm.backend.ModelBackend.embed_texts</code> refuses this
+provider.</p>
+</details>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="omop_llm.providers.supported.AnthropicProvider.canonical_model_name" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">canonical_model_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h6>
+
+
+    <div class="doc doc-contents ">
+
+        <p>No transformation: Anthropic model names have no mutable-tag concern.</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h5 id="omop_llm.providers.supported.GeminiProvider" class="doc doc-heading">
+            <code>GeminiProvider</code>
+
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="ProviderMixin (omop_llm.providers.base.ProviderMixin)" href="#omop_llm.providers.base.ProviderMixin">ProviderMixin</a></code>, <code><span title="any_llm.providers.gemini.gemini.GeminiProvider">GeminiProvider</span></code></p>
+
+
+
+        <p>Gemini, e.g. <code>gemini-2.5-pro</code>.</p>
+<p><code>base_url</code> defaults to <code>gemini</code> SDK default when not given.
+<code>api_key</code> is required (explicit, or the <code>GEMINI_API_KEY</code>/<code>GOOGLE_API_KEY</code> env var).</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="omop_llm.providers.supported.GeminiProvider.canonical_model_name" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">canonical_model_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h6>
+
+
+    <div class="doc doc-contents ">
+
+        <p>No transformation: Gemini model names have no mutable-tag concern.</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h5 id="omop_llm.providers.supported.LlamacppProvider" class="doc doc-heading">
+            <code>LlamacppProvider</code>
+
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="ProviderMixin (omop_llm.providers.base.ProviderMixin)" href="#omop_llm.providers.base.ProviderMixin">ProviderMixin</a></code>, <code><span title="any_llm.providers.llamacpp.llamacpp.LlamacppProvider">LlamacppProvider</span></code></p>
+
+
+
+        <p>llama.cpp's <code>llama-server</code>. Covers local dev and a CUDA/TRE fallback profile.</p>
+<p><code>base_url</code> defaults to <code>http://127.0.0.1:8080/v1</code> if not given.
+<code>api_key</code> is not required.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="omop_llm.providers.supported.LlamacppProvider.canonical_model_name" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">canonical_model_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h6>
+
+
+    <div class="doc doc-contents ">
+
+        <p>No transformation: <code>llama-server</code> model names have no mutable-tag concern.</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h5 id="omop_llm.providers.supported.OllamaProvider" class="doc doc-heading">
+            <code>OllamaProvider</code>
+
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="ProviderMixin (omop_llm.providers.base.ProviderMixin)" href="#omop_llm.providers.base.ProviderMixin">ProviderMixin</a></code>, <code><span title="any_llm.providers.ollama.ollama.OllamaProvider">OllamaProvider</span></code></p>
+
+
+
+        <p>Wrapped Ollama provider, for local dev and TRE fallback.
+Extends any-llm's own <code>OllamaProvider</code> with canonical model naming and
+embedding-dimension lookup via Ollama's native <code>POST /api/show</code>.
+Supports structured output natively using <code>response_format</code>.</p>
+<p><code>base_url</code> defaults to <code>http://localhost:11434</code> if not given.
+<code>api_key</code> is not required.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="omop_llm.providers.supported.OllamaProvider.async_embedding_dimension_hint" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">async_embedding_dimension_hint</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">api_base</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+</h6>
+
+
+    <div class="doc doc-contents ">
+
+        <p>See :meth:<code>omop_llm.providers.base.ProviderMixin.async_embedding_dimension_hint</code>.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="omop_llm.providers.supported.OllamaProvider.canonical_model_name" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">canonical_model_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h6>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Require an explicit, immutable Ollama model tag.</p>
+<p>Rejects both untagged names and the mutable <code>:latest</code> tag: 
+<code>:latest</code> can silently repoint after an <code>ollama pull</code>, breaking
+consistency between stored embeddings and new query embeddings.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Model name with an explicit tag, e.g. <code>"llama3:8b"</code> or
+<code>"nomic-embed-text:v1.5"</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The input name, validated.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the name has no tag, or if the tag is <code>:latest</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="omop_llm.providers.supported.OllamaProvider.embedding_dimension_hint" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">embedding_dimension_hint</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">api_base</span><span class="p">)</span></code>
+
+</h6>
+
+
+    <div class="doc doc-contents ">
+
+        <p>See :meth:<code>omop_llm.providers.base.ProviderMixin.embedding_dimension_hint</code>.</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h5 id="omop_llm.providers.supported.OpenaiProvider" class="doc doc-heading">
+            <code>OpenaiProvider</code>
+
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="ProviderMixin (omop_llm.providers.base.ProviderMixin)" href="#omop_llm.providers.base.ProviderMixin">ProviderMixin</a></code>, <code><span title="any_llm.providers.openai.openai.OpenaiProvider">OpenaiProvider</span></code></p>
+
+
+
+        <p>OpenAI, e.g. <code>gpt-4o</code>.</p>
+<p>Defaults to <code>https://api.openai.com/v1</code> (any-llm's own explicit
+default) when <code>base_url</code> is not given, the real OpenAI API, same as
+leaving <code>base_url</code> unset in the <code>openai</code> SDK directly. Requires
+<code>api_key</code> (explicit, or the <code>OPENAI_API_KEY</code> environment
+variable); raises if neither is set.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="omop_llm.providers.supported.OpenaiProvider.canonical_model_name" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">canonical_model_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h6>
+
+
+    <div class="doc doc-contents ">
+
+        <p>No transformation: OpenAI model names have no mutable-tag concern.</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h5 id="omop_llm.providers.supported.VllmProvider" class="doc doc-heading">
+            <code>VllmProvider</code>
+
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="ProviderMixin (omop_llm.providers.base.ProviderMixin)" href="#omop_llm.providers.base.ProviderMixin">ProviderMixin</a></code>, <code><span title="any_llm.providers.vllm.vllm.VllmProvider">VllmProvider</span></code></p>
+
+
+
+        <p>vLLM, the preferred TRE/NVIDIA backend.</p>
+<p><code>base_url</code> defaults to <code>http://localhost:8000/v1</code> if not given.
+<code>api_key</code> is optional since self-hosted vLLM commonly runs without auth.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="omop_llm.providers.supported.VllmProvider.canonical_model_name" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">canonical_model_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h6>
+
+
+    <div class="doc doc-contents ">
+
+        <p>No transformation: vLLM model names have no mutable-tag concern.</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="omop_llm.structured" class="doc doc-heading">
+            <code>structured</code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+        <p>Optional fallback for structured extraction: <code>instructor</code>'s validate-and-retry loop.</p>
+<p>The primary structured-extraction path lives on
+:meth:<code>omop_llm.backend.ModelBackend.extract</code>/:meth:<code>~omop_llm.backend.ModelBackend.async_extract</code>,
+built directly on any-llm's own <code>response_format=&lt;PydanticModel&gt;</code>
+passthrough. This module is a separate, explicitly scoped alternative for
+callers that specifically want resilience against a model returning
+almost-valid JSON, kept out of <code>backend.py</code> so importing <code>omop_llm</code>
+never requires the optional <code>instructor</code> dependency.</p>
+<p>It is <em>not</em> wired in as a silent alternative for every provider. This was
+checked directly against <code>instructor</code>'s own source
+(<code>instructor.v2.auto_client._PROVIDER_BUILDERS</code>):</p>
+<ul>
+<li><code>ollama</code> is not safe to route through it: instructor's own Ollama
+  builder constructs a plain <code>openai.AsyncOpenAI(base_url=".../v1")</code>
+  client, the OpenAI-compat shim, not native <code>/api/chat</code>, and picks
+  TOOLS-vs-JSON mode from a hardcoded model-name-substring list</li>
+<li><code>llamacpp</code>/<code>vllm</code> have no dedicated builder in <code>instructor</code> at all.
+  They are  reachable only by routing through instructor's <code>openai</code> builder with
+  an explicit <code>base_url</code> override, which is what
+  :func:<code>extract_with_retry</code>/:func:<code>async_extract_with_retry</code> do.</li>
+<li><code>anthropic</code>/<code>gemini</code> are not offered here either: this module only
+  vouches for providers whose any-llm integration is already
+  OpenAI-compat-native, so there is no native-transport distinction to
+  lose.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="omop_llm.structured.async_extract_with_retry" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">async_extract_with_retry</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">response_model</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Extract via <code>instructor</code>'s validate-and-retry loop.</p>
+<p>Always builds instructor's <code>openai</code> client, a generic
+OpenAI-API-compatible constructor, to pass through all providers
+<code>_INSTRUCTOR_SAFE_PROVIDERS</code> allows.</p>
+<p>Requires the <code>instructor</code> optional extra
+(<code>pip install 'omop-llm[instructor]'</code>).</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>provider</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>One of <code>{"openai", "llamacpp", "vllm"}</code> (see module docstring).
+<code>llamacpp</code>/<code>vllm</code> are routed through <code>instructor</code>'s
+<code>openai</code> builder with an explicit <code>base_url</code>, which is
+therefore required for those two, to avoid silently falling back
+to instructor's real-OpenAI default endpoint.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>model</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The model name or identifier.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>messages</code>
+            </td>
+            <td>
+                  <code>list of dict</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Chat history in OpenAI message format.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>response_model</code>
+            </td>
+            <td>
+                  <code>type of BaseModel</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The Pydantic model to constrain and validate the response against.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>base_url</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The provider's base URL. Required when <code>provider</code> is not
+<code>"openai"</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>api_key</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The API key for this provider, if one is required.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>max_retries</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of validate-and-retry attempts. Default is 2.</p>
+              </div>
+            </td>
+            <td>
+                  <code>2</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>**kwargs</code>
+            </td>
+            <td>
+                  <code><span title="typing.Any">Any</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Additional arguments forwarded to instructor's
+<code>chat.completions.create</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pydantic.BaseModel">BaseModel</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A validated instance of <code>response_model</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="UnsupportedCapabilityError (omop_llm.errors.UnsupportedCapabilityError)" href="#omop_llm.errors.UnsupportedCapabilityError">UnsupportedCapabilityError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>provider</code> is not in <code>{"openai", "llamacpp", "vllm"}</code>, or if
+the <code>instructor</code> optional extra is not installed.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>provider</code> is not <code>"openai"</code> and <code>base_url</code> is not given.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="omop_llm.structured.extract_with_retry" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">extract_with_retry</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">response_model</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Extract via <code>instructor</code>'s validate-and-retry loop, synchronously.</p>
+<p>Always builds instructor's <code>openai</code> client, a generic
+OpenAI-API-compatible constructor, to pass through all providers
+<code>_INSTRUCTOR_SAFE_PROVIDERS</code> allows. See :func:<code>async_extract_with_retry</code>
+for parameters.</p>
+
+
+    </div>
+
+</div>
+
 
 
   </div>
@@ -2208,7 +6742,7 @@ Must be a subclass of BaseModel.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.path", "navigation.top", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

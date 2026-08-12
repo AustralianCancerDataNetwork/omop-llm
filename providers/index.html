@@ -10,29 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://AustralianCancerDataNetwork.github.io/omop-llm/">
+        <link rel="canonical" href="https://AustralianCancerDataNetwork.github.io/omop-llm/providers/">
       
       
+        <link rel="prev" href="../usage/asymmetric-embeddings/">
       
-        <link rel="next" href="usage/installation/">
+      
+        <link rel="next" href="../reference/">
       
       
         
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>OMOP LLM</title>
+        <title>Providers - OMOP LLM</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -51,9 +53,9 @@
       
     
     
-      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#omop-llm-interface" class="md-skip">
+        <a href="#providers" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +96,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="OMOP LLM" class="md-header__button md-logo" aria-label="OMOP LLM" data-md-component="logo">
+    <a href=".." title="OMOP LLM" class="md-header__button md-logo" aria-label="OMOP LLM" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              Providers
             
           </span>
         </div>
@@ -230,7 +232,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="OMOP LLM" class="md-nav__button md-logo" aria-label="OMOP LLM" data-md-component="logo">
+    <a href=".." title="OMOP LLM" class="md-nav__button md-logo" aria-label="OMOP LLM" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -257,37 +259,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -303,59 +278,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#what-it-provides" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What it provides
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-it-deliberately-does-not-do" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What it deliberately does not do
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#documentation-overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Documentation overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -367,7 +289,7 @@
   
   
     <li class="md-nav__item">
-      <a href="usage/installation/" class="md-nav__link">
+      <a href="../usage/installation/" class="md-nav__link">
         
   
   
@@ -394,7 +316,7 @@
   
   
     <li class="md-nav__item">
-      <a href="usage/asymmetric-embeddings/" class="md-nav__link">
+      <a href="../usage/asymmetric-embeddings/" class="md-nav__link">
         
   
   
@@ -418,10 +340,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="providers/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Providers
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -437,6 +386,59 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#base_url-and-api_key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        base_url and api_key
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capabilities-per-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capabilities per provider
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-a-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a provider
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -448,7 +450,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/" class="md-nav__link">
+      <a href="../reference/" class="md-nav__link">
         
   
   
@@ -495,10 +497,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-it-provides" class="md-nav__link">
+  <a href="#base_url-and-api_key" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What it provides
+        base_url and api_key
       
     </span>
   </a>
@@ -506,10 +508,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-it-deliberately-does-not-do" class="md-nav__link">
+  <a href="#capabilities-per-provider" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What it deliberately does not do
+        Capabilities per provider
       
     </span>
   </a>
@@ -517,10 +519,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#documentation-overview" class="md-nav__link">
+  <a href="#adding-a-provider" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Documentation overview
+        Adding a provider
       
     </span>
   </a>
@@ -555,33 +557,177 @@
   
 
 
-<h1 id="omop-llm-interface">OMOP LLM Interface</h1>
-<p><code>omop-llm</code> is the shared chat/embedding backend contract for the OMOP stack: a generic interface for calling a chat or embedding model, so packages that need one compose it in rather than each writing their own adapter, capability model, and provider vocabulary from scratch.</p>
-<h2 id="what-it-provides">What it provides</h2>
+<h1 id="providers">Providers</h1>
+<p><code>omop-llm</code> intentionally supports a select collection of <code>any-llm</code>'s own providers in two categories: 
+- local (<code>ollama</code>, <code>llamacpp</code>, <code>vllm</code>), and 
+- cloud (<code>openai</code>, <code>anthropic</code>, <code>gemini</code>). </p>
+<p>See any-llm's own <a href="https://docs.mozilla.ai/any-llm/providers/">provider reference</a> for capabilities of these providers. 
+Given the interface we have devised, future providers will be extended in the future to support other use-cases.</p>
+<h2 id="base_url-and-api_key"><code>base_url</code> and <code>api_key</code></h2>
+<p>Every one of these fields is optional on <code>build_model_backend(provider, model, base_url=None, api_key=None, ...)</code>. What "not set" resolves to differs per provider.
+Resolution order for both, always: <strong>explicit argument → the provider's own environment variable → a class-level default (if any)</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Default <code>base_url</code> when not set</th>
+<th><code>api_key</code> required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ollama</code></td>
+<td>any-llm sets none; falls through to the official <code>ollama</code> SDK's own default (<code>http://localhost:11434</code>)</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>llamacpp</code></td>
+<td><code>http://127.0.0.1:8080/v1</code> (any-llm's own default, matches <code>llama-server</code>'s conventional port)</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>vllm</code></td>
+<td><code>http://localhost:8000/v1</code> (any-llm's own default, matches vLLM's conventional port)</td>
+<td>No (any-llm's <code>VllmProvider</code> explicitly overrides key verification, since self-hosted vLLM commonly runs without auth)</td>
+</tr>
+<tr>
+<td><code>openai</code></td>
+<td><code>https://api.openai.com/v1</code> (any-llm's own explicit default)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>anthropic</code></td>
+<td>any-llm sets none; falls through to the <code>anthropic</code> SDK's own default (the real Anthropic API)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>gemini</code></td>
+<td>any-llm sets none; falls through to the <code>google-genai</code> SDK's own default (the real Gemini API)</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">The pattern</p>
+<p>Local providers either have no sensible universal default or a conventional local-dev default. You'll almost always want to set <code>base_url</code> explicitly once you're pointed at anything other than a single local instance on the default port. Cloud providers need no <code>base_url</code> at all for the normal case: leaving it unset resolves to the real vendor API, exactly as if you were calling that vendor's own SDK directly with no <code>base_url</code> override. You only set <code>base_url</code> for a cloud provider to point at something <em>other</em> than the vendor's real endpoint (an Azure OpenAI-style proxy, for instance).</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Env var for <code>base_url</code></th>
+<th>Env var for <code>api_key</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ollama</code></td>
+<td><code>OLLAMA_HOST</code></td>
+<td>none (not required)</td>
+</tr>
+<tr>
+<td><code>llamacpp</code></td>
+<td><code>LLAMACPP_API_BASE</code></td>
+<td>none (not required)</td>
+</tr>
+<tr>
+<td><code>vllm</code></td>
+<td><code>VLLM_API_BASE</code></td>
+<td><code>VLLM_API_KEY</code> (optional)</td>
+</tr>
+<tr>
+<td><code>openai</code></td>
+<td><code>OPENAI_BASE_URL</code></td>
+<td><code>OPENAI_API_KEY</code></td>
+</tr>
+<tr>
+<td><code>anthropic</code></td>
+<td><code>ANTHROPIC_BASE_URL</code></td>
+<td><code>ANTHROPIC_API_KEY</code></td>
+</tr>
+<tr>
+<td><code>gemini</code></td>
+<td><code>GOOGLE_GEMINI_BASE_URL</code></td>
+<td><code>GEMINI_API_KEY</code> or <code>GOOGLE_API_KEY</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="capabilities-per-provider">Capabilities per provider</h2>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th><code>streaming</code></th>
+<th><code>embeddings</code></th>
+<th><code>extended_thinking</code></th>
+<th><code>tool_use</code></th>
+<th><code>structured_output</code></th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ollama</code></td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>Canonical model names require an explicit tag (<code>llama3:8b</code>, not <code>llama3</code> or <code>llama3:latest</code>); see <code>omop_llm.providers.supported.OllamaProvider.canonical_model_name</code>.</td>
+</tr>
+<tr>
+<td><code>llamacpp</code></td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>Covers both a local <code>llama-server</code> and a CUDA/TRE fallback profile; only <code>base_url</code> changes.</td>
+</tr>
+<tr>
+<td><code>vllm</code></td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>Preferred TRE/NVIDIA backend.</td>
+</tr>
+<tr>
+<td><code>openai</code></td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td><code>anthropic</code></td>
+<td>✅</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>No embeddings API; <code>ModelBackend.embed_texts</code>/<code>async_embed_texts</code> refuse this provider.</td>
+</tr>
+<tr>
+<td><code>gemini</code></td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><code>streaming</code>/<code>embeddings</code>/<code>extended_thinking</code> come from any-llm's own <code>get_provider_metadata()</code>, verified directly against the installed package for these six providers. <code>tool_use</code>/<code>structured_output</code> are declared by <code>omop-llm</code> itself, since any-llm tracks neither (see <a href="../reference/#omop_llm.capabilities"><code>Capabilities</code></a>).</p>
+<h2 id="adding-a-provider">Adding a provider</h2>
 <ul>
-<li><strong><code>ModelBackend</code></strong> (<a href="reference/#omop_llm.backend">reference</a>): the one calling contract every consumer uses, built by <code>build_model_backend(provider, model, ...)</code>. It wraps a single <a href="https://github.com/mozilla-ai/any-llm">any-llm</a> provider instance and exposes chat completion, embeddings, and structured extraction as methods on one object, each with a synchronous form and an <code>async_</code>-prefixed asynchronous form (<code>complete</code>/<code>async_complete</code>, <code>embed_texts</code>/<code>async_embed_texts</code>, and so on), so both async and fully synchronous consumers get a real, non-hand-rolled path.</li>
-<li><strong>Asymmetric embedding prefixes</strong> (<a href="reference/#omop_llm.embeddings"><code>EmbeddingRole</code></a>, <a href="usage/asymmetric-embeddings/">full guide</a>): asymmetric embedding models (nomic-embed-text, the E5 family, BGE, and others) need a different prefix prepended depending on whether the text is being indexed or used to search. <code>embed_texts(texts, role=EmbeddingRole.DOCUMENT)</code>/<code>role=EmbeddingRole.QUERY</code> applies it automatically, sourced from <code>build_model_backend</code>'s own <code>document_prefix</code>/<code>query_prefix</code> arguments (or <code>oa-configurator</code>'s typed <code>ModelConfig.document_prefix</code>/<code>query_prefix</code> fields via <code>build_model_backend_from_resolved</code>) so the values live in one place, not duplicated per consuming package.</li>
-<li><strong>A closed provider registry</strong> (<a href="reference/#omop_llm.providers">reference</a>): <code>omop-llm</code> supports selected providers, not any-llm's full set shown in the <a href="providers/">Providers overview</a>. Every supported provider is a real subclass of any-llm's own provider class, which is both the allow-list (nothing outside this set is reachable through <code>omop-llm</code>) and the seam for provider-specific behavior, such as Ollama's canonical model naming and embedding-dimension fast path (see <code>omop_llm.providers.supported</code>).</li>
-<li><strong>An explicit, per-model capability model</strong> (<a href="reference/#omop_llm.capabilities"><code>Capabilities</code></a>): a resolved backend's effective capabilities are the provider's own ceiling (<code>provider_capabilities_for</code>, sourced from any-llm's metadata plus <code>omop-llm</code>'s own <code>tool_use</code>/<code>structured_output</code> declarations, since any-llm tracks neither) AND'd with what the <em>specific model</em> is declared to support (e.g. <code>oa-configurator</code>'s <code>ModelConfig.embeddings</code>/<code>tool_use</code>/<code>structured_output</code>/<code>extended_thinking</code>, since neither any-llm nor <code>omop-llm</code> can introspect this per model) — a capability is only effective if both agree. <code>streaming</code> is always <code>False</code>, since <code>ModelBackend</code> doesn't implement it regardless of what the provider/model support. A caller requiring a capability the resolved backend doesn't have fails at construction time, not mid-run.</li>
-<li><strong>Structured single-object extraction</strong> (<code>ModelBackend.extract</code>/<code>async_extract</code>): pulling one validated Pydantic object out of one LLM call. This is <em>not</em> the same problem as multi-turn agentic tool use (a model calling several real tools across several turns), which stays on <code>ModelBackend.complete(messages, tools=...)</code> directly. See <a href="reference/#omop_llm.structured"><code>omop_llm.structured</code></a>'s own docstring for why the primary strategy is any-llm's native <code>response_format=</code> translation, and why <code>instructor</code>-based extraction (the optional fallback) is only offered for <code>openai</code>/<code>llamacpp</code>/<code>vllm</code>, not <code>ollama</code>/<code>anthropic</code>/<code>gemini</code>.</li>
-</ul>
-<p><code>omop-llm</code> depends on <code>oa-configurator</code> for config resolution. Two entry points: 
-1. <code>build_model_backend(provider, model, ...)</code> takes plain keyword arguments directly, and 
-2. <code>build_model_backend_from_resolved(resolved)</code> takes an <code>oa_configurator.ResolvedModel</code> (from <code>Resolver(stack).resolve_model(name)</code>) and does the field mapping for you. </p>
-<p><code>omop-llm</code> has no <code>PackageConfigBase</code> subclass of its own: it has no inherent specific model it needs. Each real consumer declares its own plain string field (e.g. <code>embedding_model: str = "embed-default"</code>) naming a <code>[models.*]</code> entry, and resolves it itself.</p>
-<h2 id="what-it-deliberately-does-not-do">What it deliberately does not do</h2>
-<ul>
-<li>Install, launch, or manage any inference server (<code>ollama</code>, <code>llama-server</code>, <code>vllm</code>); that is Docker Compose / TRE deployment's job.</li>
-<li>Guess capabilities from a model name or provider string; see the capability model above.</li>
-<li>Reimplement <code>instructor</code>'s validate-and-retry loop, or any-llm's own per-provider wire translation; both are used directly, not duplicated.</li>
-<li>Own configuration parsing, TOML tables, or secrets; that is <code>oa-configurator</code>'s job.</li>
-</ul>
-<h2 id="documentation-overview">Documentation overview</h2>
-<ul>
-<li><a href="usage/installation/">Installation</a></li>
-<li><a href="usage/asymmetric-embeddings/">Asymmetric Embeddings</a></li>
-<li><a href="providers/">Providers</a></li>
-<li><a href="reference/">API Reference</a></li>
+<li>Add a class to <code>omop_llm.providers.supported</code>, subclassing both <code>ProviderMixin</code> and any-llm's own provider class for it (imported under an <code>AnyLLM</code>-prefixed alias to avoid a name collision with the new class). </li>
+<li><code>canonical_model_name</code> is a required override, not a default passthrough, on purpose: it forces a conscious decision about that provider's naming rules rather than silently inheriting "no transformation needed." </li>
+<li><code>PROVIDER_REGISTRY</code> (<code>omop_llm.providers.registry</code>) picks the new class up automatically, no separate list to update.</li>
 </ul>
 
 
@@ -638,10 +784,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.sections", "navigation.expand", "navigation.path", "navigation.top", "content.code.copy", "content.code.annotate"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.path", "navigation.top", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
