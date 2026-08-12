@@ -6,7 +6,6 @@ from omop_llm.providers.registry import (
     supported_providers,
 )
 
-
 __all__ = [
     "PROVIDER_REGISTRY",
     "canonical_model_name",

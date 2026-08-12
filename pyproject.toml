@@ -10,7 +10,7 @@ requires-python = ">=3.12"
 dependencies = [
     "any-llm-sdk[ollama,gemini]>=1.22.0,<2.0.0",
     "httpx",
-    "oa-configurator>=0.2.0,<1.0.0",  # TODO: raise to >=0.2.0,<2.0.0
+    "oa-configurator>=1.0.0,<2.0.0",
     "ollama",  # already imported by any-llm-sdk
     "pydantic",
   ]

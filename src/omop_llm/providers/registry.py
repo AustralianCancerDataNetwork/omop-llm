@@ -28,7 +28,9 @@ from any_llm.any_llm import AnyLLM
 
 from omop_llm.capabilities import Capabilities
 from omop_llm.errors import UnsupportedProviderError
-from omop_llm.providers import supported as _supported  # noqa: F401  (required for PROVIDER_REGISTRY to be populated)
+from omop_llm.providers import (
+    supported as _supported,  # noqa: F401  (required for PROVIDER_REGISTRY to be populated)
+)
 from omop_llm.providers.base import ProviderMixin
 
 PROVIDER_REGISTRY: Final[dict[str, type[AnyLLM]]] = {

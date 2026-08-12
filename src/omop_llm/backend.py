@@ -29,7 +29,11 @@ from oa_configurator import ResolvedModel
 from pydantic import BaseModel, ValidationError
 
 from omop_llm.capabilities import Capabilities
-from omop_llm.embeddings import EmbeddingRole, apply_embedding_prefix, warn_if_prefixes_look_wrong
+from omop_llm.embeddings import (
+    EmbeddingRole,
+    apply_embedding_prefix,
+    warn_if_prefixes_look_wrong,
+)
 from omop_llm.errors import NoParsedOutputError, UnsupportedCapabilityError
 from omop_llm.providers.base import ProviderMixin
 from omop_llm.providers.registry import (

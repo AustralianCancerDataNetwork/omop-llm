@@ -3,29 +3,25 @@ from omop_llm.backend import (
     build_model_backend,
     build_model_backend_from_resolved,
 )
-
 from omop_llm.capabilities import Capabilities
-from omop_llm.embeddings import (
-    EmbeddingRole,
-    KNOWN_EMBEDDING_PREFIXES
-)
+from omop_llm.embeddings import KNOWN_EMBEDDING_PREFIXES, EmbeddingRole
 from omop_llm.errors import (
     NoParsedOutputError,
     OmopLlmError,
     UnsupportedCapabilityError,
-    UnsupportedProviderError
+    UnsupportedProviderError,
 )
 from omop_llm.providers import (
     canonical_model_name,
     provider_capabilities_for,
-    supported_providers
+    supported_providers,
 )
 
 __all__ = [
-    "EmbeddingRole",
     "KNOWN_EMBEDDING_PREFIXES",
-    "ModelBackend",
     "Capabilities",
+    "EmbeddingRole",
+    "ModelBackend",
     "NoParsedOutputError",
     "OmopLlmError",
     "UnsupportedCapabilityError",
