@@ -244,8 +244,11 @@ async def test_dimensions_rejects_backend_without_embeddings(
         structured_output=True,
     )
     backend = ModelBackend(
-        _client=fake_client, model="m", capabilities=no_embed_caps, embedding_dim=42
-    )  # ty: ignore[invalid-argument-type]
+        _client=fake_client,  # ty: ignore[invalid-argument-type]
+        model="m",
+        capabilities=no_embed_caps,
+        embedding_dim=42,
+    )
     with pytest.raises(UnsupportedCapabilityError):
         if sync:
             backend.dimensions()
