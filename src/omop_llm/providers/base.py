@@ -64,7 +64,9 @@ class ProviderMixin(ABC):
         """
         ...
 
-    async def async_embedding_dimension_hint(self, model: str, *, api_base: str | None) -> int | None:
+    async def async_embedding_dimension_hint(
+        self, model: str, *, api_base: str | None
+    ) -> int | None:
         """Look up this model's embedding dimension via a provider-specific fast path.
 
         Default: no fast path available. Override where a provider

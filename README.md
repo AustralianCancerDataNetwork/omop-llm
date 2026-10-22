@@ -6,7 +6,9 @@ Shared chat/embedding backend contract for the OMOP stack, built on [any-llm](ht
 from omop_llm import build_model_backend, Capabilities
 
 backend = build_model_backend(
-    provider="ollama", model="llama3:8b", base_url="http://localhost:11434",
+    provider="ollama",
+    model="llama3:8b",
+    base_url="http://localhost:11434",
     model_capabilities=Capabilities(),  # plain chat only -- nothing else needed here
 )
 

@@ -38,7 +38,9 @@ def _backend(fake_client: FakeAnyLLMClient, **kwargs) -> ModelBackend:
 
 
 @pytest.mark.parametrize("sync", [True, False])
-async def test_complete_merges_configuration_and_call_kwargs(fake_client: FakeAnyLLMClient, sync: bool) -> None:
+async def test_complete_merges_configuration_and_call_kwargs(
+    fake_client: FakeAnyLLMClient, sync: bool
+) -> None:
     fake_client.completion_response = FakeChatCompletion(
         choices=[FakeChoice(message=FakeChatCompletionMessage(content="hi"))]
     )
@@ -48,7 +50,9 @@ async def test_complete_merges_configuration_and_call_kwargs(fake_client: FakeAn
     if sync:
         backend.complete([{"role": "user", "content": "hi"}], tools=tools, max_tokens=2048)
     else:
-        await backend.async_complete([{"role": "user", "content": "hi"}], tools=tools, max_tokens=2048)
+        await backend.async_complete(
+            [{"role": "user", "content": "hi"}], tools=tools, max_tokens=2048
+        )
 
     [call] = fake_client.completion_calls
     assert call["model"] == "m"
@@ -60,7 +64,9 @@ async def test_complete_merges_configuration_and_call_kwargs(fake_client: FakeAn
 
 
 @pytest.mark.parametrize("sync", [True, False])
-async def test_complete_passes_response_format_through_untouched(fake_client: FakeAnyLLMClient, sync: bool) -> None:
+async def test_complete_passes_response_format_through_untouched(
+    fake_client: FakeAnyLLMClient, sync: bool
+) -> None:
     fake_client.completion_response = FakeChatCompletion(
         choices=[FakeChoice(message=FakeChatCompletionMessage(parsed={"ok": True}))]
     )
@@ -78,14 +84,18 @@ async def test_complete_passes_response_format_through_untouched(fake_client: Fa
 
 
 @pytest.mark.parametrize("sync", [True, False])
-async def test_embed_texts_unpacks_embedding_vectors(fake_client: FakeAnyLLMClient, sync: bool) -> None:
+async def test_embed_texts_unpacks_embedding_vectors(
+    fake_client: FakeAnyLLMClient, sync: bool
+) -> None:
     fake_client.embedding_response = FakeEmbeddingResponse(
         data=[FakeEmbeddingItem(embedding=[0.1, 0.2]), FakeEmbeddingItem(embedding=[0.3, 0.4])]
     )
     backend = _backend(fake_client)
     backend.model = "embed-default"
 
-    vectors = backend.embed_texts(["a", "b"]) if sync else await backend.async_embed_texts(["a", "b"])
+    vectors = (
+        backend.embed_texts(["a", "b"]) if sync else await backend.async_embed_texts(["a", "b"])
+    )
     assert vectors == [[0.1, 0.2], [0.3, 0.4]]
     [call] = fake_client.embedding_calls
     assert call["model"] == "embed-default"
@@ -93,12 +103,16 @@ async def test_embed_texts_unpacks_embedding_vectors(fake_client: FakeAnyLLMClie
 
 
 @pytest.mark.parametrize("sync", [True, False])
-async def test_embed_texts_batch_size_chunks_and_preserves_order(fake_client: FakeAnyLLMClient, sync: bool) -> None:
+async def test_embed_texts_batch_size_chunks_and_preserves_order(
+    fake_client: FakeAnyLLMClient, sync: bool
+) -> None:
     texts = ["a", "bb", "ccc", "dddd", "e"]
 
     def fake_embedding(**kwargs) -> FakeEmbeddingResponse:
         fake_client.embedding_calls.append(kwargs)
-        return FakeEmbeddingResponse(data=[FakeEmbeddingItem(embedding=[float(len(t))]) for t in kwargs["inputs"]])
+        return FakeEmbeddingResponse(
+            data=[FakeEmbeddingItem(embedding=[float(len(t))]) for t in kwargs["inputs"]]
+        )
 
     async def fake_aembedding(**kwargs) -> FakeEmbeddingResponse:
         return fake_embedding(**kwargs)
@@ -119,7 +133,9 @@ async def test_embed_texts_batch_size_chunks_and_preserves_order(fake_client: Fa
 
 
 @pytest.mark.parametrize("sync", [True, False])
-async def test_embed_texts_rejects_non_positive_batch_size(fake_client: FakeAnyLLMClient, sync: bool) -> None:
+async def test_embed_texts_rejects_non_positive_batch_size(
+    fake_client: FakeAnyLLMClient, sync: bool
+) -> None:
     backend = _backend(fake_client)
     with pytest.raises(ValueError, match="positive"):
         if sync:
@@ -130,7 +146,9 @@ async def test_embed_texts_rejects_non_positive_batch_size(fake_client: FakeAnyL
 
 @pytest.mark.parametrize("sync", [True, False])
 async def test_embed_texts_applies_role_prefix(fake_client: FakeAnyLLMClient, sync: bool) -> None:
-    fake_client.embedding_response = FakeEmbeddingResponse(data=[FakeEmbeddingItem(embedding=[0.1])])
+    fake_client.embedding_response = FakeEmbeddingResponse(
+        data=[FakeEmbeddingItem(embedding=[0.1])]
+    )
     backend = _backend(fake_client, document_prefix="passage: ", query_prefix="query: ")
 
     if sync:
@@ -142,8 +160,12 @@ async def test_embed_texts_applies_role_prefix(fake_client: FakeAnyLLMClient, sy
 
 
 @pytest.mark.parametrize("sync", [True, False])
-async def test_embed_texts_query_role_uses_query_prefix(fake_client: FakeAnyLLMClient, sync: bool) -> None:
-    fake_client.embedding_response = FakeEmbeddingResponse(data=[FakeEmbeddingItem(embedding=[0.1])])
+async def test_embed_texts_query_role_uses_query_prefix(
+    fake_client: FakeAnyLLMClient, sync: bool
+) -> None:
+    fake_client.embedding_response = FakeEmbeddingResponse(
+        data=[FakeEmbeddingItem(embedding=[0.1])]
+    )
     backend = _backend(fake_client, document_prefix="passage: ", query_prefix="query: ")
 
     if sync:
@@ -155,8 +177,12 @@ async def test_embed_texts_query_role_uses_query_prefix(fake_client: FakeAnyLLMC
 
 
 @pytest.mark.parametrize("sync", [True, False])
-async def test_embed_texts_no_role_leaves_text_untouched(fake_client: FakeAnyLLMClient, sync: bool) -> None:
-    fake_client.embedding_response = FakeEmbeddingResponse(data=[FakeEmbeddingItem(embedding=[0.1])])
+async def test_embed_texts_no_role_leaves_text_untouched(
+    fake_client: FakeAnyLLMClient, sync: bool
+) -> None:
+    fake_client.embedding_response = FakeEmbeddingResponse(
+        data=[FakeEmbeddingItem(embedding=[0.1])]
+    )
     backend = _backend(fake_client, document_prefix="passage: ")
 
     if sync:
@@ -171,7 +197,9 @@ async def test_embed_texts_no_role_leaves_text_untouched(fake_client: FakeAnyLLM
 async def test_embed_texts_role_with_no_configured_prefix_is_a_noop(
     fake_client: FakeAnyLLMClient, sync: bool
 ) -> None:
-    fake_client.embedding_response = FakeEmbeddingResponse(data=[FakeEmbeddingItem(embedding=[0.1])])
+    fake_client.embedding_response = FakeEmbeddingResponse(
+        data=[FakeEmbeddingItem(embedding=[0.1])]
+    )
     backend = _backend(fake_client)
 
     if sync:
@@ -183,9 +211,15 @@ async def test_embed_texts_role_with_no_configured_prefix_is_a_noop(
 
 
 @pytest.mark.parametrize("sync", [True, False])
-async def test_embed_texts_rejects_backend_without_embeddings(fake_client: FakeAnyLLMClient, sync: bool) -> None:
+async def test_embed_texts_rejects_backend_without_embeddings(
+    fake_client: FakeAnyLLMClient, sync: bool
+) -> None:
     no_embed_caps = Capabilities(
-        streaming=True, embeddings=False, extended_thinking=True, tool_use=True, structured_output=True
+        streaming=True,
+        embeddings=False,
+        extended_thinking=True,
+        tool_use=True,
+        structured_output=True,
     )
     backend = ModelBackend(_client=fake_client, model="m", capabilities=no_embed_caps)  # ty: ignore[invalid-argument-type]
     with pytest.raises(UnsupportedCapabilityError):
@@ -196,12 +230,18 @@ async def test_embed_texts_rejects_backend_without_embeddings(fake_client: FakeA
 
 
 @pytest.mark.parametrize("sync", [True, False])
-async def test_dimensions_rejects_backend_without_embeddings(fake_client: FakeAnyLLMClient, sync: bool) -> None:
+async def test_dimensions_rejects_backend_without_embeddings(
+    fake_client: FakeAnyLLMClient, sync: bool
+) -> None:
     """dimensions()/async_dimensions() previously skipped this gate
     entirely, so a configured embedding_dim override looked usable even on
     a backend whose capabilities.embeddings is False."""
     no_embed_caps = Capabilities(
-        streaming=True, embeddings=False, extended_thinking=True, tool_use=True, structured_output=True
+        streaming=True,
+        embeddings=False,
+        extended_thinking=True,
+        tool_use=True,
+        structured_output=True,
     )
     backend = ModelBackend(
         _client=fake_client, model="m", capabilities=no_embed_caps, embedding_dim=42
@@ -221,7 +261,9 @@ async def test_embed_texts_never_forwards_bookkeeping_fields_to_the_provider(
     bookkeeping (dimensions()/apply_embedding_prefix() read them directly),
     never provider call kwargs. Previously folded into `configuration` and
     forwarded unfiltered, breaking the real call with an unexpected kwarg."""
-    fake_client.embedding_response = FakeEmbeddingResponse(data=[FakeEmbeddingItem(embedding=[0.1])])
+    fake_client.embedding_response = FakeEmbeddingResponse(
+        data=[FakeEmbeddingItem(embedding=[0.1])]
+    )
     backend = _backend(
         fake_client,
         configuration={"encoding_format": "float"},
@@ -242,7 +284,9 @@ async def test_embed_texts_never_forwards_bookkeeping_fields_to_the_provider(
 
 
 @pytest.mark.parametrize("sync", [True, False])
-async def test_dimensions_prefers_configured_override(fake_client: FakeAnyLLMClient, sync: bool) -> None:
+async def test_dimensions_prefers_configured_override(
+    fake_client: FakeAnyLLMClient, sync: bool
+) -> None:
     backend = _backend(fake_client, embedding_dim=768)
     result = backend.dimensions() if sync else await backend.async_dimensions()
     assert result == 768
@@ -250,7 +294,9 @@ async def test_dimensions_prefers_configured_override(fake_client: FakeAnyLLMCli
 
 
 @pytest.mark.parametrize("sync", [True, False])
-async def test_dimensions_uses_provider_hint_before_live_probe(fake_client: FakeAnyLLMClient, sync: bool) -> None:
+async def test_dimensions_uses_provider_hint_before_live_probe(
+    fake_client: FakeAnyLLMClient, sync: bool
+) -> None:
     fake_client.dimension_hint = 1024
     backend = _backend(fake_client)
     result = backend.dimensions() if sync else await backend.async_dimensions()
@@ -259,20 +305,32 @@ async def test_dimensions_uses_provider_hint_before_live_probe(fake_client: Fake
 
 
 @pytest.mark.parametrize("sync", [True, False])
-async def test_dimensions_falls_back_to_live_probe(fake_client: FakeAnyLLMClient, sync: bool) -> None:
-    fake_client.embedding_response = FakeEmbeddingResponse(data=[FakeEmbeddingItem(embedding=[0.0] * 384)])
+async def test_dimensions_falls_back_to_live_probe(
+    fake_client: FakeAnyLLMClient, sync: bool
+) -> None:
+    fake_client.embedding_response = FakeEmbeddingResponse(
+        data=[FakeEmbeddingItem(embedding=[0.0] * 384)]
+    )
     backend = _backend(fake_client)
     result = backend.dimensions() if sync else await backend.async_dimensions()
     assert result == 384
 
 
 @pytest.mark.parametrize("sync", [True, False])
-async def test_extract_rejects_backend_without_structured_output(fake_client: FakeAnyLLMClient, sync: bool) -> None:
+async def test_extract_rejects_backend_without_structured_output(
+    fake_client: FakeAnyLLMClient, sync: bool
+) -> None:
     no_structured_caps = Capabilities(
-        streaming=True, embeddings=True, extended_thinking=True, tool_use=True, structured_output=False
+        streaming=True,
+        embeddings=True,
+        extended_thinking=True,
+        tool_use=True,
+        structured_output=False,
     )
     backend = ModelBackend(_client=fake_client, model="m", capabilities=no_structured_caps)  # ty: ignore[invalid-argument-type]
-    fake_client.completion_response = FakeChatCompletion(choices=[FakeChoice(message=FakeChatCompletionMessage())])
+    fake_client.completion_response = FakeChatCompletion(
+        choices=[FakeChoice(message=FakeChatCompletionMessage())]
+    )
     with pytest.raises(UnsupportedCapabilityError):
         if sync:
             backend.extract([{"role": "user", "content": "hi"}], Answer)
@@ -297,7 +355,9 @@ async def test_extract_unwraps_parsed_instance(fake_client: FakeAnyLLMClient, sy
 
 
 @pytest.mark.parametrize("sync", [True, False])
-async def test_extract_raises_when_provider_did_not_honor_schema(fake_client: FakeAnyLLMClient, sync: bool) -> None:
+async def test_extract_raises_when_provider_did_not_honor_schema(
+    fake_client: FakeAnyLLMClient, sync: bool
+) -> None:
     fake_client.completion_response = FakeChatCompletion(
         choices=[FakeChoice(message=FakeChatCompletionMessage(parsed=None))]
     )
@@ -310,7 +370,9 @@ async def test_extract_raises_when_provider_did_not_honor_schema(fake_client: Fa
 
 
 @pytest.mark.parametrize("sync", [True, False])
-async def test_extract_raises_after_exhausting_max_retries(fake_client: FakeAnyLLMClient, sync: bool) -> None:
+async def test_extract_raises_after_exhausting_max_retries(
+    fake_client: FakeAnyLLMClient, sync: bool
+) -> None:
     fake_client.completion_response = FakeChatCompletion(
         choices=[FakeChoice(message=FakeChatCompletionMessage(parsed=None))]
     )
@@ -329,7 +391,9 @@ async def test_extract_retries_after_no_parsed_output_and_succeeds(
 ) -> None:
     responses = [
         FakeChatCompletion(choices=[FakeChoice(message=FakeChatCompletionMessage(parsed=None))]),
-        FakeChatCompletion(choices=[FakeChoice(message=FakeChatCompletionMessage(parsed=Answer(value="42")))]),
+        FakeChatCompletion(
+            choices=[FakeChoice(message=FakeChatCompletionMessage(parsed=Answer(value="42")))]
+        ),
     ]
     calls: list[dict] = []
 
@@ -395,7 +459,9 @@ async def test_extract_retries_after_validation_error_and_succeeds(
 
 def test_build_backend_constructs_offline_for_local_provider() -> None:
     backend = build_model_backend(
-        provider="llamacpp", model="local-chat", base_url="http://localhost:8080/v1",
+        provider="llamacpp",
+        model="local-chat",
+        base_url="http://localhost:8080/v1",
         model_capabilities=Capabilities(tool_use=True),
     )
     assert backend.model == "local-chat"
@@ -404,7 +470,9 @@ def test_build_backend_constructs_offline_for_local_provider() -> None:
 
 def test_provider_property_reads_from_the_constructed_client_not_a_stored_field() -> None:
     backend = build_model_backend(
-        provider="llamacpp", model="local-chat", base_url="http://localhost:8080/v1",
+        provider="llamacpp",
+        model="local-chat",
+        base_url="http://localhost:8080/v1",
         model_capabilities=Capabilities(),
     )
     assert backend.provider == "llamacpp"
@@ -423,7 +491,9 @@ def test_build_backend_passes_configuration_through() -> None:
 
 def test_build_backend_canonicalizes_the_model_name() -> None:
     backend = build_model_backend(
-        provider="ollama", model="llama3:8b", base_url="http://localhost:11434",
+        provider="ollama",
+        model="llama3:8b",
+        base_url="http://localhost:11434",
         model_capabilities=Capabilities(),
     )
     assert backend.model == "llama3:8b"
@@ -432,7 +502,9 @@ def test_build_backend_canonicalizes_the_model_name() -> None:
 def test_build_backend_rejects_non_canonical_ollama_name() -> None:
     with pytest.raises(ValueError, match="explicit tag"):
         build_model_backend(
-            provider="ollama", model="llama3", base_url="http://localhost:11434",
+            provider="ollama",
+            model="llama3",
+            base_url="http://localhost:11434",
             model_capabilities=Capabilities(),
         )
 
@@ -447,7 +519,9 @@ def test_build_backend_requires_model_capabilities() -> None:
 
 def test_build_backend_constructs_offline_for_embedding_capable_provider() -> None:
     backend = build_model_backend(
-        provider="ollama", model="qwen3-embedding:0.6b", base_url="http://localhost:11434",
+        provider="ollama",
+        model="qwen3-embedding:0.6b",
+        base_url="http://localhost:11434",
         model_capabilities=Capabilities(embeddings=True),
     )
     assert backend.model == "qwen3-embedding:0.6b"
@@ -458,7 +532,9 @@ def test_build_backend_streaming_is_always_false() -> None:
     """ModelBackend doesn't implement streaming, regardless of what the
     provider supports (ollama genuinely does) or what the caller asks for."""
     backend = build_model_backend(
-        provider="ollama", model="llama3:8b", base_url="http://localhost:11434",
+        provider="ollama",
+        model="llama3:8b",
+        base_url="http://localhost:11434",
         model_capabilities=Capabilities(streaming=True),
     )
     assert backend.capabilities.streaming is False
@@ -470,7 +546,9 @@ def test_build_backend_empty_model_capabilities_grants_nothing() -> None:
     leak through -- proving this is a real AND, not just the provider
     ceiling passed through."""
     backend = build_model_backend(
-        provider="ollama", model="llama3:8b", base_url="http://localhost:11434",
+        provider="ollama",
+        model="llama3:8b",
+        base_url="http://localhost:11434",
         model_capabilities=Capabilities(),
     )
     assert backend.capabilities.embeddings is False
@@ -481,7 +559,9 @@ def test_build_backend_model_declaration_cannot_widen_provider_capability() -> N
     it on model_capabilities can't override that -- the provider is a
     ceiling, not just one vote."""
     backend = build_model_backend(
-        provider="anthropic", model="claude-test", api_key="sk-test",
+        provider="anthropic",
+        model="claude-test",
+        api_key="sk-test",
         model_capabilities=Capabilities(embeddings=True),
     )
     assert backend.capabilities.embeddings is False
@@ -490,22 +570,31 @@ def test_build_backend_model_declaration_cannot_widen_provider_capability() -> N
 def test_build_backend_rejects_embedding_dim_without_embeddings_capability() -> None:
     with pytest.raises(ValueError, match="embeddings"):
         build_model_backend(
-            provider="anthropic", model="claude-test", api_key="sk-test", embedding_dim=42,
+            provider="anthropic",
+            model="claude-test",
+            api_key="sk-test",
+            embedding_dim=42,
             model_capabilities=Capabilities(),
         )
 
 
-def test_build_backend_warns_on_missing_prefixes_for_embedding_model(caplog: pytest.LogCaptureFixture) -> None:
+def test_build_backend_warns_on_missing_prefixes_for_embedding_model(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
     with caplog.at_level("WARNING", logger="omop_llm.embeddings"):
         build_model_backend(
-            provider="ollama", model="qwen3-embedding:0.6b", base_url="http://localhost:11434",
+            provider="ollama",
+            model="qwen3-embedding:0.6b",
+            base_url="http://localhost:11434",
             model_capabilities=Capabilities(embeddings=True),
         )
     assert "document_prefix" in caplog.text
     assert "query_prefix" in caplog.text
 
 
-def test_build_backend_no_warning_when_prefixes_configured(caplog: pytest.LogCaptureFixture) -> None:
+def test_build_backend_no_warning_when_prefixes_configured(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
     with caplog.at_level("WARNING", logger="omop_llm.embeddings"):
         build_model_backend(
             provider="ollama",
@@ -518,11 +607,15 @@ def test_build_backend_no_warning_when_prefixes_configured(caplog: pytest.LogCap
     assert caplog.text == ""
 
 
-def test_build_backend_no_prefix_warning_for_non_embedding_provider(caplog: pytest.LogCaptureFixture) -> None:
+def test_build_backend_no_prefix_warning_for_non_embedding_provider(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
     # anthropic is the one provider in the registry with embeddings=False.
     with caplog.at_level("WARNING", logger="omop_llm.embeddings"):
         build_model_backend(
-            provider="anthropic", model="claude-haiku-4-5", api_key="sk-test",
+            provider="anthropic",
+            model="claude-haiku-4-5",
+            api_key="sk-test",
             model_capabilities=Capabilities(),
         )
     assert caplog.text == ""

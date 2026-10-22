@@ -34,9 +34,7 @@ from omop_llm.providers import (
 from omop_llm.providers.base import ProviderMixin
 
 PROVIDER_REGISTRY: Final[dict[str, type[AnyLLM]]] = {
-    cls.PROVIDER_NAME: cls
-    for cls in ProviderMixin.__subclasses__()
-    if issubclass(cls, AnyLLM)
+    cls.PROVIDER_NAME: cls for cls in ProviderMixin.__subclasses__() if issubclass(cls, AnyLLM)
 }
 
 
@@ -154,5 +152,7 @@ def canonical_model_name(provider_key: str, name: str) -> str:
     assert issubclass(provider_class, ProviderMixin)
     name = name.strip()
     if not name:
-        raise ValueError(f"Model name cannot be empty or whitespace-only for provider {provider_key!r}.")
+        raise ValueError(
+            f"Model name cannot be empty or whitespace-only for provider {provider_key!r}."
+        )
     return provider_class.canonical_model_name(name)

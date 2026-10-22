@@ -40,7 +40,9 @@ def test_maps_resolved_fields_onto_build_backend() -> None:
 def test_canonicalizes_the_model_name() -> None:
     resolved = ResolvedModel(
         name="m",
-        provider=ResolvedProvider(name="p", provider="ollama", base_url="http://localhost:11434", api_key=None),
+        provider=ResolvedProvider(
+            name="p", provider="ollama", base_url="http://localhost:11434", api_key=None
+        ),
         model="llama3:8b",
         embedding_dim=None,
         document_prefix=None,
@@ -61,7 +63,9 @@ def test_embedding_dim_and_prefixes_land_on_dedicated_fields_not_configuration()
     dedicated ModelBackend fields, and configuration stays untouched."""
     resolved = ResolvedModel(
         name="nomic-embed",
-        provider=ResolvedProvider(name="p", provider="ollama", base_url="http://localhost:11434", api_key=None),
+        provider=ResolvedProvider(
+            name="p", provider="ollama", base_url="http://localhost:11434", api_key=None
+        ),
         model="nomic-embed-text:v1.5",
         embedding_dim=768,
         document_prefix="search_document: ",
@@ -85,7 +89,9 @@ def test_configuration_dict_is_passed_through_untouched() -> None:
     reads out of `configuration` for these anymore."""
     resolved = ResolvedModel(
         name="nomic-embed",
-        provider=ResolvedProvider(name="p", provider="ollama", base_url="http://localhost:11434", api_key=None),
+        provider=ResolvedProvider(
+            name="p", provider="ollama", base_url="http://localhost:11434", api_key=None
+        ),
         model="nomic-embed-text:v1.5",
         embedding_dim=768,
         document_prefix="search_document: ",
@@ -107,7 +113,9 @@ def test_capability_fields_narrow_the_provider_ceiling() -> None:
     proving this is a real AND and not just reading the provider ceiling."""
     resolved = ResolvedModel(
         name="local-chat",
-        provider=ResolvedProvider(name="p", provider="ollama", base_url="http://localhost:11434", api_key=None),
+        provider=ResolvedProvider(
+            name="p", provider="ollama", base_url="http://localhost:11434", api_key=None
+        ),
         model="local-chat:8b",
         embedding_dim=None,
         document_prefix=None,

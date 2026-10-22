@@ -37,11 +37,9 @@ from omop_llm.providers.supported import LlamacppProvider, OpenaiProvider, VllmP
 
 # Compatible with instructor's generic OpenAI-API client builder.
 # See docstring above for details
-_INSTRUCTOR_SAFE_PROVIDERS = frozenset({
-    OpenaiProvider.PROVIDER_NAME, 
-    LlamacppProvider.PROVIDER_NAME, 
-    VllmProvider.PROVIDER_NAME
-})
+_INSTRUCTOR_SAFE_PROVIDERS = frozenset(
+    {OpenaiProvider.PROVIDER_NAME, LlamacppProvider.PROVIDER_NAME, VllmProvider.PROVIDER_NAME}
+)
 
 
 def _check_provider_and_base_url(provider: str, base_url: str | None) -> None:
@@ -115,7 +113,9 @@ def extract_with_retry[T: BaseModel](
     """
     _check_provider_and_base_url(provider, base_url)
     instructor = _require_instructor()
-    client_kwargs = _instructor_client_kwargs(provider, base_url=base_url, api_key=api_key, async_client=False)
+    client_kwargs = _instructor_client_kwargs(
+        provider, base_url=base_url, api_key=api_key, async_client=False
+    )
 
     client = instructor.from_provider(f"openai/{model}", **client_kwargs)
     return client.chat.completions.create(
@@ -186,7 +186,9 @@ async def async_extract_with_retry[T: BaseModel](
     """
     _check_provider_and_base_url(provider, base_url)
     instructor = _require_instructor()
-    client_kwargs = _instructor_client_kwargs(provider, base_url=base_url, api_key=api_key, async_client=True)
+    client_kwargs = _instructor_client_kwargs(
+        provider, base_url=base_url, api_key=api_key, async_client=True
+    )
 
     client = instructor.from_provider(f"openai/{model}", **client_kwargs)
     return await client.chat.completions.create(

@@ -27,8 +27,8 @@ class Answer(BaseModel):
     value: str
 
 
-
 _UNSAFE_PROVIDERS = sorted(set(supported_providers()) - _INSTRUCTOR_SAFE_PROVIDERS) + ["azure"]
+
 
 def test_instructor_safe_providers_is_the_openai_compat_native_set() -> None:
     # Deliberately excludes ollama (instructor's own Ollama builder uses the
@@ -40,7 +40,9 @@ def test_instructor_safe_providers_is_the_openai_compat_native_set() -> None:
 @pytest.mark.parametrize("provider", _UNSAFE_PROVIDERS)
 def test_extract_with_retry_rejects_unsafe_providers(provider: str) -> None:
     with pytest.raises(UnsupportedCapabilityError):
-        extract_with_retry(provider, "some-model", [{"role": "user", "content": "hi"}], Answer, base_url="http://x")
+        extract_with_retry(
+            provider, "some-model", [{"role": "user", "content": "hi"}], Answer, base_url="http://x"
+        )
 
 
 @pytest.mark.parametrize("provider", _UNSAFE_PROVIDERS)
@@ -58,7 +60,9 @@ def test_extract_with_retry_requires_base_url_for_self_hosted_providers() -> Non
 
 async def test_async_extract_with_retry_requires_base_url_for_self_hosted_providers() -> None:
     with pytest.raises(ValueError, match="base_url"):
-        await async_extract_with_retry("llamacpp", "local-chat", [{"role": "user", "content": "hi"}], Answer)
+        await async_extract_with_retry(
+            "llamacpp", "local-chat", [{"role": "user", "content": "hi"}], Answer
+        )
 
 
 class TestInstructorClientKwargs:
@@ -69,16 +73,22 @@ class TestInstructorClientKwargs:
 
     @pytest.mark.parametrize("provider", ["llamacpp", "vllm"])
     def test_local_provider_without_api_key_gets_placeholder(self, provider: str) -> None:
-        kwargs = _instructor_client_kwargs(provider, base_url="http://x", api_key=None, async_client=False)
+        kwargs = _instructor_client_kwargs(
+            provider, base_url="http://x", api_key=None, async_client=False
+        )
         assert kwargs["api_key"] == _LOCAL_PLACEHOLDER_API_KEY
 
     def test_openai_without_api_key_gets_no_placeholder(self) -> None:
         # Real OpenAI must keep falling through to OPENAI_API_KEY, not a fake key.
-        kwargs = _instructor_client_kwargs("openai", base_url=None, api_key=None, async_client=False)
+        kwargs = _instructor_client_kwargs(
+            "openai", base_url=None, api_key=None, async_client=False
+        )
         assert "api_key" not in kwargs
 
     def test_explicit_api_key_is_never_overridden(self) -> None:
-        kwargs = _instructor_client_kwargs("llamacpp", base_url="http://x", api_key="real-key", async_client=False)
+        kwargs = _instructor_client_kwargs(
+            "llamacpp", base_url="http://x", api_key="real-key", async_client=False
+        )
         assert kwargs["api_key"] == "real-key"
 
     def test_async_client_flag_is_forwarded(self) -> None:
@@ -90,7 +100,9 @@ class TestInstructorClientConstruction:
     """End-to-end: instructor.from_provider is mocked, but extract_with_retry's
     own kwargs-building and call plumbing run for real."""
 
-    def test_extract_with_retry_passes_placeholder_key_for_local_provider(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_extract_with_retry_passes_placeholder_key_for_local_provider(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         import instructor
 
         fake_client = MagicMock()
@@ -104,7 +116,11 @@ class TestInstructorClientConstruction:
         monkeypatch.setattr(instructor, "from_provider", fake_from_provider)
 
         result = extract_with_retry(
-            "llamacpp", "local-chat", [{"role": "user", "content": "hi"}], Answer, base_url="http://x"
+            "llamacpp",
+            "local-chat",
+            [{"role": "user", "content": "hi"}],
+            Answer,
+            base_url="http://x",
         )
         assert result == Answer(value="ok")
         assert captured["api_key"] == _LOCAL_PLACEHOLDER_API_KEY
@@ -132,7 +148,9 @@ class TestInstructorClientConstruction:
         assert captured["api_key"] == _LOCAL_PLACEHOLDER_API_KEY
         assert captured["async_client"] is True
 
-    def test_extract_with_retry_never_fakes_a_key_for_real_openai(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_extract_with_retry_never_fakes_a_key_for_real_openai(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         import instructor
 
         fake_client = MagicMock()
@@ -145,5 +163,7 @@ class TestInstructorClientConstruction:
 
         monkeypatch.setattr(instructor, "from_provider", fake_from_provider)
 
-        extract_with_retry("openai", "gpt-4o", [{"role": "user", "content": "hi"}], Answer, api_key="sk-real")
+        extract_with_retry(
+            "openai", "gpt-4o", [{"role": "user", "content": "hi"}], Answer, api_key="sk-real"
+        )
         assert captured["api_key"] == "sk-real"
