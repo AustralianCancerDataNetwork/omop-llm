@@ -24,7 +24,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from any_llm.any_llm import AnyLLM
-from any_llm.types.completion import ChatCompletion, ReasoningEffort
+from any_llm.types.completion import ChatCompletion, ChatCompletionMessage, ReasoningEffort
 from oa_configurator import ResolvedModel
 from pydantic import BaseModel, ValidationError
 
@@ -62,6 +62,27 @@ def _chunked[T](items: list[T], size: int) -> Iterator[list[T]]:
         raise ValueError(f"batch_size must be a positive integer, got {size!r}")
     for start in range(0, len(items), size):
         yield items[start : start + size]
+
+
+def _as_client_messages(
+    messages: list[dict[str, Any]],
+) -> list[dict[str, Any] | ChatCompletionMessage]:
+    """Return ``messages`` typed as the any-llm client expects.
+
+    The client declares ``list[dict | ChatCompletionMessage]``, which a plain
+    ``list[dict]`` does not satisfy because lists are invariant.
+
+    Parameters
+    ----------
+    messages : list of dict
+        Chat history in OpenAI message format.
+
+    Returns
+    -------
+    list
+        A shallow copy of ``messages``.
+    """
+    return [*messages]
 
 
 @dataclass
@@ -167,10 +188,8 @@ class ModelBackend:
             reasoning_effort=reasoning_effort,
             extra=kwargs,
         )
-        # always non-streaming and typed to return a ChatCompletion
-        # but not captured by any single any-llm overload
-        return self._client.completion(  # ty: ignore[no-matching-overload]
-            model=self.model, messages=messages, **call_kwargs
+        return self._client.completion(
+            model=self.model, messages=_as_client_messages(messages), **call_kwargs
         )
 
     async def async_complete(
@@ -229,10 +248,8 @@ class ModelBackend:
             reasoning_effort=reasoning_effort,
             extra=kwargs,
         )
-        # See the matching comment in complete(): our response_format
-        # union doesn't match any single any-llm acompletion() overload.
-        return await self._client.acompletion(  # ty: ignore[no-matching-overload]
-            model=self.model, messages=messages, **call_kwargs
+        return await self._client.acompletion(
+            model=self.model, messages=_as_client_messages(messages), **call_kwargs
         )
 
     def embed_texts(
@@ -587,7 +604,7 @@ class ModelBackend:
                 "(no validation or length/content-filter error was raised, so the "
                 "model likely refused to answer or returned empty content)"
             )
-        return parsed  # type: ignore[no-any-return]
+        return parsed
 
     def is_available(self, **kwargs: Any) -> bool:
         """Check whether this backend can actually be reached, synchronously.

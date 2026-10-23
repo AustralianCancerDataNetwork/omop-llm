@@ -8,7 +8,10 @@ canonicalization, and capability-gate behavior.
 
 from __future__ import annotations
 
+from typing import Any, cast
+
 import pytest
+from any_llm.any_llm import AnyLLM
 from pydantic import BaseModel
 
 from omop_llm.backend import ModelBackend, build_model_backend
@@ -33,8 +36,13 @@ class Answer(BaseModel):
     value: str
 
 
-def _backend(fake_client: FakeAnyLLMClient, **kwargs) -> ModelBackend:
-    return ModelBackend(_client=fake_client, model="m", capabilities=_CAPS, **kwargs)  # ty: ignore[invalid-argument-type]
+def _backend(
+    fake_client: FakeAnyLLMClient, *, capabilities: Capabilities = _CAPS, **kwargs: Any
+) -> ModelBackend:
+    """Build a ModelBackend around the fake, which stands in structurally for an AnyLLM."""
+    return ModelBackend(
+        _client=cast(AnyLLM, fake_client), model="m", capabilities=capabilities, **kwargs
+    )
 
 
 @pytest.mark.parametrize("sync", [True, False])
@@ -104,7 +112,7 @@ async def test_embed_texts_unpacks_embedding_vectors(
 
 @pytest.mark.parametrize("sync", [True, False])
 async def test_embed_texts_batch_size_chunks_and_preserves_order(
-    fake_client: FakeAnyLLMClient, sync: bool
+    fake_client: FakeAnyLLMClient, sync: bool, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     texts = ["a", "bb", "ccc", "dddd", "e"]
 
@@ -117,10 +125,8 @@ async def test_embed_texts_batch_size_chunks_and_preserves_order(
     async def fake_aembedding(**kwargs) -> FakeEmbeddingResponse:
         return fake_embedding(**kwargs)
 
-    # Instance attribute assignment doesn't need a `self` parameter, unlike
-    # the class-declared bound method ty checks this against.
-    fake_client._embedding = fake_embedding  # ty: ignore[invalid-assignment]
-    fake_client.aembedding = fake_aembedding  # ty: ignore[invalid-assignment]
+    monkeypatch.setattr(fake_client, "_embedding", fake_embedding)
+    monkeypatch.setattr(fake_client, "aembedding", fake_aembedding)
     backend = _backend(fake_client)
 
     vectors = (
@@ -221,7 +227,7 @@ async def test_embed_texts_rejects_backend_without_embeddings(
         tool_use=True,
         structured_output=True,
     )
-    backend = ModelBackend(_client=fake_client, model="m", capabilities=no_embed_caps)  # ty: ignore[invalid-argument-type]
+    backend = _backend(fake_client, capabilities=no_embed_caps)
     with pytest.raises(UnsupportedCapabilityError):
         if sync:
             backend.embed_texts(["a"])
@@ -243,12 +249,7 @@ async def test_dimensions_rejects_backend_without_embeddings(
         tool_use=True,
         structured_output=True,
     )
-    backend = ModelBackend(
-        _client=fake_client,  # ty: ignore[invalid-argument-type]
-        model="m",
-        capabilities=no_embed_caps,
-        embedding_dim=42,
-    )
+    backend = _backend(fake_client, capabilities=no_embed_caps, embedding_dim=42)
     with pytest.raises(UnsupportedCapabilityError):
         if sync:
             backend.dimensions()
@@ -330,7 +331,7 @@ async def test_extract_rejects_backend_without_structured_output(
         tool_use=True,
         structured_output=False,
     )
-    backend = ModelBackend(_client=fake_client, model="m", capabilities=no_structured_caps)  # ty: ignore[invalid-argument-type]
+    backend = _backend(fake_client, capabilities=no_structured_caps)
     fake_client.completion_response = FakeChatCompletion(
         choices=[FakeChoice(message=FakeChatCompletionMessage())]
     )
@@ -390,7 +391,7 @@ async def test_extract_raises_after_exhausting_max_retries(
 
 @pytest.mark.parametrize("sync", [True, False])
 async def test_extract_retries_after_no_parsed_output_and_succeeds(
-    fake_client: FakeAnyLLMClient, sync: bool
+    fake_client: FakeAnyLLMClient, sync: bool, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     responses = [
         FakeChatCompletion(choices=[FakeChoice(message=FakeChatCompletionMessage(parsed=None))]),
@@ -407,10 +408,8 @@ async def test_extract_retries_after_no_parsed_output_and_succeeds(
     async def fake_acompletion(**kwargs) -> FakeChatCompletion:
         return fake_completion(**kwargs)
 
-    # Instance attribute assignment doesn't need a `self` parameter, unlike
-    # the class-declared bound method ty checks this against.
-    fake_client.completion = fake_completion  # ty: ignore[invalid-assignment]
-    fake_client.acompletion = fake_acompletion  # ty: ignore[invalid-assignment]
+    monkeypatch.setattr(fake_client, "completion", fake_completion)
+    monkeypatch.setattr(fake_client, "acompletion", fake_acompletion)
     backend = _backend(fake_client)
 
     result = (
@@ -428,7 +427,7 @@ async def test_extract_retries_after_no_parsed_output_and_succeeds(
 
 @pytest.mark.parametrize("sync", [True, False])
 async def test_extract_retries_after_validation_error_and_succeeds(
-    fake_client: FakeAnyLLMClient, sync: bool
+    fake_client: FakeAnyLLMClient, sync: bool, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     fake_client.completion_response = FakeChatCompletion(
         choices=[FakeChoice(message=FakeChatCompletionMessage(parsed=Answer(value="42")))]
@@ -445,10 +444,8 @@ async def test_extract_retries_after_validation_error_and_succeeds(
     async def fake_acompletion(**kwargs) -> FakeChatCompletion:
         return fake_completion(**kwargs)
 
-    # Instance attribute assignment doesn't need a `self` parameter, unlike
-    # the class-declared bound method ty checks this against.
-    fake_client.completion = fake_completion  # ty: ignore[invalid-assignment]
-    fake_client.acompletion = fake_acompletion  # ty: ignore[invalid-assignment]
+    monkeypatch.setattr(fake_client, "completion", fake_completion)
+    monkeypatch.setattr(fake_client, "acompletion", fake_acompletion)
     backend = _backend(fake_client)
 
     result = (
@@ -516,8 +513,13 @@ def test_build_backend_requires_model_capabilities() -> None:
     """model_capabilities is required, not opt-in-by-default: omitting it
     entirely must fail loudly rather than silently resolve to 'nothing
     granted.'"""
+    kwargs: dict[str, Any] = {
+        "provider": "ollama",
+        "model": "llama3:8b",
+        "base_url": "http://localhost:11434",
+    }
     with pytest.raises(TypeError, match="model_capabilities"):
-        build_model_backend(provider="ollama", model="llama3:8b", base_url="http://localhost:11434")  # ty: ignore[missing-argument]
+        build_model_backend(**kwargs)
 
 
 def test_build_backend_constructs_offline_for_embedding_capable_provider() -> None:
