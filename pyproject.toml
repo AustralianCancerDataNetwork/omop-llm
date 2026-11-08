@@ -61,3 +61,7 @@ markers = [
   "unit: Unit tests that do not require external API calls",
   "integration: Tests that hit live LLM endpoints (requires API keys)",
 ]
+
+[tool.ty.rules]
+# raises on stale suppressions
+unused-ignore-comment = "error"
