@@ -6,5 +6,9 @@ on:
 jobs:
   label-gate:
     uses: AustralianCancerDataNetwork/cava-devops/.github/workflows/label-gate.yml@main
-  build-test:
-    uses: AustralianCancerDataNetwork/cava-devops/.github/workflows/build-test.yml@main
+  ruff:
+    uses: AustralianCancerDataNetwork/cava-devops/.github/workflows/ruff.yml@ruff-ty-workflows
+  ty:
+    uses: AustralianCancerDataNetwork/cava-devops/.github/workflows/ty.yml@ruff-ty-workflows
+  build-test-sqlite:
+    uses: AustralianCancerDataNetwork/cava-devops/.github/workflows/build-test-sqlite.yml@ruff-ty-workflows

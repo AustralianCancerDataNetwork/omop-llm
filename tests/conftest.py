@@ -96,7 +96,9 @@ class FakeAnyLLMClient(ProviderMixin):
     def embedding_dimension_hint(self, model: str, *, api_base: str | None) -> int | None:
         return self.dimension_hint
 
-    async def async_embedding_dimension_hint(self, model: str, *, api_base: str | None) -> int | None:
+    async def async_embedding_dimension_hint(
+        self, model: str, *, api_base: str | None
+    ) -> int | None:
         return self.dimension_hint
 
 

@@ -48,7 +48,9 @@ def apply_embedding_prefix(
     return [f"{prefix}{text}" for text in texts]
 
 
-def warn_if_prefixes_look_wrong(*, model: str, document_prefix: str | None, query_prefix: str | None) -> None:
+def warn_if_prefixes_look_wrong(
+    *, model: str, document_prefix: str | None, query_prefix: str | None
+) -> None:
     """Log a warning for a missing or unrecognized prefix.
 
     Called once, at :func:`~omop_llm.backend.build_model_backend` time, for
@@ -65,11 +67,15 @@ def warn_if_prefixes_look_wrong(*, model: str, document_prefix: str | None, quer
                 "%s: no %s_prefix configured for model %r. Fine for symmetric models; "
                 "asymmetric models (e.g. nomic-embed-text, E5, BGE) need one "
                 "to retrieve correctly.",
-                role.value.capitalize(), role.value, model,
+                role.value.capitalize(),
+                role.value,
+                model,
             )
         elif prefix not in KNOWN_EMBEDDING_PREFIXES:
             logger.warning(
                 "%s prefix %r for model %r doesn't match a commonly recognized "
                 "convention. Not necessarily wrong, just worth double-checking.",
-                role.value.capitalize(), prefix, model,
+                role.value.capitalize(),
+                prefix,
+                model,
             )

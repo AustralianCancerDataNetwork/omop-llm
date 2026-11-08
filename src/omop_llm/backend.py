@@ -9,7 +9,7 @@ rather than split across separate classes per modality.
 Every method has a synchronous form and an ``async_``-prefixed
 asynchronous form (``complete``/``async_complete``,
 ``embed_texts``/``async_embed_texts``, and so on). This was a deliberate
-choice, not an oversight. 
+choice, not an oversight.
 
 Consumers only ever see this class, never a raw any-llm provider instance.
 If any-llm needed replacing, only this module's method bodies, and the
@@ -24,7 +24,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from any_llm.any_llm import AnyLLM
-from any_llm.types.completion import ChatCompletion, ReasoningEffort
+from any_llm.types.completion import ChatCompletion, ChatCompletionMessage, ReasoningEffort
 from oa_configurator import ResolvedModel
 from pydantic import BaseModel, ValidationError
 
@@ -62,6 +62,27 @@ def _chunked[T](items: list[T], size: int) -> Iterator[list[T]]:
         raise ValueError(f"batch_size must be a positive integer, got {size!r}")
     for start in range(0, len(items), size):
         yield items[start : start + size]
+
+
+def _as_client_messages(
+    messages: list[dict[str, Any]],
+) -> list[dict[str, Any] | ChatCompletionMessage]:
+    """Return ``messages`` typed as the any-llm client expects.
+
+    The client declares ``list[dict | ChatCompletionMessage]``, which a plain
+    ``list[dict]`` does not satisfy because lists are invariant.
+
+    Parameters
+    ----------
+    messages : list of dict
+        Chat history in OpenAI message format.
+
+    Returns
+    -------
+    list
+        A shallow copy of ``messages``.
+    """
+    return [*messages]
 
 
 @dataclass
@@ -160,13 +181,15 @@ class ModelBackend:
     ) -> ChatCompletion:
         """Run one chat completion synchronously. See :meth:`async_complete` for parameters."""
         call_kwargs = self._build_call_kwargs(
-            tools=tools, response_format=response_format, max_tokens=max_tokens,
-            temperature=temperature, reasoning_effort=reasoning_effort, extra=kwargs,
+            tools=tools,
+            response_format=response_format,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            reasoning_effort=reasoning_effort,
+            extra=kwargs,
         )
-        # always non-streaming and typed to return a ChatCompletion
-        # but not captured by any single any-llm overload
-        return self._client.completion(  # ty: ignore[no-matching-overload]
-            model=self.model, messages=messages, **call_kwargs
+        return self._client.completion(
+            model=self.model, messages=_as_client_messages(messages), **call_kwargs
         )
 
     async def async_complete(
@@ -218,13 +241,15 @@ class ModelBackend:
             The completion response.
         """
         call_kwargs = self._build_call_kwargs(
-            tools=tools, response_format=response_format, max_tokens=max_tokens,
-            temperature=temperature, reasoning_effort=reasoning_effort, extra=kwargs,
+            tools=tools,
+            response_format=response_format,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            reasoning_effort=reasoning_effort,
+            extra=kwargs,
         )
-        # See the matching comment in complete(): our response_format
-        # union doesn't match any single any-llm acompletion() overload.
-        return await self._client.acompletion(  # ty: ignore[no-matching-overload]
-            model=self.model, messages=messages, **call_kwargs
+        return await self._client.acompletion(
+            model=self.model, messages=_as_client_messages(messages), **call_kwargs
         )
 
     def embed_texts(
@@ -325,11 +350,15 @@ class ModelBackend:
                 texts, role, document_prefix=self.document_prefix, query_prefix=self.query_prefix
             )
         if batch_size is None:
-            response = await self._client.aembedding(model=self.model, inputs=texts, **self.configuration)
+            response = await self._client.aembedding(
+                model=self.model, inputs=texts, **self.configuration
+            )
             return [item.embedding for item in response.data]
         vectors: list[list[float]] = []
         for chunk in _chunked(texts, batch_size):
-            response = await self._client.aembedding(model=self.model, inputs=chunk, **self.configuration)
+            response = await self._client.aembedding(
+                model=self.model, inputs=chunk, **self.configuration
+            )
             vectors.extend(item.embedding for item in response.data)
         return vectors
 
@@ -387,7 +416,9 @@ class ModelBackend:
         if self.embedding_dim is not None:
             return self.embedding_dim
         assert isinstance(self._client, ProviderMixin)
-        hint = await self._client.async_embedding_dimension_hint(self.model, api_base=self._api_base)
+        hint = await self._client.async_embedding_dimension_hint(
+            self.model, api_base=self._api_base
+        )
         if hint is not None:
             return hint
         [vector] = await self.async_embed_texts(["dimension probe"])
@@ -513,7 +544,9 @@ class ModelBackend:
         conversation = list(messages)
         for attempt in range(max_retries + 1):
             try:
-                completion = await self.async_complete(conversation, response_format=response_model, **kwargs)
+                completion = await self.async_complete(
+                    conversation, response_format=response_model, **kwargs
+                )
                 return self._unwrap_parsed(completion, response_model)
             except (NoParsedOutputError, ValidationError) as exc:
                 if attempt >= max_retries:
@@ -528,7 +561,9 @@ class ModelBackend:
             )
 
     @staticmethod
-    def _retry_extract_message[T: BaseModel](exc: Exception, response_model: type[T]) -> dict[str, Any]:
+    def _retry_extract_message[T: BaseModel](
+        exc: Exception, response_model: type[T]
+    ) -> dict[str, Any]:
         """Build a follow-up user message asking the model to correct a failed extraction."""
         return {
             "role": "user",
@@ -569,7 +604,7 @@ class ModelBackend:
                 "(no validation or length/content-filter error was raised, so the "
                 "model likely refused to answer or returned empty content)"
             )
-        return parsed  # type: ignore[no-any-return]
+        return parsed
 
     def is_available(self, **kwargs: Any) -> bool:
         """Check whether this backend can actually be reached, synchronously.
@@ -690,7 +725,9 @@ def build_model_backend(
     provider_class = provider_class_for(provider)
     provider_caps = provider_capabilities_for(provider)
     effective_caps = provider_caps & model_capabilities
-    effective_caps = dataclasses.replace(effective_caps, streaming=False)  # ModelBackend doesn't implement streaming as of now (see complete()/async_complete() docstring)
+    effective_caps = dataclasses.replace(
+        effective_caps, streaming=False
+    )  # ModelBackend doesn't implement streaming as of now (see complete()/async_complete() docstring)
     canonical_model = canonical_model_name(provider, model)
     if embedding_dim is not None and not effective_caps.embeddings:
         raise ValueError(
