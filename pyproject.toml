@@ -21,9 +21,8 @@ instructor = [
 ]
 dev = [
     "omop-llm[instructor]",
-    "mypy>=1.19.1",
-    "ty>=0.0.59",
-    "ruff",
+    "ty==0.0.90",
+    "ruff==0.17.1",
     "pytest>=9.0.2",
     "pytest-asyncio>=1.0.0",
     "pytest-cov>=7.0.0",
@@ -48,6 +47,9 @@ packages = ["src/omop_llm"]
 [tool.uv]
 cache-keys = [{ file = "pyproject.toml" }, { git = { commit = true, tags = true } }]
 
+[tool.ruff]
+line-length = 100
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
@@ -59,3 +61,7 @@ markers = [
   "unit: Unit tests that do not require external API calls",
   "integration: Tests that hit live LLM endpoints (requires API keys)",
 ]
+
+[tool.ty.rules]
+# raises on stale suppressions
+unused-ignore-comment = "error"

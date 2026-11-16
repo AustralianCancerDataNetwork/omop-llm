@@ -50,11 +50,15 @@ def test_embedding_dimension_hint_parses_api_show_response(monkeypatch: pytest.M
 
     monkeypatch.setattr(httpx, "post", fake_post)
     provider = OllamaProvider(api_key=None, api_base="http://localhost:11434")
-    result = provider.embedding_dimension_hint("nomic-embed-text:v1.5", api_base="http://localhost:11434")
+    result = provider.embedding_dimension_hint(
+        "nomic-embed-text:v1.5", api_base="http://localhost:11434"
+    )
     assert result == 768
 
 
-def test_embedding_dimension_hint_returns_none_when_metadata_is_missing(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_embedding_dimension_hint_returns_none_when_metadata_is_missing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     def fake_post(url: str, json: dict[str, Any]) -> httpx.Response:
         return httpx.Response(200, json={"model_info": {}})
 
@@ -70,7 +74,9 @@ async def test_async_embedding_dimension_hint_returns_none_without_api_base() ->
     assert result is None
 
 
-async def test_async_embedding_dimension_hint_parses_api_show_response(monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_async_embedding_dimension_hint_parses_api_show_response(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     async def fake_post(self: httpx.AsyncClient, url: str, json: dict[str, Any]) -> httpx.Response:
         assert url == "http://localhost:11434/api/show"
         return httpx.Response(200, json={"model_info": {"nomic-embed-text.embedding_length": 768}})
@@ -84,14 +90,18 @@ async def test_async_embedding_dimension_hint_parses_api_show_response(monkeypat
 
 
 def test_convert_completion_params_translates_max_tokens_to_num_predict() -> None:
-    params = CompletionParams(model_id="llama3:8b", messages=[{"role": "user", "content": "hi"}], max_tokens=512)
+    params = CompletionParams(
+        model_id="llama3:8b", messages=[{"role": "user", "content": "hi"}], max_tokens=512
+    )
     converted = OllamaProvider._convert_completion_params(params)
     assert "max_tokens" not in converted
     assert converted["num_predict"] == 512
 
 
 def test_convert_completion_params_prefers_explicit_num_predict_over_max_tokens() -> None:
-    params = CompletionParams(model_id="llama3:8b", messages=[{"role": "user", "content": "hi"}], max_tokens=512)
+    params = CompletionParams(
+        model_id="llama3:8b", messages=[{"role": "user", "content": "hi"}], max_tokens=512
+    )
     converted = OllamaProvider._convert_completion_params(params, num_predict=128)
     assert converted["num_predict"] == 128
     assert "max_tokens" not in converted
@@ -103,7 +113,9 @@ def test_convert_completion_params_omits_num_predict_when_max_tokens_not_set() -
     assert "num_predict" not in converted
 
 
-def test_convert_completion_params_warns_on_unrecognized_kwargs(caplog: pytest.LogCaptureFixture) -> None:
+def test_convert_completion_params_warns_on_unrecognized_kwargs(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
     params = CompletionParams(model_id="llama3:8b", messages=[{"role": "user", "content": "hi"}])
     with caplog.at_level("WARNING", logger="omop_llm.providers.supported"):
         converted = OllamaProvider._convert_completion_params(params, bogus_kwarg="x")
@@ -111,7 +123,9 @@ def test_convert_completion_params_warns_on_unrecognized_kwargs(caplog: pytest.L
     assert "bogus_kwarg" in caplog.text
 
 
-def test_convert_completion_params_does_not_warn_on_tools_or_think(caplog: pytest.LogCaptureFixture) -> None:
+def test_convert_completion_params_does_not_warn_on_tools_or_think(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
     params = CompletionParams(model_id="llama3:8b", messages=[{"role": "user", "content": "hi"}])
     with caplog.at_level("WARNING", logger="omop_llm.providers.supported"):
         OllamaProvider._convert_completion_params(params, tools=[{"type": "function"}], think=True)

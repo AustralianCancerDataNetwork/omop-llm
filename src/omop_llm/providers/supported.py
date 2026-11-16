@@ -2,9 +2,9 @@
 
 any-llm itself supports around fifty providers (see its own reference:
 https://docs.mozilla.ai/any-llm/providers/).
-omop_llm currently supports the following models: 
+omop_llm currently supports the following models:
 - local (``ollama``, ``llama-server`` via ``llamacpp``, ``vllm``), and
-- cloud (``openai``, ``anthropic``, ``gemini``). 
+- cloud (``openai``, ``anthropic``, ``gemini``).
 
 Each class here subclasses both :class:`~omop_llm.providers.base.ProviderMixin`
 (our contract: ``TOOL_USE``/``STRUCTURED_OUTPUT``, and the required
@@ -53,7 +53,7 @@ class OllamaProvider(ProviderMixin, AnyLLMOllamaProvider):
     def canonical_model_name(cls, name: str) -> str:
         """Require an explicit, immutable Ollama model tag.
 
-        Rejects both untagged names and the mutable ``:latest`` tag: 
+        Rejects both untagged names and the mutable ``:latest`` tag:
         ``:latest`` can silently repoint after an ``ollama pull``, breaking
         consistency between stored embeddings and new query embeddings.
 
@@ -101,7 +101,9 @@ class OllamaProvider(ProviderMixin, AnyLLMOllamaProvider):
         response = httpx.post(f"{api_base.rstrip('/')}/api/show", json={"name": model}).json()
         return self._extract_embedding_length(response)
 
-    async def async_embedding_dimension_hint(self, model: str, *, api_base: str | None) -> int | None:
+    async def async_embedding_dimension_hint(
+        self, model: str, *, api_base: str | None
+    ) -> int | None:
         """See :meth:`omop_llm.providers.base.ProviderMixin.async_embedding_dimension_hint`."""
         if api_base is None:
             return None

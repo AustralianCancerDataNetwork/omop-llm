@@ -47,7 +47,9 @@ class TestApplyEmbeddingPrefix:
 class TestWarnIfPrefixesLookWrong:
     def test_warns_when_both_missing(self, caplog: pytest.LogCaptureFixture) -> None:
         with caplog.at_level("WARNING", logger="omop_llm.embeddings"):
-            warn_if_prefixes_look_wrong(model="nomic-embed-text:v1.5", document_prefix=None, query_prefix=None)
+            warn_if_prefixes_look_wrong(
+                model="nomic-embed-text:v1.5", document_prefix=None, query_prefix=None
+            )
         assert "document_prefix" in caplog.text
         assert "query_prefix" in caplog.text
 
@@ -70,7 +72,9 @@ class TestWarnIfPrefixesLookWrong:
 
     def test_does_not_raise_for_unrecognized_prefix(self) -> None:
         # A prefix outside KNOWN_EMBEDDING_PREFIXES is a heads-up, not an error.
-        warn_if_prefixes_look_wrong(model="some-new-model", document_prefix="custom: ", query_prefix="custom: ")
+        warn_if_prefixes_look_wrong(
+            model="some-new-model", document_prefix="custom: ", query_prefix="custom: "
+        )
 
     def test_every_known_prefix_is_a_non_empty_string(self) -> None:
         for prefix in KNOWN_EMBEDDING_PREFIXES:
