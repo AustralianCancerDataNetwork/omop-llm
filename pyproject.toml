@@ -55,12 +55,8 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "-v --tb=short"
+addopts = "-v --tb=short --strict-markers"
 asyncio_mode = "auto"
-markers = [
-  "unit: Unit tests that do not require external API calls",
-  "integration: Tests that hit live LLM endpoints (requires API keys)",
-]
 
 [tool.ty.rules]
 # raises on stale suppressions
