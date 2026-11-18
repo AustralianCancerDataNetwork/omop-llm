@@ -10,5 +10,5 @@ jobs:
     uses: AustralianCancerDataNetwork/cava-devops/.github/workflows/ruff.yml@main
   ty:
     uses: AustralianCancerDataNetwork/cava-devops/.github/workflows/ty.yml@main
-  build-test-sqlite:
-    uses: AustralianCancerDataNetwork/cava-devops/.github/workflows/build-test-sqlite.yml@main
+  build-test-nodb:
+    uses: AustralianCancerDataNetwork/cava-devops/.github/workflows/build-test-nodb.yml@main
